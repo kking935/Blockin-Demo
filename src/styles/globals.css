@@ -1,0 +1,101 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  background-color: rgb(176, 215, 252);
+  color: black;
+  padding: 12px 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+input {
+  display: block;
+  background-color: rgb(236, 236, 236);
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin: 30px auto;
+  text-align: center;
+}
+
+header {
+  background-color: rgb(65, 144, 255);
+  padding: 10px 30px;
+  color: white;
+}
+
+.connect-screen {
+  text-align: center;
+  padding: 100px 0px;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.7);
+  top: 0px;
+  left: 0px;
+  transition: opacity 500ms;
+  z-index: 50;
+  width: 100%;
+  height: 100%;
+}
+
+.connect-screen div {
+  background-color: white;
+  opacity: 100%;
+  width: 600px;
+  max-width: 90vw;
+  margin: 50px auto 0px;
+  padding: 30px;
+  border-radius: 25px;
+}
+
+.connect-screen h1 {
+  margin-bottom: 55px;
+}
+
+.hidden {
+  display: none;
+}
+
+main {
+  text-align: center;
+  padding: 100px 0px 0px;
+  max-width: 30rem;
+  margin-inline: auto;
+}
+
+.home h2 {
+  font-size: larger;
+}
+
+.home h3 {
+  font-size: large;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid black;
+}
+
+.home ul {
+  padding: 0px;
+  list-style: upper-roman;
+  margin: 0px;
+}
+
+.home li {
+  margin: 20px 0px 0px;
+  text-decoration: underline;
+  color: rgb(0, 99, 220)
+}
