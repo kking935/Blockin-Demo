@@ -1,7 +1,7 @@
 import Layout from '../../components/layout'
 import Head from 'next/head'
 import React, { useState } from 'react'
-import { signChallenge } from '../../wallet/sign_challenge';
+import { getChallenge, signChallenge } from '../../wallet/sign_challenge';
 import { NextPage } from 'next/types';
 import { useWalletContext } from '../../contexts/WalletContext';
 
@@ -24,14 +24,36 @@ const Verification: NextPage = () => {
     const [signingChallenge, setSigningChallenge] = useState(false)
     const [message, setMessage] = useState(loadingScreen)
 
-    const handleChallenge = async () => {
-        setSigningChallenge(true)
-        if (connector != undefined && await signChallenge(connector)) {
-            setMessage(successScreen)
+    const [challenge, setChallenge] = useState('');
+
+    const handleGetChallenge = async () => {
+        if (connector != undefined) {
+            const blockinChallenge = await getChallenge(connector, ['13365375']);
+            setChallenge(blockinChallenge);
         }
         else {
             setMessage(failureScreen)
         }
+    }
+
+    const handleSignChallenge = async () => {
+        setSigningChallenge(true);
+        setMessage(loadingScreen);
+
+        if (connector != undefined) {
+            const response = await signChallenge(connector, challenge);
+            console.log(response);
+            alert(response);
+
+            if (response.startsWith('Error')) {
+                setMessage(failureScreen);
+                setSigningChallenge(false)
+            }
+            else {
+                setMessage(successScreen);
+            }
+        }
+
     }
 
     return (
@@ -40,16 +62,32 @@ const Verification: NextPage = () => {
                 <title>Verification - Challenge/Response</title>
             </Head>
             <div>
+                <>
+                    <button onClick={handleGetChallenge}>Generate Challenge</button>
+                </>
+            </div>
+            <div>
+                Generated Challenge:<br />
+                <pre>
+                    {
+                        challenge
+                    }
+                </pre>
+
+            </div>
+            <hr />
+            <div>
                 {
                     signingChallenge ?
-                    <>
-                        {message}
-                    </> :
-                    <>
-                        <button onClick={handleChallenge}>Sign Challenge</button>
-                    </>
+                        <>
+                            {message}
+                        </> :
+                        <>
+                            <button disabled={!challenge} onClick={handleSignChallenge}>Sign Challenge</button>
+                        </>
                 }
             </div>
+
         </Layout>
     )
 }

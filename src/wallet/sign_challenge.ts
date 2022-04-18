@@ -42,13 +42,13 @@ interface IScenarioTxn {
     authAddr?: string;
     message?: string;
 }
-  
-type ScenarioReturnType = IScenarioTxn[][];  
+
+type ScenarioReturnType = IScenarioTxn[][];
 // ...End of api.ts from WalletConnect example
 
-const getChallengeFromBlockin = async (connector: WalletConnect): Promise<string> => {
+const getChallengeFromBlockin = async (connector: WalletConnect, assetIds: string[]): Promise<string> => {
     //we can also make these parameters inputs to the overall function to be more dynamic
-    const message = await createChallenge('https://vt.edu', 'Blockin', connector?.accounts[0], '');
+    const message = await createChallenge('https://vt.edu', 'Sign in to this website via Blockin.', connector?.accounts[0], '', '2022-05-22T18:19:55.901Z', undefined, assetIds);
     console.log("CREATED CHALLENGE", message);
 
     return message
@@ -150,8 +150,13 @@ const parseSignedTransactions = async (txnsFormattedForAlgoSdk: ScenarioReturnTy
     return signedTxnInfo;
 }
 
-export const signChallenge = async (connector: WalletConnect) => {
-    const message = await getChallengeFromBlockin(connector);
+
+export const getChallenge = async (connector: WalletConnect, assetIds: string[]) => {
+    const message = await getChallengeFromBlockin(connector, assetIds);
+    return message;
+}
+
+export const signChallenge = async (connector: WalletConnect, message: string) => {
 
     const txn = await constructTxnObject(connector, message);
 
@@ -179,10 +184,8 @@ export const signChallenge = async (connector: WalletConnect) => {
 
     // This is where the request gets sent to the wallet...
     const result: Array<string | null> = await connector.sendCustomRequest(request);
-    alert("done")
     if (result == null) {
-        alert("Challenge failed!")
-        return false
+        return 'Error: Failed to get result from WalletConnect.';
     }
 
     console.log("Raw response:", result);
@@ -202,12 +205,10 @@ export const signChallenge = async (connector: WalletConnect) => {
         //Blockin verify
         //Note: It will always return a string and should never throw an error
         //Returns "Successfully granted access via Blockin" upon success
-        const verified = await verifyChallenge(txnBytes, signature);
-        console.log(verified);
-        return true
+        const verificationRes = await verifyChallenge(txnBytes, signature);
+        return verificationRes;
     }
     else {
-        alert("Challenge failed")
-        return false
+        return 'Error: Error with signature response.';
     }
 };
