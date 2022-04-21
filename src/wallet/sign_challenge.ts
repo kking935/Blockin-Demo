@@ -48,7 +48,7 @@ type ScenarioReturnType = IScenarioTxn[][];
 
 const getChallengeFromBlockin = async (connector: WalletConnect, assetIds: string[]): Promise<string> => {
     //we can also make these parameters inputs to the overall function to be more dynamic
-    const message = await createChallenge('https://vt.edu', 'Sign in to this website via Blockin.', connector?.accounts[0], '', '2022-05-22T18:19:55.901Z', undefined, assetIds);
+    const message = await createChallenge('https://blockin.com', 'Sign in to this website via Blockin. You will remain signed in until you terminate your browser session.', connector?.accounts[0], '', '2022-05-22T18:19:55.901Z', undefined, assetIds);
     console.log("CREATED CHALLENGE", message);
 
     return message

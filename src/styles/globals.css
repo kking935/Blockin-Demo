@@ -41,6 +41,8 @@ header {
   background-color: rgb(65, 144, 255);
   padding: 10px 30px;
   color: white;
+  display: flex;
+  justify-content: space-between;
 }
 
 .connect-screen {
@@ -102,4 +104,20 @@ main {
   margin: 20px 0px 0px;
   text-decoration: underline;
   color: rgb(0, 99, 220)
+}
+
+.authheader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.assetidinput {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.authheader button {
+    margin-left: 10px;
 }
