@@ -1,5 +1,5 @@
 import { makeAssetCreateTxn, sha256 } from '../../blockin'
-import algosdk from "algosdk";
+import algosdk, { waitForConfirmation } from "algosdk";
 import { formatJsonRpcRequest } from "@json-rpc-tools/utils";
 import WalletConnect from '@walletconnect/client';
 
@@ -48,6 +48,7 @@ export const signAssetCreateTxn = async (connector: WalletConnect, assetAuthoriz
         });
         const algodClient = new algosdk.Algodv2(token, algodServer, port);
         const sendTx = await algodClient.sendRawTransaction(stxs).do();
+        await waitForConfirmation(algodClient, sendTx.txId, 1000);
 
         console.log("Transaction : " + sendTx.txId);
     }

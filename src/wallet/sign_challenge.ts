@@ -29,6 +29,22 @@ function clientForChain(chain: ChainType): algosdk.Algodv2 {
     }
 }
 
+export async function getAssets(address: string, chainType?: ChainType) {
+    const assets: any[] = [];
+    const chain = chainType ? chainType : ChainType.TestNet
+    const client = clientForChain(chain);
+
+    let accountInfo = (await client.accountInformation(address).do());
+
+    for (const asset of accountInfo.assets) {
+        if (asset['amount'] > 0) {
+            assets.push(asset);
+        }
+    }
+
+    return assets;
+}
+
 export async function apiGetTxnParams(chain: ChainType): Promise<algosdk.SuggestedParams> {
     const params = await clientForChain(chain)
         .getTransactionParams()

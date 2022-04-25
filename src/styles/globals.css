@@ -15,6 +15,27 @@ a {
   text-decoration: none;
 }
 
+a:link {
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:active {
+  text-decoration: underline;
+}
+
+.asset-link {
+    color:rgb(0, 99, 220);
+}
+
+
 button {
   background-color: rgb(176, 215, 252);
   color: black;
@@ -115,7 +136,7 @@ main {
 .assetidinput {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 .authheader button {
