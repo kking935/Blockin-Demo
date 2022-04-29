@@ -1,22 +1,35 @@
 import Head from 'next/head'
+import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie'
-import { simulatedOwnedAssetColors, simulatedOwnedAssetHTMLColors, simulatedOwnedAssets } from '../permissions/permissions';
+import { getColorFromMetadata } from '../permissions/permissions';
+import { getAsset } from '../wallet/sign_challenge';
 
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
     const [cookies, setCookie, removeCookie] = useCookies(['blockedin']);
+    const [bannerColor, setBannerColor] = useState('');
 
     const logout = () => {
         removeCookie('blockedin', { 'path': '/' });
+        setBannerColor('');
     }
 
-    let bannerColor = undefined;
-    let bannerColorReadable = undefined;
-    if (cookies['blockedin']) {
-        const idx = Number(cookies['blockedin']) % 5;
-        bannerColor = simulatedOwnedAssetHTMLColors[idx];
-        bannerColorReadable = simulatedOwnedAssetColors[idx];
-    }
+    useEffect(() => {
+        const setBanner = async () => {
+            if (cookies['blockedin']) {
+                const assetInfo = await getAsset(cookies['blockedin']);
+                const color = await getColorFromMetadata(assetInfo['metadata-hash']);
+                if (color) {
+                    setBannerColor(color.charAt(0).toUpperCase() + color.slice(1));
+                } else {
+                    setBannerColor('Custom')
+                }
+            }
+        }
+        setBanner();
+    }, [cookies]);
+
+
 
     return (
         <>
@@ -28,7 +41,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
                 {cookies['blockedin'] ?
                     <div className='authheader'>
-                        <h1>Blocked In ({bannerColorReadable ? bannerColorReadable : 'Custom'})</h1>
+                        <h1>Blocked In ({bannerColor})</h1>
                         <button onClick={logout}>Logout</button>
                     </div> :
                     <div className='authheader'>
