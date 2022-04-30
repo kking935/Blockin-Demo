@@ -15,8 +15,13 @@ const Home: NextPage = () => {
                 <h3>Explore the links below</h3>
                 <ul>
                     <li>
+                        <Link href={'/scenarios/simpleverification'}>
+                            <a>Demo Walkthrough (Simple)</a>
+                        </Link>
+                    </li>
+                    <li>
                         <Link href={'/scenarios/verification'}>
-                            <a>Demo Walkthrough</a>
+                            <a>Demo Walkthrough (Technical)</a>
                         </Link>
                     </li>
                     <li>
