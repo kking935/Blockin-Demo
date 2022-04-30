@@ -3,11 +3,13 @@ import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie'
 import { getColorFromMetadata } from '../permissions/permissions';
 import { getAsset } from '../wallet/sign_challenge';
+import { useWalletContext } from '../contexts/WalletContext';
 
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
     const [cookies, setCookie, removeCookie] = useCookies(['blockedin']);
     const [bannerColor, setBannerColor] = useState('');
+    const { connector } = useWalletContext();
 
     const logout = () => {
         removeCookie('blockedin', { 'path': '/' });
@@ -17,12 +19,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const setBanner = async () => {
             if (cookies['blockedin']) {
-                const assetInfo = await getAsset(cookies['blockedin']);
-                const color = await getColorFromMetadata(assetInfo['metadata-hash']);
-                if (color) {
-                    setBannerColor(color.charAt(0).toUpperCase() + color.slice(1));
+                if (cookies['blockedin'] === 'none') {
+                    setBannerColor('Custom');
                 } else {
-                    setBannerColor('Custom')
+                    const assetInfo = await getAsset(cookies['blockedin']);
+                    const color = await getColorFromMetadata(assetInfo['metadata-hash']);
+                    if (color) {
+                        setBannerColor(color.charAt(0).toUpperCase() + color.slice(1));
+                    } else {
+                        setBannerColor('Custom')
+                    }
                 }
             }
         }
@@ -30,7 +36,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     }, [cookies]);
 
 
-
+    const displayAddress = connector && connector.accounts[0] ? connector.accounts[0].substr(0, 4) + '....' + connector.accounts[0].substr(-4) : 'Wallet Not Connected';
     return (
         <>
             <Head>
@@ -39,13 +45,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <header style={{ backgroundColor: bannerColor }}>
                 <a href='/'><h1>Blockin Demo</h1></a>
 
+
                 {cookies['blockedin'] ?
                     <div className='authheader'>
-                        <h1>Blocked In ({bannerColor})</h1>
+                        <h1>{displayAddress} - Blocked In ({bannerColor})</h1>
                         <button onClick={logout}>Logout</button>
                     </div> :
                     <div className='authheader'>
-                        <h1>Not Blocked In</h1>
+                        <h1>{displayAddress} - Not Blocked In</h1>
                         <a href='/scenarios/verification'><button>Login</button></a>
                     </div>
                 }

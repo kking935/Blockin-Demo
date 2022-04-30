@@ -2,6 +2,7 @@ import algosdk from "algosdk";
 import { createChallenge, verifyChallenge } from '../../blockin'
 import { formatJsonRpcRequest } from "@json-rpc-tools/utils";
 import WalletConnect from '@walletconnect/client';
+import { getColorFromMetadata } from "../permissions/permissions";
 
 //From api.ts from WalletConnect example...
 export enum ChainType {
@@ -38,12 +39,13 @@ export async function getAsset(assetId: number, chainType?: ChainType) {
     return accountInfo.params;
 }
 
-export async function getAssets(address: string, chainType?: ChainType) {
+export async function getAssets(address: string, assetMap: any, includeColors: boolean, chainType?: ChainType) {
     const assets: any[] = [];
     const chain = chainType ? chainType : ChainType.TestNet
     const client = clientForChain(chain);
 
     let accountInfo = (await client.accountInformation(address).do());
+    const newAssetMap = assetMap;
 
     for (const asset of accountInfo.assets) {
         if (asset['amount'] > 0) {
@@ -51,7 +53,27 @@ export async function getAssets(address: string, chainType?: ChainType) {
         }
     }
 
-    return assets;
+    for (const asset of assets) {
+
+        const id: string = asset['asset-id'];
+        if (!newAssetMap[id]) {
+            const assetInfo = await getAsset(Number(id));
+            newAssetMap[id] = assetInfo;
+        }
+
+        if (includeColors) {
+            asset['color'] = await getColorFromMetadata(newAssetMap[id]['metadata-hash']);
+
+
+            if (!asset['color']) {
+                asset['color'] = 'Custom';
+            } else {
+                asset['color'] = asset['color'].charAt(0).toUpperCase() + asset['color'].slice(1);
+            }
+        }
+    }
+
+    return { assets, assetMap: newAssetMap };
 }
 
 export async function apiGetTxnParams(chain: ChainType): Promise<algosdk.SuggestedParams> {

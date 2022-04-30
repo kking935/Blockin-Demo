@@ -1,14 +1,14 @@
 import WalletConnect from "@walletconnect/client";
 import { makeAssetOptInTxn } from '../../blockin'
-import algosdk from "algosdk";
+import algosdk, { waitForConfirmation } from "algosdk";
 import { formatJsonRpcRequest } from "@json-rpc-tools/utils";
 
-export const signOptIn = async (connector: WalletConnect) => {
+export const signOptIn = async (connector: WalletConnect, assetId: string) => {
     //Generate an opt in tx
     // Sign transaction
     // txns is an array of algosdk.Transaction like below
     // i.e txns = [txn, ...someotherTxns], but we've only built one transaction in our case
-    const txns = [await makeAssetOptInTxn(connector.accounts[0], 13365375)] //TODO: not an asset we made, just for testing
+    const txns = [await makeAssetOptInTxn(connector.accounts[0], Number(assetId))]
     const txnsToSign = txns.map(txn => {
         const encodedTxn = Buffer.from(algosdk.encodeUnsignedTransaction(txn)).toString("base64");
 
@@ -45,6 +45,7 @@ export const signOptIn = async (connector: WalletConnect) => {
         });
         const algodClient = new algosdk.Algodv2(token, algodServer, port);
         const sendTx = await algodClient.sendRawTransaction(stxs).do();
+        await waitForConfirmation(algodClient, sendTx.txId, 100)
 
         console.log("Transaction : " + sendTx.txId);
     }
