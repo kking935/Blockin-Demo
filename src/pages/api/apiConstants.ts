@@ -1,6 +1,6 @@
 import algosdk from 'algosdk';
 
-export const passphrase = "nice coyote harsh sound child arm muffin lunch family rotate genuine hand dance shoe pitch retreat discover vacant tennis suit hen enact filter absent cross"
+export const passphrase = "absorb uncover brush page width axis giant path hint shoe cover brave kingdom above slender category awkward voyage drum lunar fire cradle weapon abstract project"
 export const myAccount = algosdk.mnemonicToSecretKey(passphrase)
 
 const algodToken = { "x-api-key": "H4sefDbnoL8GO8ooRkxQM6CePHih5XDQ405mcBKy" }
