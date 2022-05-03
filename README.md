@@ -1,3 +1,9 @@
+## Blockin Demo
+
+Welcome to the Blockin Demo! Blockin is a JavaScript library built to provide a flexible foundation for resource providers to implement role-based access control, dynamic resource owner privileges, and expiration tokens on-chain through a two-step process. The first step, authorization, creates an on-chain asset which is to be presented as an access token when interacting with a resource. The second step, authentication, verifies ownership of an asset through querying the blockchain and cryptographic digital signatures.
+
+The Blockin library can be found at [`Blockin`](https://github.com/matt-davison/blockin). Blockin is supposed to be a flexible, generic interface that can be implemented on any blockchain infrastructure. In this demo, we show how Blockin can be used by creating auhtorization assets on Algorand and using the Blockin library as a module within React dApp. 
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
@@ -9,6 +15,8 @@ npm run dev
 # or
 yarn dev
 ```
+
+Second, you will need to create a .env file with a sample passphrase and all valid API links and secrets. An example is provided at .env.example.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
