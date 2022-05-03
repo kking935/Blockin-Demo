@@ -108,7 +108,8 @@ const Verification: NextPage = () => {
                     <Expandable
                         title="Generate New Asset (User Creates)"
                         content={<><p>Click below to create a new asset. You may specify a metadata color in the input box below. You will have to sign the creation transaction in your wallet.</p>
-                            <p>{"This simulates the 'User Creates' method of creating an asset. For this method, the user defines the metadata and sends the create asset transaction to the blockchain. Note that this site specifically uses colors for the metadata, but the metadata can be anything an authorizing resource wants it to be."}</p>
+                            <p>{"This simulates the 'User Creates' method of creating an asset. For this method, the user will input the metadata and send the create asset transaction to the blockchain."}</p>
+                            <p>{"Note that although you have complete freedom over your metadata for this example, it most likely will not be like this in reality. The authorizing resource can and should add additional validity checks enforcing that the metadata hash is well-formed for any specific user."}</p>
                             <UserCreatesForm updateOwnedAssets={updateOwnedAssets} />
                         </>}
                     />
