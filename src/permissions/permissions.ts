@@ -1,4 +1,4 @@
-import { sha256 } from "../../blockin/dist";
+import { sha256 } from "blockin";
 
 const supportedColors = [
     'AliceBlue',
