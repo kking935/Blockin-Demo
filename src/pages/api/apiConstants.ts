@@ -1,9 +1,9 @@
 import algosdk from 'algosdk';
 
-export const passphrase = "absorb uncover brush page width axis giant path hint shoe cover brave kingdom above slender category awkward voyage drum lunar fire cradle weapon abstract project"
+export const passphrase = process.env.RESOURCE_PASSPHRASE ? process.env.RESOURCE_PASSPHRASE : '';
 export const myAccount = algosdk.mnemonicToSecretKey(passphrase)
 
-const algodToken = { "x-api-key": "H4sefDbnoL8GO8ooRkxQM6CePHih5XDQ405mcBKy" }
+const algodToken = { "x-api-key": process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : '' }
 const algodServer = "https://testnet-algorand.api.purestake.io/ps2";
 const algodPort = '';
 export let algodClient = new algosdk.Algodv2(algodToken, algodServer, algodPort);
