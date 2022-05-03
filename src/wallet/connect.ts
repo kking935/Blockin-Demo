@@ -1,5 +1,8 @@
+import { formatJsonRpcRequest } from "@json-rpc-tools/utils";
 import WalletConnect from "@walletconnect/client";
 import QRCodeModal from "@walletconnect/qrcode-modal";
+import algosdk, { Transaction } from "algosdk";
+import { UniversalTxn } from "blockin";
 
 export const connect = (): WalletConnect => {
     // Create a connector
@@ -42,4 +45,23 @@ export const connect = (): WalletConnect => {
     });
 
     return connector
+}
+
+export const createWCRequest = async (uTxns: UniversalTxn[]) => {   
+    // Sign transaction
+    // txns is an array of algosdk.Transaction like below
+    // i.e txns = [txn, ...someotherTxns], but we've only built one transaction in our case
+    const txnsToSign = uTxns.map(uTxn => {
+        return {
+            txn: uTxn.txn,
+            message: uTxn.message,
+            // Note: if the transaction does not need to be signed (because it's part of an atomic group
+            // that will be signed by another party), specify an empty singers array like so:
+            // signers: [],
+        };
+    });
+
+    const requestParams = [txnsToSign];
+    const request = formatJsonRpcRequest("algo_signTxn", requestParams);
+    return request
 }
