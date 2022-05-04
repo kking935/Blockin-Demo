@@ -6,12 +6,12 @@ import { getChallenge, getAssets, signChallenge } from '../../wallet/sign_challe
 import { NextPage } from 'next/types';
 import { useWalletContext } from '../../contexts/WalletContext';
 import { getColorFromMetadata } from '../../permissions/permissions';
-import { SignChallengeButton } from '../../wallet/sign_challenge_button';
-import { SignOptInButton } from '../../wallet/sign_opt_in_button';
-import { ResourceCreateAssetButton } from '../../wallet/resource_create_asset_button';
+import { SignChallengeButton } from '../../components/buttons/sign_challenge_button';
+import { SignOptInButton } from '../../components/buttons/sign_opt_in_button';
+import { ResourceCreateAssetButton } from '../../components/buttons/resource_create_asset_button';
 import { AssetLink } from '../../components/assetLink';
-import { ReceiveAssetFromResourceButton } from '../../wallet/resource_receive_asset_button';
-import { UserCreatesForm } from '../../wallet/user_create_asset_form';
+import { ReceiveAssetFromResourceButton } from '../../components/buttons/resource_receive_asset_button';
+import { UserCreatesForm } from '../../components/forms/user_create_asset_form';
 import { Expandable } from '../../components/expandable';
 import { Step } from '../../components/step';
 import { AssetIdList, AssetList } from '../../components/assetList';
