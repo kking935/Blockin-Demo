@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import algosdk from 'algosdk';
 import crypto from 'crypto';
-import { algodClient, myAccount, algodIndexer } from "./apiConstants";
+import { myAccount, algodIndexer } from "./apiConstants";
 import { createAssetTxn, sendTxn } from "blockin";
 
 const enc = new TextEncoder();
