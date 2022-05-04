@@ -2,7 +2,7 @@
 import Layout from '../../components/layout'
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
-import { getChallenge, getAssets, signChallenge } from '../../wallet/sign_challenge';
+import { getChallenge, getAssets, signChallenge } from '../../blockin-helpers/sign_challenge';
 import { NextPage } from 'next/types';
 import { useWalletContext } from '../../contexts/WalletContext';
 import { getColorFromMetadata } from '../../permissions/permissions';

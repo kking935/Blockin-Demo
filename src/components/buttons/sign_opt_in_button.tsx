@@ -1,8 +1,7 @@
 import { SyntheticEvent, useState } from "react"
 import { useCookies } from "react-cookie"
 import { useWalletContext } from "../../contexts/WalletContext"
-import { signChallenge } from "../../wallet/sign_challenge"
-import { signOptIn } from "../../wallet/sign_opt_in"
+import { signOptIn } from "../../blockin-helpers/sign_opt_in"
 
 const loadingMessage = <>
     <p>Go to your wallet and accept the challenge request...</p>

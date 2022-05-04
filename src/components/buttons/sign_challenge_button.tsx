@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useCookies } from "react-cookie"
 import { useWalletContext } from "../../contexts/WalletContext"
-import { signChallenge } from "../../wallet/sign_challenge"
+import { signChallenge } from "../../blockin-helpers/sign_challenge"
 
 const loadingMessage = <>
     <p>Go to your wallet and accept the challenge request...</p>
