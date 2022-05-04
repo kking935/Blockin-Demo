@@ -4,33 +4,7 @@ import WalletConnect from '@walletconnect/client';
 import { getColorFromMetadata } from "../permissions/permissions";
 import { createWCRequest } from "../WalletConnect";
 
-//From api.ts from WalletConnect example...
-export enum ChainType {
-    MainNet = "mainnet",
-    TestNet = "testnet",
-}
-
-const pureStakeTestNetClientUrl = "https://testnet-algorand.api.purestake.io/ps2";
-const port = "";
-const token = {
-    "x-api-key": "H4sefDbnoL8GO8ooRkxQM6CePHih5XDQ405mcBKy" // fill in yours
-};
-
-const pureStakeTestNetClient = new algosdk.Algodv2(token, pureStakeTestNetClientUrl, port);
-const pureStakeMainNetClient = new algosdk.Algodv2(token, pureStakeTestNetClientUrl, port);
-
-function clientForChain(chain: ChainType): algosdk.Algodv2 {
-    switch (chain) {
-        case ChainType.MainNet:
-            return pureStakeMainNetClient;
-        case ChainType.TestNet:
-            return pureStakeTestNetClient;
-        default:
-            throw new Error(`Unknown chain type: ${chain}`);
-    }
-}
-
-export async function getAssets(address: string, assetMap: any, includeColors: boolean, chainType?: ChainType) {
+export async function getAssets(address: string, assetMap: any, includeColors: boolean) {
     const assets: any[] = [];
 
     const allAssets = await getAllAssets(address);
@@ -64,13 +38,6 @@ export async function getAssets(address: string, assetMap: any, includeColors: b
     }
 
     return { assets, assetMap: newAssetMap };
-}
-
-export async function apiGetTxnParams(chain: ChainType): Promise<algosdk.SuggestedParams> {
-    const params = await clientForChain(chain)
-        .getTransactionParams()
-        .do();
-    return params;
 }
 
 interface IScenarioTxn {
