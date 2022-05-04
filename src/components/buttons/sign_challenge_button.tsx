@@ -31,7 +31,6 @@ export const SignChallengeButton = ({ challenge, cookieValue }: { challenge: str
 
         if (connector != undefined) {
             const response = await signChallenge(connector, challenge);
-            console.log(response);
             alert(response);
 
             if (response.startsWith('Error')) {

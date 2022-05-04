@@ -12,8 +12,6 @@ export const signOptIn = async (connector: WalletConnect, assetId: string) => {
     const decodedResult = result.map(element => {
         return element ? new Uint8Array(Buffer.from(element, "base64")) : null;
     });
-    console.log("Signed TXN")
-    console.log(decodedResult)
 
     if (!decodedResult) {
         console.log("ERROR: decodeResult is undefined")

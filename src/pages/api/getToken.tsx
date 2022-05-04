@@ -8,7 +8,6 @@ setChainDriver(new AlgoDriver(process.env.ALGO_API_KEY ? process.env.ALGO_API_KE
 
 const getTokenRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     const token = await createAccessToken();
-    console.log("TOKEN", token);
     return res.status(200).send(token);
 };
 

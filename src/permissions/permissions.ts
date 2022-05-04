@@ -159,6 +159,7 @@ export async function getColorFromMetadata(metadataStr: string) {
         }
     }
 
+    //Check lowercase color names
     for (let colorName of supportedColors) {
         colorName = colorName.toLowerCase();
         const colorBase64 = Buffer.from(await sha256(colorName)).toString('base64');

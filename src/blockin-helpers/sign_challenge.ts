@@ -21,7 +21,6 @@ export async function getAssets(address: string, assetMap: any, includeColors: b
         const id: string = asset['asset-id'];
         if (!newAssetMap[id]) {
             const assetInfo = await getAssetDetails(id);
-            console.log(assetInfo)
             newAssetMap[id] = assetInfo;
         }
 
@@ -53,15 +52,14 @@ type ScenarioReturnType = IScenarioTxn[][];
 const getChallengeFromBlockin = async (connector: WalletConnect, assetIds: string[]): Promise<string> => {
     //we can also make these parameters inputs to the overall function to be more dynamic
     const message = await createChallenge({
-        domain: 'https://blockin.com', 
-        statement: 'Sign in to this website via Blockin. You will remain signed in until you terminate your browser session.', 
-        address: connector?.accounts[0], 
-        uri: '', 
-        expirationDate: '2022-05-22T18:19:55.901Z', 
-        notBefore: undefined, 
+        domain: 'https://blockin.com',
+        statement: 'Sign in to this website via Blockin. You will remain signed in until you terminate your browser session.',
+        address: connector?.accounts[0],
+        uri: '',
+        expirationDate: '2022-05-22T18:19:55.901Z',
+        notBefore: undefined,
         resources: assetIds
     });
-    console.log("CREATED CHALLENGE", message);
 
     return message
 }
@@ -119,7 +117,6 @@ const parseSignedTransactions = async (txnsFormattedForAlgoSdk: ScenarioReturnTy
             }
 
             const signedTxn = algosdk.decodeSignedTransaction(rawSignedTxn);
-            // console.log(signedTxn);
 
             const txn = (signedTxn.txn as unknown) as algosdk.Transaction;
             const txID = txn.txID();
@@ -134,8 +131,6 @@ const parseSignedTransactions = async (txnsFormattedForAlgoSdk: ScenarioReturnTy
             if (!signedTxn.sig) {
                 throw new Error(`Signature not present on transaction at index ${i}`);
             }
-
-            // console.log("SIGNED TXN SIG IN FUNC", signedTxn.sig);
 
             return {
                 txID,
@@ -172,9 +167,6 @@ export const signChallenge = async (connector: WalletConnect, message: string) =
         return 'Error: Failed to get result from WalletConnect.';
     }
 
-    console.log("Raw response:", result);
-    console.log(result)
-
     //Confusing AlgoSDK parsing stuff; returns a 2D array of the signed txns (since we have one 
     //txn and no groups, only [0][0] is defined)
     const txnsFormattedForAlgoSdk: ScenarioReturnType = [
@@ -186,7 +178,6 @@ export const signChallenge = async (connector: WalletConnect, message: string) =
         ]
     ];
     const signedTxnInfo = await parseSignedTransactions(txnsFormattedForAlgoSdk, result);
-    console.log("Signed txn info:", signedTxnInfo);
 
     //Get signature and call blockin's verifyChallenge
     if (signedTxnInfo && signedTxnInfo[0] && signedTxnInfo[0][0]) {

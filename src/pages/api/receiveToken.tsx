@@ -19,7 +19,6 @@ const receiveTokenRequest = async (req: NextApiRequest, res: NextApiResponse) =>
     }
 
     const token = await receiveToken(address, assetId);
-    console.log("TOKEN", token);
     return res.status(200).send(token);
 };
 
