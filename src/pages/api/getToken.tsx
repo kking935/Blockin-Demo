@@ -1,16 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import crypto from 'crypto';
-import { myAccount, algodIndexer } from "./apiConstants";
-import { AlgoDriver, createAssetTxn, sendTxn, setChainDriver } from "blockin";
+import { myAccount } from "./apiConstants";
+import { AlgoDriver, createAssetTxn, sendTxn, setChainDriver, lookupTransactionById } from "blockin";
 
 const enc = new TextEncoder();
 setChainDriver(new AlgoDriver())
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const getTokenRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     const token = await createAccessToken();
     console.log("TOKEN", token);
     return res.status(200).send(token);
 };
+
+export default getTokenRequest;
 
 function getRandomIntInclusive(min: number, max: number) {
     min = Math.ceil(min);
@@ -46,9 +48,7 @@ export async function createAccessToken() {
         console.log("Signed transaction with txID: %s", uTxn.txnId);
 
         await sendTxn(signedTxn, uTxn.txnId)
-        console.log("Successfully created asset", uTxn.txnId)
-        const assetDetails = await algodIndexer.lookupTransactionByID(uTxn.txnId).do();
-        console.log(assetDetails)
+        const assetDetails = await lookupTransactionById(uTxn.txnId);
 
         return { address: myAccount.addr, assetId: assetDetails.transaction['created-asset-index'], metadata: colors[randomIdx] }
     }
