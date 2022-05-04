@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react"
 import { useCookies } from "react-cookie"
 import { AssetLink } from "../components/assetLink"
 import { useWalletContext } from "../contexts/WalletContext"
-import { signChallenge } from "./sign_challenge"
 
 
 
