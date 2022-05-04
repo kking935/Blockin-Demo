@@ -1,45 +1,41 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import algosdk from 'algosdk';
-import { algodClient, myAccount, algodIndexer } from "./apiConstants";
+import { myAccount } from "./apiConstants";
+import { createAssetTransferTxn, sendTxn } from "blockin";
 
 const enc = new TextEncoder();
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-    const assetId = req.query.assetId;
-    const address = req.query.address;
+    let assetId = req.query.assetId;
+    let address = req.query.address;
 
+    if (typeof address != "string") {
+        address = address[0]
+    }
+    if (typeof assetId != "number") {
+        assetId = assetId[0]
+    }
     const token = await receiveToken(address, assetId);
     console.log("TOKEN", token);
     return res.status(200).send(token);
 };
 
-const createSendAssetTxn = async (address: string, assetId: string) => {
-    let params = await algodClient.getTransactionParams().do();
-    params.fee = 1000;
-    params.flatFee = true;
-
-    return algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
-        from: myAccount.addr,
-        to: address,
-        suggestedParams: params,
-        amount: 1,
-        assetIndex: Number(assetId)
-    });
-}
-
-
 export async function receiveToken(address: string, assetId: string) {
     try {
+        // params.fee = 1000;
+        // params.flatFee = true;
+        let uTxn = await createAssetTransferTxn({
+            from: myAccount.addr,
+            to: address,
+            amount: 1,
+            assetIndex: Number(assetId),
+        })
 
-        let txn = await createSendAssetTxn(address, assetId);
-
+        const txn = uTxn.nativeTxn
         let signedTxn = txn.signTxn(myAccount.sk);
-        let txId = txn.txID().toString();
-        console.log("Signed transaction with txID: %s", txId);
+        console.log("Signed transaction with txID: %s", uTxn.txnId);
 
-        await algodClient.sendRawTransaction(signedTxn).do();
-        await algosdk.waitForConfirmation(algodClient, txId, 4);
-        console.log("Successfully sent 1 of asset", txId)
+        await sendTxn(signedTxn, uTxn.txnId)
+        console.log("Successfully sent 1 of asset", uTxn.txnId)
 
         return { address: myAccount.addr, assetId }
     }
