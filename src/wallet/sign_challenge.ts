@@ -1,9 +1,8 @@
 import algosdk from "algosdk";
 import { createChallenge, createPaymentTxn, getAllAssets, getAssetDetails, verifyChallenge } from '../../blockin'
-import { formatJsonRpcRequest } from "@json-rpc-tools/utils";
 import WalletConnect from '@walletconnect/client';
 import { getColorFromMetadata } from "../permissions/permissions";
-import { createWCRequest } from "./connect";
+import { createWCRequest } from "../WalletConnect";
 
 //From api.ts from WalletConnect example...
 export enum ChainType {

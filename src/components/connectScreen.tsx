@@ -1,4 +1,4 @@
-import { connect } from "../wallet/connect"
+import { connect } from "../WalletConnect"
 import { useWalletContext } from "../contexts/WalletContext"
 import { useEffect, useState } from "react"
 

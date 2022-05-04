@@ -1,6 +1,6 @@
 import { createAssetTxn, sendTxn, sha256 } from 'blockin'
 import WalletConnect from '@walletconnect/client';
-import { createWCRequest } from './connect';
+import { createWCRequest } from '../WalletConnect';
 
 export const signAssetCreateTxn = async (connector: WalletConnect, assetAuthorization: string) => {
     // Create asset, sign, and send to network

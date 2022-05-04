@@ -1,7 +1,6 @@
 import WalletConnect from "@walletconnect/client";
-import { makeAssetOptInTxn } from '../../blockin'
-import algosdk, { waitForConfirmation } from "algosdk";
-import { formatJsonRpcRequest } from "@json-rpc-tools/utils";
+import { createAssetOptInTxn, sendTxn } from 'blockin'
+import { createWCRequest } from "../WalletConnect";
 
 export const signOptIn = async (connector: WalletConnect, assetId: string) => {
     //Generate an opt in tx
