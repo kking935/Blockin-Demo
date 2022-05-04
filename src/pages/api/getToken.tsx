@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import crypto from 'crypto';
 import { myAccount } from "./apiConstants";
 import { AlgoDriver, createAssetTxn, sendTxn, setChainDriver, lookupTransactionById } from "blockin";
+import { sha256 } from "../../permissions/sha256";
 
 const enc = new TextEncoder();
 setChainDriver(new AlgoDriver(process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
@@ -22,15 +22,10 @@ function getRandomIntInclusive(min: number, max: number) {
 export async function createAccessToken() {
     try {
         const colors = ['red', 'blue', 'green', 'pink', 'purple'];
-        const randomIdx = getRandomIntInclusive(0, 4);
-        const metadataPlainText = colors[randomIdx]
-        // let params = await algodClient.getTransactionParams().do();
-        // params.fee = 1000;
-        // params.flatFee = true;
-        const hash = crypto.createHash('sha256');
-        hash.update(metadataPlainText);
-        const hashBuffer = hash.digest();
-        const metadataHash = new Uint8Array(hashBuffer);
+        // const randomIdx = getRandomIntInclusive(0, 4);
+        const randomIdx = 0;
+        const metadataPlainText = colors[randomIdx];
+        const metadataHash = sha256(metadataPlainText);
 
         let uTxn = await createAssetTxn({
             from: myAccount.addr,
@@ -39,7 +34,7 @@ export async function createAccessToken() {
             decimals: 0,
             extras: {
                 note: enc.encode("Sample Resource Creates Asset"),
-                assetMetadataHash: metadataHash,
+                assetMetadata: metadataHash,
             }
         })
 

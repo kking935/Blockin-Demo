@@ -2,7 +2,7 @@
 import Layout from '../../components/layout'
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
-import { getChallenge, getAssets } from '../../blockin-helpers/sign_challenge';
+import { getChallenge, getAssets } from '../../blockin-walletconnect-helpers/sign_challenge';
 import { NextPage } from 'next/types';
 import { useWalletContext } from '../../contexts/WalletContext';
 import { getColorFromMetadata } from '../../permissions/permissions';
@@ -127,7 +127,7 @@ const Verification: NextPage = () => {
                                     <SignOptInButton asset={resourceCreatesAssetId} onConfirm={async () => setResourceCreatesOptedIn(true)} />
                                 </div>}
                                 {resourceCreatesAssetId && resourceCreatesOptedIn && <div>
-                                    <ReceiveAssetFromResourceButton asset={resourceCreatesAssetId} />
+                                    <ReceiveAssetFromResourceButton asset={resourceCreatesAssetId} updateAssets={updateOwnedAssets} />
                                 </div>}
                             </>
                         }

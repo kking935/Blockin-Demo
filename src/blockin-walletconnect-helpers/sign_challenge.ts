@@ -1,42 +1,20 @@
 import algosdk from "algosdk";
-import { createChallenge, createPaymentTxn, getAllAssets, getAssetDetails, verifyChallenge } from 'blockin'
 import WalletConnect from '@walletconnect/client';
-import { getColorFromMetadata } from "../permissions/permissions";
 import { createWCRequest } from "../WalletConnect";
+import { stringify } from "../utils/preserveJson";
 
 export async function getAssets(address: string, assetMap: any, includeColors: boolean) {
-    const assets: any[] = [];
+    const data = await fetch('../api/getAssets', {
+        method: 'post',
+        body: JSON.stringify({
+            address,
+            includeColors,
+            assetMap
+        }),
+        headers: { 'Content-Type': 'application/json' }
+    }).then(res => res.json());
 
-    const allAssets = await getAllAssets(address);
-    const newAssetMap = assetMap;
-
-    for (const asset of allAssets) {
-        if (asset['amount'] > 0) {
-            assets.push(asset);
-        }
-    }
-
-    for (const asset of assets) {
-
-        const id: string = asset['asset-id'];
-        if (!newAssetMap[id]) {
-            const assetInfo = await getAssetDetails(id);
-            newAssetMap[id] = assetInfo;
-        }
-
-        if (includeColors) {
-            asset['color'] = await getColorFromMetadata(newAssetMap[id]['metadata-hash']);
-
-
-            if (!asset['color']) {
-                asset['color'] = 'Custom';
-            } else {
-                asset['color'] = asset['color'].charAt(0).toUpperCase() + asset['color'].slice(1);
-            }
-        }
-    }
-
-    return { assets, assetMap: newAssetMap };
+    return data;
 }
 
 interface IScenarioTxn {
@@ -50,18 +28,16 @@ type ScenarioReturnType = IScenarioTxn[][];
 // ...End of api.ts from WalletConnect example
 
 const getChallengeFromBlockin = async (connector: WalletConnect, assetIds: string[]): Promise<string> => {
-    //we can also make these parameters inputs to the overall function to be more dynamic
-    const message = await createChallenge({
-        domain: 'https://blockin.com',
-        statement: 'Sign in to this website via Blockin. You will remain signed in until you terminate your browser session.',
-        address: connector?.accounts[0],
-        uri: '',
-        expirationDate: '2022-05-22T18:19:55.901Z',
-        notBefore: undefined,
-        resources: assetIds
-    });
+    const data = await fetch('../api/getChallenge', {
+        method: 'post',
+        body: JSON.stringify({
+            address: connector?.accounts[0],
+            assetIds
+        }),
+        headers: { 'Content-Type': 'application/json' }
+    }).then(res => res.json());
 
-    return message
+    return data.message;
 }
 
 //confusing algoSDK stuff
@@ -150,22 +126,41 @@ export const getChallenge = async (connector: WalletConnect, assetIds: string[])
 }
 
 
+/** 
+ *  IMPORTANT: Note that nothing with the signatures is imported from Blockin. Blockin does not handle any
+ *  signature functionality. All of this must be implemented in the client. This function uses WalletConnect
+ *  and algoSDK to sign the challenge inputted as the 'message' parameter. Once everything is handled with
+ *  the signatures, we eventually call verifyChallenge() which takes the signature ad an input. Blockin will
+ *  never use your private keys.
+ */
 export const signChallenge = async (connector: WalletConnect, message: string) => {
+    const uTxn = algosdk.makePaymentTxn(
+        connector?.accounts[0],
+        connector?.accounts[0],
+        0,
+        0,
+        undefined,
+        0,
+        1000000,
+        new Uint8Array(Buffer.from(message)),
+        'SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=',
+        'testnet-v1.0'
+    );
 
-    const unsignedTxn = await createPaymentTxn({
-        from: connector.accounts[0],
-        to: connector.accounts[0],
-        amount: 0,
-        extras: {
-            note: new Uint8Array(Buffer.from(message))
-        }
-    })
+    const unsignedTxn = {
+        txn: algosdk.encodeUnsignedTransaction(uTxn),
+        message: '',
+        txnId: uTxn.txID().toString(),
+        nativeTxn: uTxn
+    }
 
     const wcRequest = await createWCRequest([unsignedTxn])
     const result: Array<string | null> = await connector.sendCustomRequest(wcRequest);
     if (result == null) {
         return 'Error: Failed to get result from WalletConnect.';
     }
+
+
 
     //Confusing AlgoSDK parsing stuff; returns a 2D array of the signed txns (since we have one 
     //txn and no groups, only [0][0] is defined)
@@ -177,19 +172,30 @@ export const signChallenge = async (connector: WalletConnect, message: string) =
             },
         ]
     ];
+
     const signedTxnInfo = await parseSignedTransactions(txnsFormattedForAlgoSdk, result);
 
     //Get signature and call blockin's verifyChallenge
     if (signedTxnInfo && signedTxnInfo[0] && signedTxnInfo[0][0]) {
         //Get Uint8Arrays of a) the bytes that were signed and b) the signature
-        const signature = Buffer.from(signedTxnInfo[0][0].signature, 'base64');
+        const signature = new Uint8Array(Buffer.from(signedTxnInfo[0][0].signature, 'base64'));
         const txnBytes = new Uint8Array(unsignedTxn.nativeTxn.bytesToSign());
 
         //Blockin verify
         //Note: It will always return a string and should never throw an error
         //Returns "Successfully granted access via Blockin" upon success
-        const verificationRes = await verifyChallenge(txnBytes, signature);
-        return verificationRes;
+
+        const bodyStr = stringify({
+            txnBytes, signature
+        }); //hack to preserve uint8 arrays
+
+        const verificationRes = await fetch('../api/verifyChallenge', {
+            method: 'post',
+            body: bodyStr,
+            headers: { 'Content-Type': 'application/json' }
+        }).then(res => res.json());
+
+        return verificationRes.message;
     }
     else {
         return 'Error: Error with signature response.';

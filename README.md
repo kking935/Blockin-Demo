@@ -4,6 +4,8 @@ Welcome to the Blockin Demo! Blockin is a JavaScript library built to provide a 
 
 The Blockin library can be found at [`Blockin`](https://github.com/matt-davison/blockin). Blockin is supposed to be a flexible, generic interface that can be implemented on any blockchain infrastructure. In this demo, we show how Blockin can be used by creating auhtorization assets on Algorand and using the Blockin library as a module within React dApp. 
 
+The authorizing resource's backend is simulated in src/pages/api. For an actual implementation, this API should be hosted elsewhere, but it is done like this for convenience purposes. Here, we make use of local secrets using process.env variables defined in the .env file. Anything not in this api folder should never use the Blockin library.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

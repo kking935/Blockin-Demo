@@ -4,11 +4,10 @@ import { useEffect, useState } from 'react'
 import WalletConnect from '@walletconnect/client'
 import ConnectScreen from '../components/connectScreen';
 import { WalletContext } from '../contexts/WalletContext';
-import { AlgoDriver, setChainDriver } from 'blockin';
 
 const App = ({ Component, pageProps }: AppProps) => {
     const [connector, setConnector] = useState<WalletConnect>()
-    setChainDriver(new AlgoDriver(process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
+
 
     useEffect(() => {
         console.log('refreshing page')

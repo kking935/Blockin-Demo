@@ -22,7 +22,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 if (cookies['blockedin'] === 'none') {
                     setBannerColor('Custom');
                 } else {
-                    const assetInfo = await getAssetDetails(cookies['blockedin']);
+                    const assetInfo = await fetch('../api/getAssetDetails', {
+                        method: 'post',
+                        body: JSON.stringify({
+                            id: cookies['blockedin']
+                        }),
+                        headers: { 'Content-Type': 'application/json' }
+                    }).then(res => res.json());
+
+
                     const color = await getColorFromMetadata(assetInfo['metadata-hash']);
                     if (color) {
                         setBannerColor(color.charAt(0).toUpperCase() + color.slice(1));
@@ -36,7 +44,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     }, [cookies]);
 
 
-    const displayAddress = connector && connector.accounts[0] ? connector.accounts[0].substring(0, 4) + '....' + connector.accounts[0].substring(connector.accounts[0].length -4) : 'Wallet Not Connected';
+    const displayAddress = connector && connector.accounts[0] ? connector.accounts[0].substring(0, 4) + '....' + connector.accounts[0].substring(connector.accounts[0].length - 4) : 'Wallet Not Connected';
     return (
         <>
             <Head>

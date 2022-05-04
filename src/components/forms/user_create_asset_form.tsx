@@ -1,6 +1,6 @@
 import { SyntheticEvent, useState } from "react"
 import { useWalletContext } from "../../contexts/WalletContext"
-import { signAssetCreateTxn } from "../../blockin-helpers/sign_asset_create_txn"
+import { signAssetCreateTxn } from "../../blockin-walletconnect-helpers/sign_asset_create_txn"
 
 export const UserCreatesForm = ({ updateOwnedAssets }: { updateOwnedAssets: () => Promise<void> }) => {
     const { connector } = useWalletContext();

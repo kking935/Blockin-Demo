@@ -1,6 +1,6 @@
 import { SyntheticEvent, useState } from "react"
 import { useWalletContext } from "../../contexts/WalletContext"
-import { signOptIn } from "../../blockin-helpers/sign_opt_in"
+import { signOptIn } from "../../blockin-walletconnect-helpers/sign_opt_in"
 
 export const SignOptInButton = ({ asset, onConfirm }: { asset: string, onConfirm: () => Promise<void> }) => {
     const { connector } = useWalletContext();

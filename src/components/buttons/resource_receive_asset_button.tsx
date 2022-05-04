@@ -1,7 +1,7 @@
 import { SyntheticEvent, useState } from "react"
 import { useWalletContext } from "../../contexts/WalletContext"
 
-export const ReceiveAssetFromResourceButton = ({ asset }: { asset: string }) => {
+export const ReceiveAssetFromResourceButton = ({ asset, updateAssets }: { asset: string, updateAssets: () => Promise<void> }) => {
     const { connector } = useWalletContext();
     const [waiting, setWaiting] = useState(false);
     const [resourceTransferred, setResourceTransferred] = useState(false);
@@ -17,6 +17,7 @@ export const ReceiveAssetFromResourceButton = ({ asset }: { asset: string }) => 
         const res = await fetch(`../api/receiveToken?assetId=${asset}&address=${connector.accounts[0]}`);
         setWaiting(false);
         setResourceTransferred(true);
+        updateAssets();
     }
 
 

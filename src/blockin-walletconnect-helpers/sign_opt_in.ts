@@ -1,12 +1,20 @@
-import { createAssetOptInTxn, sendTxn } from 'blockin'
 import WalletConnect from "@walletconnect/client";
 import { createWCRequest } from '../WalletConnect';
+import { parse, stringify } from '../utils/preserveJson';
 
 export const signOptIn = async (connector: WalletConnect, assetId: string) => {
-    let uTxn = await createAssetOptInTxn({
-        to: connector.accounts[0],
-        assetIndex: Number(assetId)
-    })
+
+    const data = await fetch('../api/createOptInTxn', {
+        method: 'post',
+        body: JSON.stringify({
+            to: connector.accounts[0],
+            assetId
+        }),
+        headers: { 'Content-Type': 'application/json' }
+    }).then(res => res.json());
+
+    const uTxn = parse(data.uTxn);  //little hack to preserve Uint8Arrays
+
     const wcRequest = await createWCRequest([uTxn])
     const result: Array<string | null> = await connector.sendCustomRequest(wcRequest);
     const decodedResult = result.map(element => {
@@ -23,6 +31,17 @@ export const signOptIn = async (connector: WalletConnect, assetId: string) => {
             stxs.push(elem)
         }
     });
-    const sendTx = await sendTxn(stxs, uTxn.txnId)
-    console.log("Transaction : " + sendTx.txId);
+
+    const body = {
+        stxs,
+        uTxn
+    }
+
+    const bodyStr = stringify(body); //little hack to preserve Uint8Arrays
+
+    await fetch('../api/sendTxnToNetwork', {
+        method: 'post',
+        body: bodyStr,
+        headers: { 'Content-Type': 'application/json' }
+    })
 }

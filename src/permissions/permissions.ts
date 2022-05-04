@@ -1,4 +1,4 @@
-import { sha256 } from "blockin";
+import { sha256 } from "./sha256";
 
 const supportedColors = [
     'AliceBlue',
@@ -153,7 +153,7 @@ const supportedColors = [
 
 export async function getColorFromMetadata(metadataStr: string) {
     for (const colorName of supportedColors) {
-        const colorBase64 = Buffer.from(await sha256(colorName)).toString('base64');
+        const colorBase64 = Buffer.from(sha256(colorName)).toString('base64');
         if (metadataStr === colorBase64) {
             return colorName;
         }
@@ -162,7 +162,7 @@ export async function getColorFromMetadata(metadataStr: string) {
     //Check lowercase color names
     for (let colorName of supportedColors) {
         colorName = colorName.toLowerCase();
-        const colorBase64 = Buffer.from(await sha256(colorName)).toString('base64');
+        const colorBase64 = Buffer.from(sha256(colorName)).toString('base64');
         if (metadataStr === colorBase64) {
             return colorName;
         }

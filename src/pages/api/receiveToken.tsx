@@ -4,8 +4,6 @@ import { AlgoDriver, createAssetTransferTxn, sendTxn, setChainDriver } from "blo
 
 setChainDriver(new AlgoDriver(process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
 
-const enc = new TextEncoder();
-
 const receiveTokenRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     let assetId = req.query.assetId;
     let address = req.query.address;
