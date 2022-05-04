@@ -1,9 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import crypto from 'crypto';
 import { myAccount, algodIndexer } from "./apiConstants";
-import { createAssetTxn, sendTxn } from "blockin";
+import { AlgoDriver, createAssetTxn, sendTxn, setChainDriver } from "blockin";
 
 const enc = new TextEncoder();
+setChainDriver(new AlgoDriver())
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     const token = await createAccessToken();
