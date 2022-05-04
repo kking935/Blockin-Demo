@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react"
 import { useCookies } from "react-cookie"
-import { AssetLink } from "../components/assetLink"
-import { useWalletContext } from "../contexts/WalletContext"
+import { AssetLink } from "../assetLink"
+import { useWalletContext } from "../../contexts/WalletContext"
 
 const loadingMessage = <>
     <p>Go to your wallet and accept the challenge request...</p>
