@@ -34,12 +34,16 @@ export const ResourceCreateAssetButton = ({ asset, setAsset }: { asset: string, 
         }
 
         setCreatingAsset(true);
-        const res = await fetch('../api/getToken').then(res => res.json()).then(data => {
-            setResourceAddress(data.address);
-            setAsset(data.assetId);
-            setResourceMetadata(data.metadata);
-        });
-
+        const res = await fetch('../api/getToken')
+            .then(res => res.json())
+            .then(data => {
+                setResourceAddress(data.address);
+                setAsset(data.assetId);
+                setResourceMetadata(data.metadata);
+            })
+            .catch(err => {
+                console.log("ERROR:", err)
+            })
 
         setCreatingAsset(false);
     }
