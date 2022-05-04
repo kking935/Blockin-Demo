@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react"
 import { useCookies } from "react-cookie"
-import { AssetLink } from "../components/assetLink"
-import { useWalletContext } from "../contexts/WalletContext"
-import { signAssetCreateTxn } from "./sign_asset_create_txn"
-import { signChallenge } from "./sign_challenge"
+import { AssetLink } from "../assetLink"
+import { useWalletContext } from "../../contexts/WalletContext"
+import { signAssetCreateTxn } from "../../wallet/sign_asset_create_txn"
+import { signChallenge } from "../../wallet/sign_challenge"
 
 
 
