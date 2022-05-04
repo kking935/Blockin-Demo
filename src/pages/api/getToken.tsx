@@ -4,7 +4,7 @@ import { myAccount } from "./apiConstants";
 import { AlgoDriver, createAssetTxn, sendTxn, setChainDriver, lookupTransactionById } from "blockin";
 
 const enc = new TextEncoder();
-setChainDriver(new AlgoDriver())
+setChainDriver(new AlgoDriver(process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
 
 const getTokenRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     const token = await createAccessToken();

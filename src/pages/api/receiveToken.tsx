@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { myAccount } from "./apiConstants";
 import { AlgoDriver, createAssetTransferTxn, sendTxn, setChainDriver } from "blockin";
 
-setChainDriver(new AlgoDriver())
+setChainDriver(new AlgoDriver(process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
 
 const enc = new TextEncoder();
 
