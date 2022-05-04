@@ -1,4 +1,4 @@
 [submodule "blockin"]
 	path = blockin
 	url = https://github.com/matt-davison/blockin/
-	branch = mods
+	branch = main
