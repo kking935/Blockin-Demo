@@ -4,11 +4,28 @@ import { createWCRequest } from '../WalletConnect';
 
 export const signAssetCreateTxn = async (connector: WalletConnect, assetAuthorization: string) => {
     // Create asset, sign, and send to network
-    const unsignedCreateAssetTxn = await createAssetTxn({
+    const uTxn = await createAssetTxn({
         from: connector.accounts[0],
         assetMetadata: await sha256(assetAuthorization),
     })
-    const wcResult = await createWCRequest([unsignedCreateAssetTxn])
-    const signedCreateAssetTxn = await connector.sendCustomRequest(wcResult)
-    const result = await sendTxn(signedCreateAssetTxn, unsignedCreateAssetTxn.txnId) // this could be done without Blockin
+    const wcResult = await createWCRequest([uTxn])
+    const result: Array<string | null> = await connector.sendCustomRequest(wcResult)
+    const decodedResult = result.map(element => {
+        return element ? new Uint8Array(Buffer.from(element, "base64")) : null;
+    });
+    console.log("Signed TXN")
+    console.log(decodedResult)
+
+    if (!decodedResult) {
+        console.log("ERROR: decodeResult is undefined")
+        return
+    }
+    const stxs: Uint8Array[] = []
+    decodedResult.forEach((elem) => {
+        if (elem != null) {
+            stxs.push(elem)
+        }
+    });
+    const sendTx = await sendTxn(stxs, uTxn.txnId)
+    console.log("Transaction : " + sendTx.txId);
 }
