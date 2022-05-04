@@ -1,9 +1,5 @@
-import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react"
-import { useCookies } from "react-cookie"
-import { AssetLink } from "../assetLink"
+import { SyntheticEvent, useState } from "react"
 import { useWalletContext } from "../../contexts/WalletContext"
-
-
 
 export const ReceiveAssetFromResourceButton = ({ asset }: { asset: string }) => {
     const { connector } = useWalletContext();

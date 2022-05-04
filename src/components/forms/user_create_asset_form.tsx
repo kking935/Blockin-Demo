@@ -1,11 +1,6 @@
-import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react"
-import { useCookies } from "react-cookie"
-import { AssetLink } from "../assetLink"
+import { SyntheticEvent, useState } from "react"
 import { useWalletContext } from "../../contexts/WalletContext"
 import { signAssetCreateTxn } from "../../blockin-helpers/sign_asset_create_txn"
-import { signChallenge } from "../../blockin-helpers/sign_challenge"
-
-
 
 export const UserCreatesForm = ({ updateOwnedAssets }: { updateOwnedAssets: () => Promise<void> }) => {
     const { connector } = useWalletContext();

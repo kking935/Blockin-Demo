@@ -1,23 +1,6 @@
 import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react"
-import { useCookies } from "react-cookie"
 import { AssetLink } from "../assetLink"
 import { useWalletContext } from "../../contexts/WalletContext"
-
-const loadingMessage = <>
-    <p>Go to your wallet and accept the challenge request...</p>
-</>
-
-const successMessage = <>
-    <p>Challenge succeeded!</p>
-    <p>You are now authenticated.</p>
-    <p>If you specified an asset ID, you should see the banner at the top of this page change colors!</p>
-</>
-
-const failureMessage = <>
-    <p>Challenge failed!</p>
-    <p>You are NOT authenticated</p>
-</>
-
 
 export const ResourceCreateAssetButton = ({ asset, setAsset }: { asset: string, setAsset: Dispatch<SetStateAction<string>> }) => {
     const { connector } = useWalletContext();

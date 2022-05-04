@@ -46,7 +46,7 @@ export const connect = (): WalletConnect => {
     return connector
 }
 
-export const createWCRequest = async (uTxns: UniversalTxn[]) => {   
+export const createWCRequest = async (uTxns: UniversalTxn[]) => {
     const txnsToSign = uTxns.map(uTxn => {
         return {
             txn: Buffer.from(uTxn.txn).toString("base64"),

@@ -7,22 +7,22 @@ import { WalletContext } from '../contexts/WalletContext';
 import { AlgoDriver, setChainDriver } from 'blockin';
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const [connector, setConnector] = useState<WalletConnect>()
-  setChainDriver(new AlgoDriver())
-  
-  useEffect(() => {
-    console.log('refreshing page')
-  }, [connector])
+    const [connector, setConnector] = useState<WalletConnect>()
+    setChainDriver(new AlgoDriver())
 
-  return (
-    <WalletContext.Provider value={{
-      connector,
-      setConnector
-    }}>
-      <ConnectScreen />
-      <Component {...pageProps} />
-    </WalletContext.Provider>
-  )
+    useEffect(() => {
+        console.log('refreshing page')
+    }, [connector])
+
+    return (
+        <WalletContext.Provider value={{
+            connector,
+            setConnector
+        }}>
+            <ConnectScreen />
+            <Component {...pageProps} />
+        </WalletContext.Provider>
+    )
 }
 
 export default App

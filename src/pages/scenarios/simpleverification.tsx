@@ -6,17 +6,7 @@ import { getChallenge, getAssets, signChallenge } from '../../blockin-helpers/si
 import { NextPage } from 'next/types';
 import { useWalletContext } from '../../contexts/WalletContext';
 import { getColorFromMetadata } from '../../permissions/permissions';
-import { SignChallengeButton } from '../../components/buttons/sign_challenge_button';
-import { SignOptInButton } from '../../components/buttons/sign_opt_in_button';
-import { ResourceCreateAssetButton } from '../../components/buttons/resource_create_asset_button';
-import { AssetLink } from '../../components/assetLink';
-import { ReceiveAssetFromResourceButton } from '../../components/buttons/resource_receive_asset_button';
-import { UserCreatesForm } from '../../components/forms/user_create_asset_form';
-import { Expandable } from '../../components/expandable';
 import { Step } from '../../components/step';
-import { AssetIdList, AssetList } from '../../components/assetList';
-
-const SAMPLE_ASSET_ID = '86695725';
 
 const loadingMessage = <>
     <p>Go to your wallet and accept the challenge request...</p>
@@ -46,9 +36,6 @@ const Verification: NextPage = () => {
     const [assetInfoMap, setAssetInfoMap] = useState<any>({});
     const [signInColor, setSignInColor] = useState('');
 
-    const [resourceCreatesAssetId, setResourceCreatesAssetId] = useState('');
-    const [resourceCreatesOptedIn, setResourceCreatesOptedIn] = useState(false);
-
     const [plan, setPlan] = useState('');
 
     const addAssetIdToChallenge = async (assetId: string) => {
@@ -62,12 +49,6 @@ const Verification: NextPage = () => {
         if (!arr[0]) return;
         const color = await getColorFromMetadata(assetInfoMap[arr[0]]['metadata-hash'])
         if (color) setSignInColor(color.charAt(0).toUpperCase() + color.slice(1));
-    }
-
-    const clearChallenge = () => {
-        setAssetIds([]);
-        setAssetId('');
-        setSignInColor('');
     }
 
     useEffect(() => {
@@ -96,9 +77,6 @@ const Verification: NextPage = () => {
             setAssetInfoMap(assetMap);
             setOwnedAssets(assets);
         }
-
-
-
     }
 
     const handleSignChallenge = async () => {
@@ -171,7 +149,6 @@ const Verification: NextPage = () => {
                             <hr />
                             <p>*If you have not already, refresh the page and try to sign in with a different plan.</p>
                         </>}
-
                     </>
                 }
             />
