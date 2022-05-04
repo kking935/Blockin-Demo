@@ -1,8 +1,9 @@
 import algosdk from "algosdk";
-import { createChallenge, verifyChallenge } from '../../blockin'
+import { createChallenge, createPaymentTxn, getAllAssets, getAssetDetails, verifyChallenge } from '../../blockin'
 import { formatJsonRpcRequest } from "@json-rpc-tools/utils";
 import WalletConnect from '@walletconnect/client';
 import { getColorFromMetadata } from "../permissions/permissions";
+import { createWCRequest } from "./connect";
 
 //From api.ts from WalletConnect example...
 export enum ChainType {
@@ -30,24 +31,13 @@ function clientForChain(chain: ChainType): algosdk.Algodv2 {
     }
 }
 
-export async function getAsset(assetId: number, chainType?: ChainType) {
-    const chain = chainType ? chainType : ChainType.TestNet
-    const client = clientForChain(chain);
-
-    let accountInfo = (await client.getAssetByID(assetId).do());
-
-    return accountInfo.params;
-}
-
 export async function getAssets(address: string, assetMap: any, includeColors: boolean, chainType?: ChainType) {
     const assets: any[] = [];
-    const chain = chainType ? chainType : ChainType.TestNet
-    const client = clientForChain(chain);
 
-    let accountInfo = (await client.accountInformation(address).do());
+    const allAssets = await getAllAssets(address);
     const newAssetMap = assetMap;
 
-    for (const asset of accountInfo.assets) {
+    for (const asset of allAssets) {
         if (asset['amount'] > 0) {
             assets.push(asset);
         }
@@ -57,7 +47,8 @@ export async function getAssets(address: string, assetMap: any, includeColors: b
 
         const id: string = asset['asset-id'];
         if (!newAssetMap[id]) {
-            const assetInfo = await getAsset(Number(id));
+            const assetInfo = await getAssetDetails(id);
+            console.log(assetInfo)
             newAssetMap[id] = assetInfo;
         }
 
@@ -107,20 +98,6 @@ const getChallengeFromBlockin = async (connector: WalletConnect, assetIds: strin
     console.log("CREATED CHALLENGE", message);
 
     return message
-}
-
-const constructTxnObject = async (connector: WalletConnect, message: string): Promise<algosdk.Transaction> => {
-    const suggestedParams = await apiGetTxnParams(ChainType.TestNet);
-
-    const txn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
-        from: connector.accounts[0],
-        to: connector.accounts[0],
-        amount: 0,
-        note: new Uint8Array(Buffer.from(message)),
-        suggestedParams,
-    });
-
-    return txn;
 }
 
 //confusing algoSDK stuff
@@ -211,34 +188,20 @@ export const getChallenge = async (connector: WalletConnect, assetIds: string[])
     return message;
 }
 
+
 export const signChallenge = async (connector: WalletConnect, message: string) => {
 
-    const txn = await constructTxnObject(connector, message);
-
-    //This step was a bit weird and confusing. AlgoSDK Parsing of txns and wallet connect params 
-    //had two slightly different formats
-    const txnsToSignInWalletConnectFormat = [
-        {
-            txn: Buffer.from(algosdk.encodeUnsignedTransaction(txn)).toString("base64"),
-            message
+    const unsignedTxn = await createPaymentTxn({
+        from: connector.accounts[0],
+        to: connector.accounts[0],
+        amount: 0,
+        extras: {
+            note: new Uint8Array(Buffer.from(message))
         }
-    ];
+    })
 
-    const txnsFormattedForAlgoSdk: ScenarioReturnType = [
-        [
-            {
-                txn,
-                message
-            },
-        ]
-    ];
-
-    //Send Wallet Connect algo_signTxn request; waits here until you accept within wallet
-    const requestParams = [txnsToSignInWalletConnectFormat];
-    const request = formatJsonRpcRequest("algo_signTxn", requestParams);
-
-    // This is where the request gets sent to the wallet...
-    const result: Array<string | null> = await connector.sendCustomRequest(request);
+    const wcRequest = await createWCRequest([unsignedTxn])
+    const result: Array<string | null> = await connector.sendCustomRequest(wcRequest);
     if (result == null) {
         return 'Error: Failed to get result from WalletConnect.';
     }
@@ -248,6 +211,14 @@ export const signChallenge = async (connector: WalletConnect, message: string) =
 
     //Confusing AlgoSDK parsing stuff; returns a 2D array of the signed txns (since we have one 
     //txn and no groups, only [0][0] is defined)
+    const txnsFormattedForAlgoSdk: ScenarioReturnType = [
+        [
+            {
+                txn: unsignedTxn.nativeTxn,
+                message
+            },
+        ]
+    ];
     const signedTxnInfo = await parseSignedTransactions(txnsFormattedForAlgoSdk, result);
     console.log("Signed txn info:", signedTxnInfo);
 
@@ -255,7 +226,7 @@ export const signChallenge = async (connector: WalletConnect, message: string) =
     if (signedTxnInfo && signedTxnInfo[0] && signedTxnInfo[0][0]) {
         //Get Uint8Arrays of a) the bytes that were signed and b) the signature
         const signature = Buffer.from(signedTxnInfo[0][0].signature, 'base64');
-        const txnBytes = new Uint8Array(txn.bytesToSign());
+        const txnBytes = new Uint8Array(unsignedTxn.nativeTxn.bytesToSign());
 
         //Blockin verify
         //Note: It will always return a string and should never throw an error
