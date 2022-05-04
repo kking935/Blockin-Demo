@@ -40,7 +40,7 @@ const Verification: NextPage = () => {
     }
 
     const updateSignInColor = async (arr: string[]) => {
-        if (!arr[0]) return;
+        if (!arr[0] || !assetInfoMap[arr[0]]) return;
         const color = await getColorFromMetadata(assetInfoMap[arr[0]]['metadata-hash'])
         if (color) setSignInColor(color.charAt(0).toUpperCase() + color.slice(1));
     }
