@@ -1,5 +1,5 @@
 import algosdk from "algosdk";
-import { createChallenge, createPaymentTxn, getAllAssets, getAssetDetails, verifyChallenge } from '../../blockin'
+import { createChallenge, createPaymentTxn, getAllAssets, getAssetDetails, verifyChallenge } from 'blockin'
 import WalletConnect from '@walletconnect/client';
 import { getColorFromMetadata } from "../permissions/permissions";
 import { createWCRequest } from "../WalletConnect";
