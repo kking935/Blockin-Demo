@@ -6,7 +6,7 @@ setChainDriver(new AlgoDriver())
 
 const enc = new TextEncoder();
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const receiveTokenRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     let assetId = req.query.assetId;
     let address = req.query.address;
 
@@ -22,6 +22,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     console.log("TOKEN", token);
     return res.status(200).send(token);
 };
+
+export default receiveTokenRequest;
 
 export async function receiveToken(address: string, assetId: string) {
     try {
