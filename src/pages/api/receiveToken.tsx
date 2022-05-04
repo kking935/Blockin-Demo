@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { myAccount } from "./apiConstants";
-import { createAssetTransferTxn, sendTxn } from "blockin";
+import { AlgoDriver, createAssetTransferTxn, sendTxn, setChainDriver } from "blockin";
+
+setChainDriver(new AlgoDriver())
 
 const enc = new TextEncoder();
 
