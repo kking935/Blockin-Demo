@@ -4,21 +4,23 @@ import { useEffect, useState } from 'react'
 import WalletConnect from '@walletconnect/client'
 import ConnectScreen from '../components/connectScreen';
 import { WalletContext } from '../contexts/WalletContext';
+import { connect } from '../WalletConnect';
 
 const App = ({ Component, pageProps }: AppProps) => {
     const [connector, setConnector] = useState<WalletConnect>()
-
+    const [address, setAddress] = useState('')
 
     useEffect(() => {
-        console.log('refreshing page')
-    }, [connector])
+        connect(setConnector, setAddress)
+    }, [])
 
     return (
         <WalletContext.Provider value={{
             connector,
-            setConnector
+            setConnector,
+            address,
+            setAddress
         }}>
-            <ConnectScreen />
             <Component {...pageProps} />
         </WalletContext.Provider>
     )

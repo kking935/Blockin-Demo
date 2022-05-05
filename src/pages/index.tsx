@@ -1,5 +1,4 @@
 import { NextPage } from 'next/types'
-import Head from 'next/head'
 import Link from 'next/link'
 import Layout from '../components/layout'
 

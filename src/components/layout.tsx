@@ -1,52 +1,7 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie'
-import { getColorFromMetadata } from '../permissions/permissions';
-import { useWalletContext } from '../contexts/WalletContext';
-import { getAssetDetails } from 'blockin';
-import Link from 'next/link';
-import icon from '../../public/images/blockin-icon.png'
+import Header from './header'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['blockedin']);
-    const [bannerColor, setBannerColor] = useState('Default');
-    const { connector } = useWalletContext();
-
-    const logout = () => {
-        removeCookie('blockedin', { 'path': '/' });
-        setBannerColor('Default');
-    }
-
-    useEffect(() => {
-        const setBanner = async () => {
-            if (cookies['blockedin']) {
-                if (cookies['blockedin'] === 'none') {
-                    setBannerColor('Custom');
-                } else {
-                    const assetInfo = await fetch('../api/getAssetDetails', {
-                        method: 'post',
-                        body: JSON.stringify({
-                            id: cookies['blockedin']
-                        }),
-                        headers: { 'Content-Type': 'application/json' }
-                    }).then(res => res.json());
-
-
-                    const color = await getColorFromMetadata(assetInfo['metadata-hash']);
-                    if (color) {
-                        setBannerColor(color.charAt(0).toUpperCase() + color.slice(1));
-                    } else {
-                        setBannerColor('Custom')
-                    }
-                }
-            }
-        }
-        setBanner();
-    }, [cookies]);
-
-
-    const displayAddress = connector && connector.accounts[0] ? connector.accounts[0].substring(0, 4) + '....' + connector.accounts[0].substring(connector.accounts[0].length - 4) : undefined;
     return (
         <>
             <Head>
@@ -60,7 +15,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
                 <link rel="manifest" href="/site.webmanifest" />
                 <link rel="canonical" href="https://www.kenking.dev/" />
-                
+
                 <meta property='og:url' content="https://www.blockin-demo.vercel.app"></meta>
                 <meta property='og:type' content="website"></meta>
                 <meta property="og:title" content="Home | Blockin Demo"></meta>
@@ -76,31 +31,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <meta name="twitter:description" content="Demo dApp for Blockin library"></meta>
                 <meta name="twitter:image" content="/images/blockin.png"></meta>
             </Head>
-            <header style={{ backgroundColor: bannerColor }}>
-                <Image
-                    priority
-                    src='/images/blockin-icon.png'
-                    alt=''
-                    width={100}
-                    height={50}
-                />
-                <Link href={'/'}>
-                    <a><h1>Blockin Demo</h1></a>
-                </Link>
-
-                {cookies['blockedin'] || displayAddress ?
-                    <div className='authheader'>
-                        <h1>{displayAddress} - Blocked In ({bannerColor})</h1>
-                        <button onClick={logout}>Logout</button>
-                    </div> :
-                    <div className='authheader'>
-                        <h1>Wallet Not Connected - Not Blocked In</h1>
-                        <Link href={'/scenarios/verification'}>
-                            <a><button>Login</button></a>
-                        </Link>
-                    </div>
-                }
-            </header>
+ 
+            <Header />
             <main>
                 {children}
             </main>

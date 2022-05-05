@@ -7,6 +7,7 @@ import { NextPage } from 'next/types';
 import { useWalletContext } from '../../contexts/WalletContext';
 import { getColorFromMetadata } from '../../permissions/permissions';
 import { Step } from '../../components/step';
+import ConnectScreen from '../../components/connectScreen';
 
 const loadingMessage = <>
     <p>Go to your wallet and accept the challenge request...</p>
@@ -100,6 +101,8 @@ const Verification: NextPage = () => {
 
     return (
         <Layout>
+            <ConnectScreen />
+
             <h1>Welcome to the Log in with Blockin Demo!</h1>
             <p>{"This demo walks you through a simple flow of signing in with Blockin using Netflix standard and family plans as an example."}</p>
             <p>{"Assume that Netflix has created both a family plan asset and standard plan asset on-chain. "}<b>You buy the family plan, and they send you the family plan asset to your wallet. You do not own the standard plan asset.</b></p>

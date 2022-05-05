@@ -23,13 +23,13 @@ a:visited {
   text-decoration: none;
 }
 
-a:hover {
+/* a:hover {
   text-decoration: underline;
-}
+} */
 
-a:active {
+/* a:active {
   text-decoration: underline;
-}
+} */
 
 .asset-link {
     color:rgb(0, 99, 220);
@@ -60,10 +60,12 @@ input {
 
 header {
   background-color: rgb(65, 144, 255);
-  padding: 10px 30px;
+  padding: 10px 30px 20px;
   color: white;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .connect-screen {
@@ -127,18 +129,89 @@ main {
   color: rgb(0, 99, 220)
 }
 
-.authheader {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .assetidinput {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.authheader button {
-    margin-left: 10px;
+.banner {
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  font-weight: bold;
+  font-size: 50px;
+  color: black;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0); /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 1.5px;
+  -webkit-text-stroke-color: rgb(247, 247, 247);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.bottomBanner {
+  width: 100%;
+}
+
+.bannerStatus {
+  float: left;
+  display: flex;
+  align-items: center;
+  cursor: default;
+}
+
+.bannerStatus div {
+  display: flex;
+  align-items: center;
+  margin-right: 30px;
+}
+
+p {
+  margin: 0px;
+}
+
+.sideIcon {
+  fill: white;
+  margin-right: 13px;
+}
+
+.blockinIcon {
+  fill: white;
+}
+
+
+.logout, .login {
+  background: none;
+  color: white;
+  padding: 0px;
+  margin: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-size:medium;
+  font-weight: 500;
+  float: right;
+}
+
+.closeButton {
+  background: none;
+  fill: black;
+  padding: 3px 0px 0px 0px;
+  margin: 0px 0px 20px 0px;
+  border: none;
+  float: right;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.connectButton {
+  display: flex;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+}
+
+.connectButton svg {
+  fill: black
 }

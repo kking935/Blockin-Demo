@@ -2,8 +2,9 @@ import { formatJsonRpcRequest } from "@json-rpc-tools/utils";
 import WalletConnect from "@walletconnect/client";
 import QRCodeModal from "@walletconnect/qrcode-modal";
 import { UniversalTxn } from "blockin";
+import { Dispatch, SetStateAction } from "react";
 
-export const connect = (): WalletConnect => {
+export const connect = (setConnector: Dispatch<SetStateAction<WalletConnect | undefined>>, setAddress: Dispatch<SetStateAction<string>>) => {
     // Create a connector
     const connector = new WalletConnect({
         bridge: "https://bridge.walletconnect.org", // Required
@@ -43,7 +44,9 @@ export const connect = (): WalletConnect => {
         // Delete connector
     });
 
-    return connector
+    setConnector(connector)
+    const newAddress = connector && connector.accounts[0] ? connector.accounts[0].substring(0, 4) + '....' + connector.accounts[0].substring(connector.accounts[0].length - 4) : ''
+    setAddress(newAddress)
 }
 
 export const createWCRequest = async (uTxns: UniversalTxn[]) => {

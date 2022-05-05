@@ -1,25 +1,39 @@
 import { connect } from "../WalletConnect"
 import { useWalletContext } from "../contexts/WalletContext"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { CloseIcon } from "./icons/closeIcon";
+import { LoginIcon } from "./icons/loginIcon";
 
 const ConnectScreen = () => {
-    const { connector, setConnector } = useWalletContext();
+    const { connector, address, setConnector, setAddress } = useWalletContext();
+    const [popup, setPopup] = useState(false)
 
-    const handleConnect = () => {
-        const connector = connect()
-        setConnector(connector)
-    }
+    const delay = 1
 
     useEffect(() => {
-        const connector = connect()
-        setConnector(connector)
-    }, [setConnector])
+        let timer1 = setTimeout(() => {
+            if (address != '') {
+                setPopup(false)
+            }
+            else {
+                setPopup(true)
+            }
+        }, delay * 1000);
+
+        // this will clear Timeout
+        // when component unmount like in willComponentUnmount
+        // and show will not change to true
+        return () => {
+          clearTimeout(timer1);
+        };
+    }, [address])
 
     return (
-        <section className={`${!connector || connector.connected ? 'hidden' : 'connect-screen'}`}>
+        <section className={`${popup ? 'connect-screen' : 'hidden'}`}>
             <div>
+                <button onClick={() => setPopup(false)} className="closeButton"><CloseIcon /></button>
                 <h1>You must connect your wallet to get started</h1>
-                <button onClick={handleConnect}>Connect Wallet</button>
+                <button className="connectButton" onClick={() => connect(setConnector, setAddress)}><LoginIcon /> Connect Wallet</button>
             </div>
         </section>
     )
