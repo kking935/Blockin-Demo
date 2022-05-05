@@ -11,8 +11,9 @@ const ConnectScreen = () => {
     }
 
     useEffect(() => {
-        handleConnect();
-    }, [])
+        const connector = connect()
+        setConnector(connector)
+    }, [setConnector])
 
     return (
         <section className={`${!connector || connector.connected ? 'hidden' : 'connect-screen'}`}>
