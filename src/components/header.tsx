@@ -107,11 +107,11 @@ const Header = () => {
                 <WalletIcon />
                 <p>Not Blocked In</p>
             </div>
-            <button className='logout' onClick={() => {
-                window.location.href = '/scenarios/verification';
-            }}>
-                <LogoutIcon /> Login
-            </button>
+            <Link  href='/scenarios/verification'>
+                <a className='login'>
+                    <LoginIcon /> Login
+                </a>
+            </Link>
         </div>
     </>
 
