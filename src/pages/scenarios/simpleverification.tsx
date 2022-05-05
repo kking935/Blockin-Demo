@@ -100,10 +100,6 @@ const Verification: NextPage = () => {
 
     return (
         <Layout>
-            <Head>
-                <title>Blockin Demo</title>
-            </Head>
-
             <h1>Welcome to the Log in with Blockin Demo!</h1>
             <p>{"This demo walks you through a simple flow of signing in with Blockin using Netflix standard and family plans as an example."}</p>
             <p>{"Assume that Netflix has created both a family plan asset and standard plan asset on-chain. "}<b>You buy the family plan, and they send you the family plan asset to your wallet. You do not own the standard plan asset.</b></p>
