@@ -15,13 +15,13 @@ import { getColorFromMetadata } from '../permissions/permissions';
 import { useWalletContext } from '../contexts/WalletContext';
 
 const Header = () => {
-    const [bannerColor, setBannerColor] = useState('Default');
+    const [bannerColor, setBannerColor] = useState('');
     const [cookies, setCookie, removeCookie] = useCookies(['blockedin']);
     const { connector, setConnector, address, setAddress } = useWalletContext();
     
     const logout = async () => {
         removeCookie('blockedin', { 'path': '/' });
-        setBannerColor('Default');
+        setBannerColor('');
         await connector?.killSession({message: 'bye'})
         // connector?.rejectSession({message: 'bye'})
         setConnector(undefined)
