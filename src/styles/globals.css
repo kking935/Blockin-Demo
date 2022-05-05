@@ -165,6 +165,19 @@ main {
   margin-right: 30px;
 }
 
+.connectStatus {
+    float: right;
+    display: flex;
+    align-items: center;
+    cursor: default;
+  }
+  
+  .connectStatus div {
+    display: flex;
+    align-items: center;
+    margin-right: 30px;
+  }
+
 p {
   margin: 0px;
 }

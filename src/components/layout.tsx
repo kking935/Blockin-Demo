@@ -31,7 +31,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <meta name="twitter:description" content="Demo dApp for Blockin library"></meta>
                 <meta name="twitter:image" content="/images/blockin.png"></meta>
             </Head>
- 
+
             <Header />
             <main>
                 {children}

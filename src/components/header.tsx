@@ -18,14 +18,18 @@ const Header = () => {
     const [bannerColor, setBannerColor] = useState('');
     const [cookies, setCookie, removeCookie] = useCookies(['blockedin']);
     const { connector, setConnector, address, setAddress } = useWalletContext();
-    
+
     const logout = async () => {
         removeCookie('blockedin', { 'path': '/' });
         setBannerColor('');
-        // await connector?.killSession({message: 'bye'})
-        // connector?.rejectSession({message: 'bye'})
-        // setConnector(undefined)
-        // setAddress('')
+    }
+
+    const disconnect = async () => {
+        await logout();
+        await connector?.killSession({ message: 'bye' })
+        connector?.rejectSession({ message: 'bye' })
+        setConnector(undefined)
+        setAddress('')
     }
 
     useEffect(() => {
@@ -60,49 +64,79 @@ const Header = () => {
         console.log(address)
     }, [address, setAddress])
 
-    const loggedInBanner = <>
+    const loggedInElem = <>
         <div className='bannerStatus'>
             <div>
                 <KeyIcon />
                 <p>Blocked In ({bannerColor})</p>
             </div>
+            <button className='logout' onClick={logout}>
+                <LogoutIcon /> Logout
+            </button>
+        </div>
+    </>
+
+    const connectedElem = <>
+        <div className='connectStatus'>
             <div>
                 <WalletIcon />
                 <p>{address}</p>
             </div>
+            <button className='logout' onClick={disconnect}>
+                <LogoutIcon /> Disconnect
+            </button>
         </div>
-        <button className='logout' onClick={logout}>
-            <LogoutIcon /> Logout
-        </button>
-    </>
+    </>;
 
-    const loggedOutBanner = <>
+    const disconnectedElem = <>
+        <div className='connectStatus'>
+            <div>
+                <WalletIcon />
+                <p>Not Connected</p>
+            </div>
+            <button className='login' onClick={() => connect(setConnector, setAddress)}>
+                <LoginIcon /> Connect
+            </button>
+        </div>
+
+    </>;
+
+    const loggedOutElem = <>
         <div className='bannerStatus'>
             <div>
                 <WalletIcon />
-                <p>Not BlockedIn</p>
+                <p>Not Blocked In</p>
             </div>
+            <button className='logout' onClick={() => {
+                window.location.href = '/scenarios/verification';
+            }}>
+                <LogoutIcon /> Login
+            </button>
         </div>
-        <button className='login' onClick={() => connect(setConnector, setAddress)}>
-            <LoginIcon /> Connect
-        </button>
     </>
 
     return (
         <header style={{ backgroundColor: bannerColor }}>
 
-        <Link href={'/'}>
-            <a>
-                <h1 className='banner'>BL<BlockinIcon />CKIN</h1>
-            </a>
-        </Link>
+            <Link href={'/'}>
+                <a>
+                    <h1 className='banner'>BL<BlockinIcon />CKIN</h1>
+                </a>
+            </Link>
 
-        <div className='bottomBanner'>
-            {cookies['blockedin'] || address != '' ?  
-                loggedInBanner : loggedOutBanner
-            }
+
+            <div className='bottomBanner'>
+                {cookies['blockedin'] ?
+                    loggedInElem : loggedOutElem
+                }
+                {address != '' ?
+                    connectedElem : disconnectedElem
+                }
             </div>
-    </header>
+
+
+
+        </header >
     )
 }
 
