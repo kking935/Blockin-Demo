@@ -9,12 +9,12 @@ import Link from 'next/link';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
     const [cookies, setCookie, removeCookie] = useCookies(['blockedin']);
-    const [bannerColor, setBannerColor] = useState('');
+    const [bannerColor, setBannerColor] = useState('Default');
     const { connector } = useWalletContext();
 
     const logout = () => {
         removeCookie('blockedin', { 'path': '/' });
-        setBannerColor('');
+        setBannerColor('Default');
     }
 
     useEffect(() => {
@@ -45,7 +45,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     }, [cookies]);
 
 
-    const displayAddress = connector && connector.accounts[0] ? connector.accounts[0].substring(0, 4) + '....' + connector.accounts[0].substring(connector.accounts[0].length - 4) : 'Wallet Not Connected';
+    const displayAddress = connector && connector.accounts[0] ? connector.accounts[0].substring(0, 4) + '....' + connector.accounts[0].substring(connector.accounts[0].length - 4) : undefined;
     return (
         <>
             <Head>
@@ -56,13 +56,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     <a><h1>Blockin Demo</h1></a>
                 </Link>
 
-                {cookies['blockedin'] ?
+                {cookies['blockedin'] || displayAddress ?
                     <div className='authheader'>
                         <h1>{displayAddress} - Blocked In ({bannerColor})</h1>
                         <button onClick={logout}>Logout</button>
                     </div> :
                     <div className='authheader'>
-                        <h1>{displayAddress} - Not Blocked In</h1>
+                        <h1>Wallet Not Connected - Not Blocked In</h1>
                         <Link href={'/scenarios/verification'}>
                             <a><button>Login</button></a>
                         </Link>

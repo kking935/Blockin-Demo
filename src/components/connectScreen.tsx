@@ -10,9 +10,9 @@ const ConnectScreen = () => {
         setConnector(connector)
     }
 
-    if (!connector?.connected) {
+    useEffect(() => {
         handleConnect();
-    }
+    }, [])
 
     return (
         <section className={`${!connector || connector.connected ? 'hidden' : 'connect-screen'}`}>
