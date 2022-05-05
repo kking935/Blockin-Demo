@@ -9,7 +9,7 @@ const getChallengeRequest = async (req: NextApiRequest, res: NextApiResponse) =>
         domain: 'https://blockin.com',
         statement: 'Sign in to this website via Blockin. You will remain signed in until you terminate your browser session.',
         address: req.body.address,
-        uri: '',
+        uri: 'https://blockin.com/login',
         expirationDate: '2022-05-22T18:19:55.901Z',
         notBefore: undefined,
         resources: req.body.assetIds

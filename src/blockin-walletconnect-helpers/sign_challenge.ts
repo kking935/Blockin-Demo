@@ -121,7 +121,12 @@ const parseSignedTransactions = async (txnsFormattedForAlgoSdk: ScenarioReturnTy
 
 
 export const getChallenge = async (connector: WalletConnect, assetIds: string[]) => {
-    const message = await getChallengeFromBlockin(connector, assetIds);
+    const assets = [];
+    for (const assetId of assetIds) {
+        assets.push('Asset ID: ' + assetId);
+    }
+
+    const message = await getChallengeFromBlockin(connector, assets);
     return message;
 }
 
@@ -195,7 +200,7 @@ export const signChallenge = async (connector: WalletConnect, message: string) =
             headers: { 'Content-Type': 'application/json' }
         }).then(res => res.json());
 
-        return verificationRes.message;
+        return verificationRes;
     }
     else {
         return 'Error: Error with signature response.';
