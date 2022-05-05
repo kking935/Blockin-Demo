@@ -4,6 +4,7 @@ import { useCookies } from 'react-cookie'
 import { getColorFromMetadata } from '../permissions/permissions';
 import { useWalletContext } from '../contexts/WalletContext';
 import { getAssetDetails } from 'blockin';
+import Link from 'next/link';
 
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -51,8 +52,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <header style={{ backgroundColor: bannerColor }}>
-                <a href='/'><h1>Blockin Demo</h1></a>
-
+                <Link href={'/'}>
+                    <a><h1>Blockin Demo</h1></a>
+                </Link>
 
                 {cookies['blockedin'] ?
                     <div className='authheader'>
@@ -61,7 +63,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     </div> :
                     <div className='authheader'>
                         <h1>{displayAddress} - Not Blocked In</h1>
-                        <a href='/scenarios/verification'><button>Login</button></a>
+                        <Link href={'/scenarios/verification'}>
+                            <a><button>Login</button></a>
+                        </Link>
                     </div>
                 }
             </header>
