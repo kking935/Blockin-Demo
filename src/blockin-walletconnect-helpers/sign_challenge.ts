@@ -200,7 +200,7 @@ export const signChallenge = async (connector: WalletConnect, message: string) =
             headers: { 'Content-Type': 'application/json' }
         }).then(res => res.json());
 
-        return verificationRes.message;
+        return verificationRes;
     }
     else {
         return 'Error: Error with signature response.';

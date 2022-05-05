@@ -86,7 +86,7 @@ const Verification: NextPage = () => {
         if (connector != undefined) {
             const response = await signChallenge(connector, challenge);
 
-            if (response.startsWith('Error')) {
+            if (!response.verified) {
                 setDisplayMessage(failureMessage);
                 setUserIsSigningChallenge(false)
             }
