@@ -22,10 +22,10 @@ const Header = () => {
     const logout = async () => {
         removeCookie('blockedin', { 'path': '/' });
         setBannerColor('');
-        await connector?.killSession({message: 'bye'})
+        // await connector?.killSession({message: 'bye'})
         // connector?.rejectSession({message: 'bye'})
-        setConnector(undefined)
-        setAddress('')
+        // setConnector(undefined)
+        // setAddress('')
     }
 
     useEffect(() => {
