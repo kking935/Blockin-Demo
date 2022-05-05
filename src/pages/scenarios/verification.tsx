@@ -81,10 +81,6 @@ const Verification: NextPage = () => {
 
     return (
         <Layout>
-            <Head>
-                <title>Blockin Demo</title>
-            </Head>
-
             <h1>Welcome to the Log in with Blockin Demo!</h1>
             <p>{"This demo walks you through the flow and behind the scenes of signing in using Blockin. For this demo, we will be simulating different sign-in privileges and role based access through changing the color of the banner at the top of this page. To determine the banner color, we will look at the asset's metadata hash which is stored on-chain. "}</p>
             <p>{"Note that this is just our demo site's custom implementation using Blockin. Any website can create their own assets and have sign-in privileges custom to their created assets using the Blockin JavaScript library!"}</p>

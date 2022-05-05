@@ -6,10 +6,6 @@ import Layout from '../components/layout'
 const Home: NextPage = () => {
     return (
         <Layout>
-            <Head>
-                <title>Home | Blockin Demo</title>
-                <meta name="description" content="Demo dApp for Blockin library" />
-            </Head>
             <section className='home'>
                 <h2>Your wallet is connected</h2>
                 <h3>Explore the links below</h3>
