@@ -12,7 +12,8 @@ const getChallengeRequest = async (req: NextApiRequest, res: NextApiResponse) =>
         uri: 'https://blockin.com/login',
         expirationDate: '2022-05-22T18:19:55.901Z',
         notBefore: undefined,
-        resources: req.body.assetIds
+        resources: req.body.assetIds,
+        nonce: 'abc123xyz'
     });
 
 
