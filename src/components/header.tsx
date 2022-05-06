@@ -1,5 +1,8 @@
+import Image from 'next/image'
 import { useState } from 'react';
+import { getAssetDetails } from 'blockin';
 import Link from 'next/link';
+import icon from '../../public/images/blockin-icon.png'
 import { BlockinIcon } from './icons/blockinIcon';
 import { KeyIcon } from './icons/keyIcon';
 import { WalletIcon } from './icons/walletIcon';
@@ -8,16 +11,16 @@ import { LoginIcon } from './icons/loginIcon';
 import { connect } from '../WalletConnect';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie'
+import { getColorFromMetadata } from '../permissions/permissions';
 import { useWalletContext } from '../contexts/WalletContext';
 
 const Header = () => {
     const [bannerColor, setBannerColor] = useState('');
-    const [cookies, setCookie, removeCookie] = useCookies(['family', 'standard', 'normal']);
+    const [cookies, setCookie, removeCookie] = useCookies(['blockedin']);
     const { connector, setConnector, address, setAddress } = useWalletContext();
 
     const logout = async () => {
-        removeCookie('family', { 'path': '/' });
-        removeCookie('standard', { 'path': '/' });
+        removeCookie('blockedin', { 'path': '/' });
         setBannerColor('');
     }
 
@@ -30,33 +33,42 @@ const Header = () => {
     }
 
     useEffect(() => {
+        const setBanner = async () => {
+            if (cookies['blockedin']) {
+                if (cookies['blockedin'] === 'none') {
+                    setBannerColor('Custom');
+                } else {
+                    const assetInfo = await fetch('../api/getAssetDetails', {
+                        method: 'post',
+                        body: JSON.stringify({
+                            id: cookies['blockedin']
+                        }),
+                        headers: { 'Content-Type': 'application/json' }
+                    }).then(res => res.json());
+
+
+                    const color = await getColorFromMetadata(assetInfo['metadata-hash']);
+                    if (color) {
+                        setBannerColor(color.charAt(0).toUpperCase() + color.slice(1));
+                    } else {
+                        setBannerColor('Custom')
+                    }
+                }
+            }
+        }
+        setBanner();
+    }, [cookies]);
+
+    useEffect(() => {
         console.log("updating banner cuz address changed")
         console.log(address)
     }, [address, setAddress])
-
-    const loggedIn = cookies['family'] || cookies['standard'] || cookies['normal'];
-
-    const loggedInMessage = () => {
-        const privileges = [];
-        if (cookies['normal']) {
-            privileges.push('Standard Access');
-        }
-        if (cookies['family']) {
-            privileges.push('Family Plan');
-        }
-        if (cookies['standard']) {
-            privileges.push('Standard Plan');
-        }
-
-        return privileges.join(', ');
-    };
-
 
     const loggedInElem = <>
         <div className='bannerStatus'>
             <div>
                 <KeyIcon />
-                <p>Blocked In ({loggedInMessage()})</p>
+                <p>Blocked In ({bannerColor})</p>
             </div>
             <button className='logout' onClick={logout}>
                 <LogoutIcon /> Logout
@@ -95,14 +107,13 @@ const Header = () => {
                 <WalletIcon />
                 <p>Not Blocked In</p>
             </div>
-            <Link href='/scenarios/samplebutton'>
+            <Link  href='/scenarios/verification'>
                 <a className='login'>
                     <LoginIcon /> Login
                 </a>
             </Link>
         </div>
     </>
-
 
     return (
         <header style={{ backgroundColor: bannerColor }}>
@@ -115,13 +126,16 @@ const Header = () => {
 
 
             <div className='bottomBanner'>
-                {loggedIn ?
+                {cookies['blockedin'] ?
                     loggedInElem : loggedOutElem
                 }
                 {address != '' ?
                     connectedElem : disconnectedElem
                 }
             </div>
+
+
+
         </header >
     )
 }

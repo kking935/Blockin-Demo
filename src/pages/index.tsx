@@ -10,8 +10,29 @@ const Home: NextPage = () => {
                 <h3>Explore the links below</h3>
                 <ul>
                     <li>
-                        <Link href={'/scenarios/samplebutton'}>
-                            <a>Sign In With Blockin Button</a>
+                        <Link href={'/scenarios/simpleverification'}>
+                            <a>Demo Walkthrough (Simple)</a>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href={'/scenarios/verification'}>
+                            <a>Demo Walkthrough (Technical)</a>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href={'https://github.com/matt-davison/blockin'}>
+                            <a>GitHub - Blockin Library</a>
+                        </Link>
+                    </li>
+
+                    <li>
+                        <Link href={'https://github.com/kking935/Blockin-Demo'}>
+                            <a>GitHub - Demo Site</a>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href={''}>
+                            <a>Paper</a>
                         </Link>
                     </li>
                 </ul>
