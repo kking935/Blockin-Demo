@@ -1,13 +1,7 @@
 import Image from 'next/image'
 import { useState } from 'react';
-import { getAssetDetails } from 'blockin';
 import Link from 'next/link';
-import icon from '../../public/images/blockin-icon.png'
-import { BlockinIcon } from './icons/blockinIcon';
-import { KeyIcon } from './icons/keyIcon';
-import { WalletIcon } from './icons/walletIcon';
-import { LogoutIcon } from './icons/logoutIcon';
-import { LoginIcon } from './icons/loginIcon';
+import { BlockinIcon, KeyIcon, WalletIcon, LogoutIcon, LoginIcon } from './icons';
 import { connect } from '../WalletConnect';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie'
@@ -120,7 +114,7 @@ const Header = () => {
 
             <Link href={'/'}>
                 <a>
-                    <h1 className='banner'>BL<BlockinIcon />CKIN</h1>
+                    <h1 className='banner'>BL<BlockinIcon dimensions='40pt' />CKIN</h1>
                 </a>
             </Link>
 

@@ -1,8 +1,7 @@
 import { connect } from "../WalletConnect"
 import { useWalletContext } from "../contexts/WalletContext"
 import { useEffect, useState } from "react"
-import { CloseIcon } from "./icons/closeIcon";
-import { LoginIcon } from "./icons/loginIcon";
+import { CloseIcon, LoginIcon } from "./icons";
 
 const ConnectScreen = () => {
     const { connector, address, setConnector, setAddress } = useWalletContext();
