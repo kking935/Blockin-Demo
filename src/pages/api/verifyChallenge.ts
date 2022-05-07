@@ -10,7 +10,11 @@ const verifyChallengeRequest = async (req: NextApiRequest, res: NextApiResponse)
     try {
         const message = await verifyChallenge(
             body.txnBytes,
-            body.signature
+            body.signature,
+            {
+                verifyNonceWithBlockTimestamps: true,
+                verificationTimeLimit: 1,
+            }
         );
 
         return res.status(200).json({ verified: true, message });
