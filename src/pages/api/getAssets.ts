@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { AlgoDriver, getAllAssets, getAssetDetails, setChainDriver } from "blockin";
+import { AlgoDriver, getAllAssetsForAddress, getAssetDetails, setChainDriver } from "blockin";
 import { getColorFromMetadata } from "../../permissions/permissions";
 
 setChainDriver(new AlgoDriver(process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
@@ -11,7 +11,7 @@ const getAssetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const assets: any[] = [];
 
-    const allAssets = await getAllAssets(address);
+    const allAssets = await getAllAssetsForAddress(address);
     const newAssetMap = assetMap;
 
     for (const asset of allAssets) {
