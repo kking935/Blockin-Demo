@@ -6,7 +6,7 @@ const Home: NextPage = () => {
     return (
         <Layout>
             <section className='home'>
-                <h2>Your wallet is connected</h2>
+                <h2>Welcome to Blockin Demo</h2>
                 <h3>Explore the links below</h3>
                 <ul>
                     <li>
