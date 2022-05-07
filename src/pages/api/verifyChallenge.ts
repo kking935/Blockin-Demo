@@ -12,8 +12,7 @@ const verifyChallengeRequest = async (req: NextApiRequest, res: NextApiResponse)
             body.txnBytes,
             body.signature,
             {
-                verifyNonceWithBlockTimestamps: true,
-                verificationTimeLimit: 1,
+                verifyNonceWithBlockTimestamps: true
             }
         );
 
