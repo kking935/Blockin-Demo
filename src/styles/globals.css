@@ -101,7 +101,7 @@ header {
 
 main {
   text-align: center;
-  padding: 100px 0px 0px;
+  padding: 50px 1px 150px;
   max-width: 30rem;
   margin-inline: auto;
 }
@@ -187,7 +187,6 @@ main {
   fill: white;
 }
 
-
 .logout, .login {
   background: none;
   color: white;
@@ -223,4 +222,40 @@ main {
 
 .connectButton svg {
   fill: black
+}
+
+footer {
+  background-color: rgb(35, 38, 40); 
+  font-size: small; 
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-items: center; 
+  align-items: center;
+  color: white;
+  fill: white;
+  padding: 30px 1px;
+}
+
+footer a {
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
+footer div {
+  display: flex;
+}
+
+footer a p {
+  margin-left: 2px;
+}
+
+#demo-code p {
+  margin-left: 10px;
+}
+
+#src-code p {
+  margin-left: 4px;
 }
