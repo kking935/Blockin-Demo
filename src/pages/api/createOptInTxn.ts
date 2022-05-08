@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { AlgoDriver, createAssetOptInTxn, createAssetTxn, setChainDriver } from "blockin";
 import { stringify } from "../../utils/preserveJson";
 
-setChainDriver(new AlgoDriver(process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''));
+setChainDriver(new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''));
 
 const createOptInTxn = async (req: NextApiRequest, res: NextApiResponse) => {
 

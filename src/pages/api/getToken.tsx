@@ -4,7 +4,7 @@ import { AlgoDriver, createAssetTxn, sendTxn, setChainDriver, lookupTransactionB
 import { sha256 } from "../../permissions/sha256";
 
 const enc = new TextEncoder();
-setChainDriver(new AlgoDriver(process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
+setChainDriver(new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
 
 const getTokenRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     const token = await createAccessToken();

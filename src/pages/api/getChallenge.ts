@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { AlgoDriver, createChallenge, setChainDriver } from "blockin";
 
 
-setChainDriver(new AlgoDriver(process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
+setChainDriver(new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
 
 const getChallengeRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     const message = await createChallenge(

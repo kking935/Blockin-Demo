@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { myAccount } from "./apiConstants";
 import { AlgoDriver, createAssetTransferTxn, sendTxn, setChainDriver } from "blockin";
 
-setChainDriver(new AlgoDriver(process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
+setChainDriver(new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
 
 const receiveTokenRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     let assetId = req.query.assetId;

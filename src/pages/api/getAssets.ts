@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { AlgoDriver, getAllAssetsForAddress, getAssetDetails, setChainDriver } from "blockin";
 import { getColorFromMetadata } from "../../permissions/permissions";
 
-setChainDriver(new AlgoDriver(process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
+setChainDriver(new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
 
 const getAssetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     const address = req.body.address;

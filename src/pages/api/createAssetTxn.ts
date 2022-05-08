@@ -3,7 +3,7 @@ import { AlgoDriver, createAssetTxn, setChainDriver } from "blockin";
 import { sha256 } from "../../permissions/sha256";
 import { stringify } from "../../utils/preserveJson";
 
-setChainDriver(new AlgoDriver(process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
+setChainDriver(new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
 
 const createAssetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
