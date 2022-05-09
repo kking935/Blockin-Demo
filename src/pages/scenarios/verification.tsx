@@ -12,12 +12,17 @@ import { ResourceCreateAssetButton } from '../../components/buttons/resource_cre
 import { AssetLink } from '../../components/assetLink';
 import { ReceiveAssetFromResourceButton } from '../../components/buttons/resource_receive_asset_button';
 import { UserCreatesForm } from '../../components/forms/user_create_asset_form';
+import { LocalContractCreatesForm } from '../../components/forms/local_contract_create_asset_form';
 import { Expandable } from '../../components/expandable';
 import { Step } from '../../components/step';
 import { AssetIdList, AssetList } from '../../components/assetList';
 import ConnectScreen from '../../components/connectScreen';
+import { ContractOptInButton } from '../../components/buttons/contract_opt_in_button';
+import { LocalContractRetrieveAssetButton } from '../../components/buttons/local_contract_retrieve_button';
 
 const SAMPLE_ASSET_ID = '86695725';
+
+const contractId = process.env.NEXT_PUBLIC_LOCAL_CONTRACT_ID ?? "0";
 
 const Verification: NextPage = () => {
     const { connector } = useWalletContext()
@@ -32,6 +37,11 @@ const Verification: NextPage = () => {
 
     const [resourceCreatesAssetId, setResourceCreatesAssetId] = useState('');
     const [resourceCreatesOptedIn, setResourceCreatesOptedIn] = useState(false);
+
+    const [smartContractCreatesLocalAssetId, setSmartContractCreatesLocalAssetId] = useState('');
+    const [smartContractCreatesLocalOptedIn, setSmartContractCreatesLocalOptedIn] = useState(false);
+    const [smartContractCreatesLocalAssetOptedIn, setSmartContractCreatesLocalAssetOptedIn] = useState(false);
+
 
     const addAssetIdToChallenge = async (assetId: string) => {
         if (!assetId) return;
@@ -132,8 +142,25 @@ const Verification: NextPage = () => {
                         }
                     />
                     <Expandable
-                        title='Generate New Asset (Smart Contract Creates)'
-                        content={<><p>Coming Soon...</p></>}
+                        title='Generate New Asset (Smart Contract with Local Storage)'
+                        content={
+                            <>
+                                <p>Click below to request to receive a new asset from the authorizing resource. You will have to sign a transaction in your wallet.</p>
+                                <p>{"This simulates the 'Smart Contract Creates with Local Storage' method of creating an asset. For this method, the user must opt-in to the contract. Once they have opted-in the resource will call the smart contract with their asset details and user address. The smart contract creates the asset and stores the new asset's id in the user's local storage. Next the user opts-in to the asset and requests their asset from the smart contract. The smart contract uses the mapping in the user's local storage to find the asset created by it earlier and sends it to the user."}</p>
+                                <div>
+                                    <ContractOptInButton contractId={contractId} onConfirm={async () => setSmartContractCreatesLocalOptedIn(true)} />
+                                </div>
+                                { smartContractCreatesLocalOptedIn && <div>
+                                    <LocalContractCreatesForm contractId={contractId} setAssetId={setSmartContractCreatesLocalAssetId} />
+                                </div>}
+                                { smartContractCreatesLocalAssetId != '' && <div>
+                                    <SignOptInButton asset={smartContractCreatesLocalAssetId} onConfirm={async () => setSmartContractCreatesLocalAssetOptedIn(true)} />
+                                </div>}
+                                { smartContractCreatesLocalAssetOptedIn && <div>
+                                    <LocalContractRetrieveAssetButton contractId={contractId} assetId={smartContractCreatesLocalAssetId} updateAssets={updateOwnedAssets} />
+                                </div>}
+                            </>
+                        }
                     />
                 </>
                 }
@@ -141,7 +168,7 @@ const Verification: NextPage = () => {
 
             <Step
                 title='Step 1: Choose Assets'
-                description='Here, users will specify the assets that they want to sign-in with. To be verified by Blockin, the user must own the requested asset in their wallet at the time of verification. Blockin verifies through proof of ownership of an asset on-chain, never based on any specific address.'
+                description='Here, users will specify the assets that they want to sign-in with. To be verified by Blockin, the user must own the requested asset in their wallet at the time of verification. Blockin verifies users through proof of ownership of an asset on-chain.'
                 content={<>
                     <Expandable
                         title='Add Owned Assets'
