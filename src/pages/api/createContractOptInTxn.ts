@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { AlgoDriver, createContractOptInTxn, setChainDriver } from 'blockin';
+import { AlgoDriver, setChainDriver } from 'blockin';
 import { stringify } from "../../utils/preserveJson";
 
-setChainDriver(new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''));
+const chainDriver = new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : '')
+setChainDriver(chainDriver);
 
 const createContractOptInRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
@@ -10,7 +11,7 @@ const createContractOptInRequest = async (req: NextApiRequest, res: NextApiRespo
     const contractId = req.body.contractId;
 
     // Create asset, sign, and send to network
-    const uTxn = await createContractOptInTxn({
+    const uTxn = await chainDriver.makeContractOptInTxn({
         from,
         appIndex: Number(contractId),
     });

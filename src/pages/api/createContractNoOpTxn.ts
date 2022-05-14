@@ -1,9 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { AlgoDriver, createContractNoOpTxn, sendTxn, setChainDriver } from "blockin";
+import { AlgoDriver, sendTxn, setChainDriver } from "blockin";
 import { myAccount } from "./apiConstants";
 import { stringify } from "../../utils/preserveJson";
 
-setChainDriver(new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''));
+const chainDriver = new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : '')
+setChainDriver(chainDriver);
 
 const createContractNoOpRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
@@ -13,7 +14,7 @@ const createContractNoOpRequest = async (req: NextApiRequest, res: NextApiRespon
 
     console.log("contractId")
     console.log(contractId)
-    const uTxn = await createContractNoOpTxn({
+    const uTxn = await chainDriver.makeContractNoOpTxn({
         from: from,
         appIndex: Number(contractId),
         accounts: [from],

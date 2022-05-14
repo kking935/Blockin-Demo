@@ -1,10 +1,10 @@
 import { myAccount } from "./apiConstants";
 import { NextApiRequest, NextApiResponse } from "next";
-import { AlgoDriver, createContractNoOpTxn, sendTxn, setChainDriver } from "blockin";
+import { AlgoDriver, sendTxn, setChainDriver } from "blockin";
 import { sha256 } from "../../permissions/sha256";
-import { lookupApplicationLocalState } from "blockin/auth";
 
-setChainDriver(new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''));
+const chainDriver = new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : '')
+setChainDriver(chainDriver);
 
 const localContractCreateAssetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
@@ -17,7 +17,7 @@ const localContractCreateAssetRequest = async (req: NextApiRequest, res: NextApi
     //application_args = (user_address, asset_total, asset_unit_name, asset_name, asset_url, asset_metadata_hash, asset_manager_address)
     // Create asset, sign, and send to network
     const encoder = new TextEncoder()
-    const uTxn = await createContractNoOpTxn({
+    const uTxn = await chainDriver.makeContractNoOpTxn({
         from: myAccount.addr,
         appIndex: Number(contractId),
         appArgs: [num_asset, encoder.encode('blkn'), encoder.encode('Blockin Demo'), encoder.encode('https://www.blockin.vercel.app'), await sha256(metaData)],
@@ -30,7 +30,7 @@ const localContractCreateAssetRequest = async (req: NextApiRequest, res: NextApi
     const sentTxn = await sendTxn(signedTxn, uTxn.txnId)
     console.log(sentTxn)
     console.log("TODO: return data: assetId")
-    const all_local_states = await lookupApplicationLocalState(address)
+    const all_local_states = await chainDriver.lookupApplicationLocalState(address)
     let asset_id = 0
     all_local_states['apps-local-states'].forEach((elem: any) => {
         if (elem.id == process.env.NEXT_PUBLIC_LOCAL_CONTRACT_ID) {
@@ -38,7 +38,7 @@ const localContractCreateAssetRequest = async (req: NextApiRequest, res: NextApi
             console.log(asset_id)
         }
     });
-        
+
     return res.status(200).json({ assetId: asset_id });
 };
 
