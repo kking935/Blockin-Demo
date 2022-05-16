@@ -101,9 +101,19 @@ header {
 
 main {
   text-align: center;
-  padding: 50px 1px 150px;
-  max-width: 30rem;
+  padding-top: 30px;
+  padding-bottom: 150px;
+  padding-left: 55px;
+  padding-right: 55px;
+  max-width: 60rem;
   margin-inline: auto;
+}
+
+@media only screen and (max-width: 500px) {
+  main {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
 }
 
 .home h2 {
