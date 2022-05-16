@@ -1,10 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { myAccount } from "./apiConstants";
-import { AlgoDriver, createAssetTxn, sendTxn, setChainDriver, lookupTransactionById } from "blockin";
+import { AlgoDriver, createAssetTxn, sendTxn, setChainDriver } from "blockin";
 import { sha256 } from "../../permissions/sha256";
 
 const enc = new TextEncoder();
-setChainDriver(new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
+const chainDriver = new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : '');
+setChainDriver(chainDriver)
 
 const getTokenRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     const token = await createAccessToken();
@@ -42,7 +43,7 @@ export async function createAccessToken() {
         console.log("Signed transaction with txID: %s", uTxn.txnId);
 
         await sendTxn(signedTxn, uTxn.txnId)
-        const assetDetails = await lookupTransactionById(uTxn.txnId);
+        const assetDetails = await chainDriver.lookupTransactionById(uTxn.txnId);
 
         return { address: myAccount.addr, assetId: assetDetails.transaction['created-asset-index'], metadata: colors[randomIdx] }
     }

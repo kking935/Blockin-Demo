@@ -1,9 +1,10 @@
 import WalletConnect from "@walletconnect/client";
 import { createWCRequest } from '../WalletConnect';
 import { parse, stringify } from '../utils/preserveJson';
-import { AlgoDriver, createContractNoOpTxn, setChainDriver } from "blockin";
+import { AlgoDriver, setChainDriver } from "blockin";
 
-setChainDriver(new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''));
+const chainDriver = new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : '')
+setChainDriver(chainDriver);
 
 export const signContractNoOp = async (connector: WalletConnect, contractId: string, assetId: string) => {
 

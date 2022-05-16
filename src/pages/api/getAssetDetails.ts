@@ -1,10 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { AlgoDriver, getAssetDetails, setChainDriver } from "blockin";
+import { AlgoDriver, setChainDriver } from "blockin";
 
-setChainDriver(new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
+const chainDriver = new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : '')
+setChainDriver(chainDriver)
 
 const getAssetDetailsRequest = async (req: NextApiRequest, res: NextApiResponse) => {
-    const assetInfo = await getAssetDetails(req.body.id);
+    const assetInfo = await chainDriver.getAssetDetails(req.body.id);
 
     return res.status(200).json(assetInfo);
 };
