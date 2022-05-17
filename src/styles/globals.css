@@ -1,3 +1,7 @@
+:root {
+  --main-button-color: rgb(65, 144, 255);
+}
+
 html,
 body {
   padding: 0;
@@ -37,8 +41,8 @@ a:visited {
 
 
 button {
-  background-color: rgb(176, 215, 252);
-  color: black;
+  background: linear-gradient(#98d1fc, #1c8fe7);
+  color: rgb(255, 255, 255);
   padding: 12px 15px;
   font-weight: 600;
   border-radius: 10px;
@@ -59,8 +63,8 @@ input {
 }
 
 header {
-  background-color: rgb(65, 144, 255);
-  padding: 10px 30px 20px;
+  background-color: var(--main-button-color);
+  padding: 10px 30px;
   color: white;
   display: flex;
   justify-content: center;
@@ -107,6 +111,18 @@ main {
   padding-right: 55px;
   max-width: 60rem;
   margin-inline: auto;
+  min-height: 100vh;
+}
+
+.expandable {
+  margin: 0px auto;
+  border-radius: 10px;
+  padding: 10px 20px;
+  box-shadow: 0.8px 0.8px 2px;
+}
+
+.verification hr {
+  margin-bottom: 50px;
 }
 
 @media only screen and (max-width: 500px) {
@@ -114,6 +130,17 @@ main {
     padding-left: 25px;
     padding-right: 25px;
   }
+}
+
+.dropdown {
+  background: none;
+  border: none;
+  transition: all 300ms ease;
+  fill: rgb(50, 52, 61);
+}
+
+.pullup {
+  transform: rotate(180deg);
 }
 
 .home h2 {
@@ -268,4 +295,20 @@ footer a p {
 
 #src-code p {
   margin-left: 4px;
+}
+
+.verification h1 {
+  padding-bottom: 20px;
+}
+
+.verification h2 {
+  margin: 100px 0px 0px
+}
+
+.verification h3 {
+  margin: 100px auto 50px;
+}
+
+p {
+  font-size: large;
 }
