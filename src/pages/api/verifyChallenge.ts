@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { setChainDriver, verifyChallenge } from "blockin";
+import { setChainDriver, verifyChallenge } from 'blockin-test-package';
 import { parse } from "../../utils/preserveJson";
 import { AlgoDriver } from "../../blockin-walletconnect-helpers/AlgoDriver";
 

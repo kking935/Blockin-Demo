@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { createAssetTxn, setChainDriver } from "blockin";
+import { createAssetTxn, setChainDriver } from 'blockin-test-package';
 import { stringify } from "../../utils/preserveJson";
 import { AlgoDriver } from "../../blockin-walletconnect-helpers/AlgoDriver";
 

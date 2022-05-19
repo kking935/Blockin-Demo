@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { myAccount } from "./apiConstants";
-import { createAssetTxn, sendTxn, setChainDriver } from "blockin";
+import { createAssetTxn, sendTxn, setChainDriver } from 'blockin-test-package';
 import { sha256 } from "../../permissions/sha256";
 import { AlgoDriver } from "../../blockin-walletconnect-helpers/AlgoDriver";
 

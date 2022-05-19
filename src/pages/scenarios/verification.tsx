@@ -19,8 +19,8 @@ import { AssetIdList, AssetList } from '../../components/assetList';
 import ConnectScreen from '../../components/connectScreen';
 import { ContractOptInButton } from '../../components/buttons/contract_opt_in_button';
 import { LocalContractRetrieveAssetButton } from '../../components/buttons/local_contract_retrieve_button';
-import { ChainSelect, SignInWithBlockinButton } from 'blockin/dist/ui';
-import { VerifyChallengeOnBackendRequest, VerifyChallengeOnBackendResponse } from 'blockin';
+import { ChainSelect, SignInWithBlockinButton } from 'blockin-test-package/dist/ui';
+import { VerifyChallengeOnBackendRequest, VerifyChallengeOnBackendResponse } from 'blockin-test-package';
 
 const SAMPLE_ASSET_ID = '86695725';
 
