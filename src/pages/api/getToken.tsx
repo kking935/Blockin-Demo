@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { myAccount } from "./apiConstants";
-import { AlgoDriver, createAssetTxn, sendTxn, setChainDriver } from "blockin";
+import { createAssetTxn, sendTxn, setChainDriver } from "blockin";
 import { sha256 } from "../../permissions/sha256";
+import { AlgoDriver } from "../../blockin-walletconnect-helpers/AlgoDriver";
 
 const enc = new TextEncoder();
 const chainDriver = new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : '');
