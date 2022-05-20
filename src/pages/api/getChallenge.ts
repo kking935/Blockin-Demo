@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { AlgoDriver, createChallenge, generateNonceWithLastBlockTimestamp, setChainDriver } from "blockin";
-
+import { createChallenge, generateNonceWithLastBlockTimestamp, setChainDriver } from 'blockin';
+import AlgoDriver from "blockin-algo-driver";
 
 setChainDriver(new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
 

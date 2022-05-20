@@ -10,11 +10,14 @@ import { useWalletContext } from '../contexts/WalletContext';
 
 const Header = () => {
     const [bannerColor, setBannerColor] = useState('');
-    const [cookies, setCookie, removeCookie] = useCookies(['blockedin']);
+    const [cookies, setCookie, removeCookie] = useCookies(['blockedin', 'stripes', 'gradient']);
     const { connector, setConnector, address, setAddress } = useWalletContext();
 
     const logout = async () => {
         removeCookie('blockedin', { 'path': '/' });
+        removeCookie('stripes', { 'path': '/' });
+
+        removeCookie('gradient', { 'path': '/' });
         setBannerColor('');
     }
 
@@ -101,7 +104,7 @@ const Header = () => {
                 <WalletIcon />
                 <p>Not Blocked In</p>
             </div>
-            <Link  href='/scenarios/verification'>
+            <Link href='/scenarios/verification'>
                 <a className='login'>
                     <LoginIcon /> Login
                 </a>
@@ -110,27 +113,36 @@ const Header = () => {
     </>
 
     return (
-        <header style={{ backgroundColor: bannerColor }}>
+        <>
+            <header style={{ backgroundColor: bannerColor }}>
 
-            <Link href={'/'}>
-                <a>
-                    <h1 className='banner'>BL<BlockinIcon dimensions='40pt' />CKIN</h1>
-                </a>
-            </Link>
-
-
-            <div className='bottomBanner'>
-                {cookies['blockedin'] ?
-                    loggedInElem : loggedOutElem
-                }
-                {address != '' ?
-                    connectedElem : disconnectedElem
-                }
-            </div>
+                <Link href={'/'}>
+                    <a>
+                        <h1 className='banner'>BL<BlockinIcon dimensions='40pt' />CKIN</h1>
+                    </a>
+                </Link>
 
 
+                <div className='bottomBanner'>
+                    {cookies['blockedin'] ?
+                        loggedInElem : loggedOutElem
+                    }
+                    {address != '' ?
+                        connectedElem : disconnectedElem
+                    }
+                </div>
 
-        </header >
+
+
+            </header >
+            {cookies['stripes'] && <div style={{
+                width: '100%', height: 50, background: 'repeating-linear-gradient(45deg, red, red 10px, white 10px, white 20px)'
+            }}></div>}
+
+            {cookies['gradient'] && <div style={{
+                width: '100%', height: 50, background: 'linear-gradient(black, blue)'
+            }}></div>}
+        </>
     )
 }
 

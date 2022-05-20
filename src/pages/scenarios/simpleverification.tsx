@@ -87,7 +87,7 @@ const Verification: NextPage = () => {
         if (connector != undefined) {
             const response = await signChallenge(connector, challenge);
 
-            if (!response.verified) {
+            if (!response.signatureBytes || !response.originalBytes) {
                 setDisplayMessage(failureMessage);
                 setUserIsSigningChallenge(false)
             }

@@ -77,6 +77,7 @@ const Verification: NextPage = () => {
     const updateChallenge = async () => {
         if (connector != undefined) {
             const blockinChallenge = await getChallenge(connector, assetIds);
+            console.log(blockinChallenge);
             setChallenge(blockinChallenge);
         }
     }
@@ -90,8 +91,31 @@ const Verification: NextPage = () => {
         }
     }
 
+    const getVerifyChallengeSuccess = async () => {
+        return { success: true, message: 'Successfully granted access via Blockin.' };
+    }
+
+    const getVerifyChallengeFailure = async () => {
+        return { success: false, message: 'We encountered a problem verifying the challenge.' };
+    }
+
+    const handleSignChallengeFailure = async (challenge: string) => {
+        return {
+            message: 'We encountered a problem signing the challenge.'
+        }
+    }
+
+    const handleSignChallengeSuccess = async (challenge: string) => {
+        return {
+            originalBytes: new Uint8Array(23),
+            signatureBytes: new Uint8Array(23),
+            message: 'Success signing challenge'
+        }
+    }
+
     return (
         <Layout>
+
             <ConnectScreen />
 
             <div className='verification'>
@@ -207,17 +231,17 @@ const Verification: NextPage = () => {
                         </pre>
                     }
                 />
-
-                <Step
-                    title='Step 3: Sign Challenge with Your Wallet'
-                    description=''
-                    content={
-                        <div style={{ marginBottom: 50, marginTop: 10 }}>
-                            <SignChallengeButton cookieValue={assetIds[0] ? assetIds[0] : 'none'} challenge={challenge} />
-                        </div>
-                    }
-                />
             </div>
+            <Step
+                title='Step 3: Sign Challenge with Your Wallet'
+                description=''
+                content={
+
+                    <div style={{ marginBottom: 50, marginTop: 10 }}>
+                        <SignChallengeButton assets={assetIds} cookieValue={assetIds[0] ? assetIds[0] : 'none'} challenge={challenge} />
+                    </div>
+                }
+            />
         </Layout>
     )
 }
