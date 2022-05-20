@@ -231,17 +231,17 @@ const Verification: NextPage = () => {
                         </pre>
                     }
                 />
-
-                <Step
-                    title='Step 3: Sign Challenge with Your Wallet'
-                    description=''
-                    content={
-                        <div style={{ marginBottom: 50, marginTop: 10 }}>
-                            <SignChallengeButton assets={assetIds} cookieValue={assetIds[0] ? assetIds[0] : 'none'} challenge={challenge} />
-                        </div>
-                    }
-                />
             </div>
+            <Step
+                title='Step 3: Sign Challenge with Your Wallet'
+                description=''
+                content={
+
+                    <div style={{ marginBottom: 50, marginTop: 10 }}>
+                        <SignChallengeButton assets={assetIds} cookieValue={assetIds[0] ? assetIds[0] : 'none'} challenge={challenge} />
+                    </div>
+                }
+            />
         </Layout>
     )
 }

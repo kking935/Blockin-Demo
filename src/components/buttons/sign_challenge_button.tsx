@@ -67,7 +67,7 @@ export const SignChallengeButton = ({ challenge, cookieValue, assets }: { challe
     }
 
     return <>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
             <ChainSelect
                 chains={[
                     {
