@@ -40,7 +40,7 @@ export const SignChallengeButton = ({ challenge, cookieValue, assets }: { challe
     }
 
     const handleVerifyChallenge = async (signChallengeResponse: VerifyChallengeOnBackendRequest) => {
-        if (!signChallengeResponse.originalBytes && !signChallengeResponse.signatureBytes) {
+        if (!signChallengeResponse.originalBytes || !signChallengeResponse.signatureBytes) {
             return { success: false, message: `${signChallengeResponse.message}` }
         }
 
