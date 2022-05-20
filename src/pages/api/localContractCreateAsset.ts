@@ -2,7 +2,7 @@ import { myAccount } from "./apiConstants";
 import { NextApiRequest, NextApiResponse } from "next";
 import { sendTxn, setChainDriver } from 'blockin-test-package';
 import { sha256 } from "../../permissions/sha256";
-import { AlgoDriver } from "../../blockin-walletconnect-helpers/AlgoDriver";
+import AlgoDriver from "blockin-algo-driver";
 
 const chainDriver = new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : '')
 setChainDriver(chainDriver);

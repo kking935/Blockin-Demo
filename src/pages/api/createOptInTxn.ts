@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { createAssetTxn, setChainDriver } from 'blockin-test-package';
 import { stringify } from "../../utils/preserveJson";
-import { AlgoDriver } from "../../blockin-walletconnect-helpers/AlgoDriver";
+import AlgoDriver from "blockin-algo-driver";
 
 const chainDriver = new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : '')
 setChainDriver(chainDriver);
