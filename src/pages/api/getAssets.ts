@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { setChainDriver } from 'blockin-test-package';
+import { setChainDriver } from 'blockin';
 import { getColorFromMetadata } from "../../permissions/permissions";
 import AlgoDriver from "blockin-algo-driver";
 

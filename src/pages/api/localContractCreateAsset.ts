@@ -1,6 +1,6 @@
 import { myAccount } from "./apiConstants";
 import { NextApiRequest, NextApiResponse } from "next";
-import { sendTxn, setChainDriver } from 'blockin-test-package';
+import { sendTxn, setChainDriver } from 'blockin';
 import { sha256 } from "../../permissions/sha256";
 import AlgoDriver from "blockin-algo-driver";
 

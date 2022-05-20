@@ -162,7 +162,7 @@ export const signChallenge = async (connector: WalletConnect, message: string) =
     const wcRequest = await createWCRequest([unsignedTxn])
     const result: Array<string | null> = await connector.sendCustomRequest(wcRequest);
     if (result == null) {
-        return 'Error: Failed to get result from WalletConnect.';
+        return { message: 'Error: Failed to get result from WalletConnect.', signatureBytes: new Uint8Array(0), originalBytes: new Uint8Array(0) };
     }
 
 
@@ -183,26 +183,30 @@ export const signChallenge = async (connector: WalletConnect, message: string) =
     //Get signature and call blockin's verifyChallenge
     if (signedTxnInfo && signedTxnInfo[0] && signedTxnInfo[0][0]) {
         //Get Uint8Arrays of a) the bytes that were signed and b) the signature
-        const signature = new Uint8Array(Buffer.from(signedTxnInfo[0][0].signature, 'base64'));
-        const txnBytes = new Uint8Array(unsignedTxn.nativeTxn.bytesToSign());
+        const signatureBytes = new Uint8Array(Buffer.from(signedTxnInfo[0][0].signature, 'base64'));
+        const originalBytes = new Uint8Array(unsignedTxn.nativeTxn.bytesToSign());
 
-        //Blockin verify
-        //Note: It will always return a string and should never throw an error
-        //Returns "Successfully granted access via Blockin" upon success
-
-        const bodyStr = stringify({
-            txnBytes, signature
-        }); //hack to preserve uint8 arrays
-
-        const verificationRes = await fetch('../api/verifyChallenge', {
-            method: 'post',
-            body: bodyStr,
-            headers: { 'Content-Type': 'application/json' }
-        }).then(res => res.json());
-
-        return verificationRes;
+        return { originalBytes, signatureBytes, message: 'Successfully signed message.' }
     }
     else {
-        return 'Error: Error with signature response.';
+        return { message: 'Error: Error with signature response.', signatureBytes: new Uint8Array(0), originalBytes: new Uint8Array(0) };
     }
 };
+
+export const verifyChallengeOnBackend = async (signChallengeResponse: any) => {
+    //Blockin verify
+    //Note: It will always return a string and should never throw an error
+    //Returns "Successfully granted access via Blockin" upon success
+
+    const bodyStr = stringify(signChallengeResponse); //hack to preserve uint8 arrays
+    console.log(bodyStr);
+
+    const verificationRes = await fetch('../api/verifyChallenge', {
+        method: 'post',
+        body: bodyStr,
+        headers: { 'Content-Type': 'application/json' }
+    }).then(res => res.json());
+    
+
+    return verificationRes;
+}

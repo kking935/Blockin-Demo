@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { setChainDriver, verifyChallenge } from 'blockin-test-package';
+import { setChainDriver, verifyChallenge } from 'blockin';
 import { parse } from "../../utils/preserveJson";
 import AlgoDriver from "blockin-algo-driver";
 
@@ -10,8 +10,8 @@ const verifyChallengeRequest = async (req: NextApiRequest, res: NextApiResponse)
 
     try {
         const verificationResponse = await verifyChallenge(
-            body.txnBytes,
-            body.signature,
+            body.originalBytes,
+            body.signatureBytes,
             {
                 verifyNonceWithBlockTimestamps: true
             }

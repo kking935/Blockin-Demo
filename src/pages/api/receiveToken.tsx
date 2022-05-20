@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { myAccount } from "./apiConstants";
-import { createAssetTransferTxn, sendTxn, setChainDriver } from 'blockin-test-package';
+import { createAssetTransferTxn, sendTxn, setChainDriver } from 'blockin';
 import AlgoDriver from "blockin-algo-driver";
 
 setChainDriver(new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))

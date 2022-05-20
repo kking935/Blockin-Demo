@@ -1,7 +1,7 @@
 import { formatJsonRpcRequest } from "@json-rpc-tools/utils";
 import WalletConnect from "@walletconnect/client";
 import QRCodeModal from "@walletconnect/qrcode-modal";
-import { UniversalTxn } from 'blockin-test-package';
+import { UniversalTxn } from 'blockin';
 import { Dispatch, SetStateAction } from "react";
 
 export const connect = (setConnector: Dispatch<SetStateAction<WalletConnect | undefined>>, setAddress: Dispatch<SetStateAction<string>>) => {

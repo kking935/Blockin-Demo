@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { sendTxn, setChainDriver } from 'blockin-test-package';
+import { sendTxn, setChainDriver } from 'blockin';
 import { parse } from "../../utils/preserveJson";
 import AlgoDriver from "blockin-algo-driver";
 
