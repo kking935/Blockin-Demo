@@ -11,8 +11,6 @@ const Home: NextPage = () => {
 
                 <p>The problem Blockin solves is that current sign-in standards (such as EIP-4361 Sign-In with Ethereum) are limited. Not all users for a company like Netflix, for example, will all belong to the same blockchain. Blockin is capable of supporting sign-ins from any blockchain!</p>
 
-                <p>Note that this site is built for Algorand and Pera Wallet through WalletConnect. To gain full functionality for logging in and the technical demo, you will need to connect via the Pera Wallet mobile app. However, everything else does not require a wallet connection.</p>
-
                 <h3>Explore the links below</h3>
                 <ul>
                     <li>
@@ -30,10 +28,7 @@ const Home: NextPage = () => {
                         </Link>
                     </li>
                     <div className='link-description'>
-                        For full functionality, you will need to connect your Algorand wallet via the Pera Wallet mobile app and WalletConnect.
-                    </div>
-                    <div className='link-description'>
-                        You can still see what is going on behind the scenes without a connected wallet.
+                        Wallet connection is optional, but needed for a full experience. We do provide a simulated experience that does not require wallet connections or signatures.
                     </div>
                     <li>
                         <Link href={'https://blockin.gitbook.io/blockin/'}>
