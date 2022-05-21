@@ -16,7 +16,6 @@
     "algosdk": "^1.15.0",
     "blockin": "^1.1.5",
     "blockin-algo-driver": "^1.0.1",
-    "crypto": "^1.0.1",
     "crypto-browserify": "^3.12.0",
     "dotenv": "^16.0.0",
     "next": "^12.1.6",
