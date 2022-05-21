@@ -6,7 +6,13 @@ const Home: NextPage = () => {
     return (
         <Layout>
             <section className='home'>
-                <h2>Welcome to Blockin Demo</h2>
+                <h2>Welcome to the Blockin Demo</h2>
+                <p>Blockin is a universal, multi-chain sign-in standard for Web 3.0 that supports many other features such as micro-authorizations and role-based access control!</p>
+
+                <p>The problem Blockin solves is that current sign-in standards (such as EIP-4361 Sign-In with Ethereum) are limited. Not all users for a company like Netflix, for example, will all belong to the same blockchain. Blockin is capable of supporting sign-ins from any blockchain!</p>
+
+                <p>Note that this site is built for Algorand and Pera Wallet through WalletConnect. To gain full functionality for logging in and the technical demo, you will need to connect via the Pera Wallet mobile app. However, everything else does not require a wallet connection.</p>
+
                 <h3>Explore the links below</h3>
                 <ul>
                     <li>
