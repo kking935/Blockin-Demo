@@ -14,12 +14,20 @@ const Home: NextPage = () => {
                 <h3>Explore the links below</h3>
                 <ul>
                     <li>
-                        <Link href={'/scenarios/simpleverification'}>
-                            <a>Demo Walkthrough (Simple Example Use Case)</a>
+                        <Link href={'/scenarios/userperspectives'}>
+                            <a>Example Use Cases (User Perspective)</a>
                         </Link>
                     </li>
                     <div className='link-description'>
-                        No wallet connection or signatures needed.
+                        {"View Blockin from a non-technical, normal user's perspective, and see how easy it is to integrate!."}
+                    </div>
+                    <li>
+                        <Link href={'/scenarios/simpleverification'}>
+                            <a>Demo Walkthrough (Simple - Behind the Scenes)</a>
+                        </Link>
+                    </li>
+                    <div className='link-description'>
+                        Simple behind the scenes that is kept non-technical. No wallet connection or signatures needed.
                     </div>
 
                     <li>
@@ -28,7 +36,7 @@ const Home: NextPage = () => {
                         </Link>
                     </li>
                     <div className='link-description'>
-                        Wallet connection is optional, but needed for a full experience. We do provide a simulated experience that does not require wallet connections or signatures.
+                        Technical behind the scenes. Wallet connection is optional, but is needed for a full experience. We do provide a simulated experience that does not require wallet connections or signatures.
                     </div>
                     <li>
                         <Link href={'https://blockin.gitbook.io/blockin/'}>
