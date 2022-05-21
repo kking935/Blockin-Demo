@@ -12,7 +12,7 @@ const loadingMessage = <>
 const successMessage = <>
     <p>Challenge succeeded!</p>
     <p>You are now authenticated.</p>
-    <p>If you specified an asset ID, you should see the banner at the top of this page change colors!</p>
+    <p>If you specified a banner privilege, you should see the banner at the top of this page change!</p>
 </>
 
 const failureMessage = <>
@@ -28,27 +28,21 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
     const [challengeString, setChallengeString] = useState('');
     const [cookies, setCookie] = useCookies(['blockedin', 'stripes', 'gradient']);
     const [chainProps, setChainProps] = useState<ChainProps>({
-        name: 'Default',
-        // displayedAssets: [],
-        displayedAssets: assets.map(id => {
-            console.log(id);
-            return { assetId: `Asset ID: ${id}`, name: `Asset ID: ${id}`, frozen: false, defaultSelected: true, description: 'User has added an Algorand asset with ID: ' + id }
-        }),
-        displayedUris: [{
-            uri: 'https://blockin.com/striped',
-            name: 'Striped Banner',
-            defaultSelected: false,
-            frozen: false,
-            description: 'You will see a striped banner at the top of the page.'
-        },
-        {
-            uri: 'https://blockin.com/gradient',
-            name: 'Gradient Banner',
-            defaultSelected: false,
-            frozen: false,
-            description: 'You will see a gradient banner at the top of the page.'
-        },],
+        name: 'Default'
     });
+
+    const [assetsDisplayed, setAssetsDisplayed] = useState(assets ? assets.map((elem: any) => {
+        console.log(elem);
+        return { assetId: elem['asset-id'], name: `Algorand Testnet Asset ID: ${elem['asset-id']}`, frozen: false, defaultSelected: false, description: `${elem['color']} Banner` }
+    }) : []);
+
+    useEffect(() => {
+        setAssetsDisplayed(assets.map((elem: any) => {
+            console.log(elem);
+            return { assetId: elem['asset-id'], name: `Algorand Testnet Asset ID: ${elem['asset-id']}`, frozen: false, defaultSelected: false, description: `${elem['color']} Banner` }
+        }));
+    }, [assets])
+
 
     const handleSignChallenge = async (challenge: string) => {
         setUserIsSigningChallenge(true);
@@ -56,6 +50,9 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
         setChallengeString(challenge);
         console.log("CHALLENGE STRING", challenge)
 
+        if (chainProps.name === 'Simulated') {
+            return { signatureBytes: new Uint8Array(32), originalBytes: new Uint8Array(32) }
+        }
         if (connector != undefined) {
             const response = await signChallenge(connector, challenge, chainProps.name === 'Algorand Testnet');
             return response;
@@ -65,7 +62,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
     }
 
     const handleVerifyChallenge = async (originalBytes: Uint8Array, signatureBytes: Uint8Array, challengeObj: ChallengeParams) => {
-        const verificationResponse = await verifyChallengeOnBackend(originalBytes, signatureBytes);
+        const verificationResponse = chainProps.name !== 'Simulated' ? await verifyChallengeOnBackend(originalBytes, signatureBytes) : { verified: true, message: 'Successfully verified!' };
 
         if (!verificationResponse.verified) {
             setDisplayMessage(failureMessage);
@@ -75,8 +72,6 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
         else {
             setDisplayMessage(successMessage);
             setCookie('blockedin', cookieValue, { 'path': '/' });
-
-
 
             if (challengeObj.resources) {
                 console.log(challengeObj);
@@ -103,53 +98,16 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
         <div style={{ display: 'flex', justifyContent: 'center' }}>
             <ChainSelect
                 chains={[
+
+                    {
+                        name: 'Simulated'
+                    },
                     {
                         name: 'Algorand Testnet',
-                        // displayedAssets: [],
-                        displayedAssets: assets.map(id => {
-                            console.log(id);
-                            return { assetId: id, name: `Asset ID: ${id}`, frozen: false, defaultSelected: true, description: 'User has added an Algorand asset with ID: ' + id }
-                        }),
-                        displayedUris: [{
-                            uri: 'https://blockin.com/striped',
-                            name: 'Striped Banner',
-                            defaultSelected: false,
-                            frozen: false,
-                            description: 'You will see a striped banner at the top of the page.'
-                        },
-                        {
-                            uri: 'https://blockin.com/gradient',
-                            name: 'Gradient Banner',
-                            defaultSelected: false,
-                            frozen: false,
-                            description: 'You will see a gradient banner at the top of the page.'
-                        },],
-                        currentChainInfo: undefined,
-                        signChallenge: handleSignChallenge
                     },
                     {
                         name: 'Algorand Mainnet',
-                        displayedAssets: assets.map(id => {
-                            return { assetId: `Asset ID: ${id}`, name: `Asset ID: ${id}`, frozen: false, defaultSelected: true, description: 'User has added an Algorand asset with ID: ' + id }
-                        }),
-                        // displayedAssets: [],
-                        displayedUris: [{
-                            uri: 'https://blockin.com/striped',
-                            name: 'Striped Banner',
-                            defaultSelected: false,
-                            frozen: false,
-                            description: 'You will see a striped banner at the top of the page.'
-                        },
-                        {
-                            uri: 'https://blockin.com/gradient',
-                            name: 'Gradient Banner',
-                            defaultSelected: false,
-                            frozen: false,
-                            description: 'You will see a gradient banner at the top of the page.'
-                        },],
-                        currentChainInfo: undefined,
-                        signChallenge: handleSignChallenge
-                    }
+                    },
                 ]}
                 updateChain={(newChainProps: ChainProps) => { setChainProps(newChainProps) }}
             />
@@ -157,14 +115,28 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                 <SignInWithBlockinButton
                     challengeParams={constructChallengeObjectFromString(challengeParams ? challengeParams : '')}
                     currentChain={chainProps.name}
-                    displayedAssets={chainProps.displayedAssets ? chainProps.displayedAssets : []}
-                    displayedUris={chainProps.displayedUris ? chainProps.displayedUris : []}
+                    displayedAssets={chainProps.name === 'Algorand Tesnet' ? assetsDisplayed : []}
+                    displayedUris={[{
+                        uri: 'https://blockin.com/striped',
+                        name: 'Striped Banner',
+                        defaultSelected: false,
+                        frozen: false,
+                        description: 'If selected, you will see a striped banner at the top of the page upon signing-in.'
+                    },
+                    {
+                        uri: 'https://blockin.com/gradient',
+                        name: 'Gradient Banner',
+                        defaultSelected: false,
+                        frozen: false,
+                        description: 'If selected, you will see a gradient banner at the top of the page upon signing-in.'
+                    }]}
                     signChallenge={challengeParams ? handleSignChallenge : async () => {
                         return {
                             message: 'Failed to sign challenge. Challenge not generated yet'
                         }
                     }}
                     verifyChallengeOnBackend={handleVerifyChallenge}
+                    canAddCustomAssets={true}
                 />
             }
         </div>

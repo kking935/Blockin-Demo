@@ -138,8 +138,9 @@ const Verification: NextPage = () => {
 
                 <Step
                     title='Step 0: Asset Creation'
-                    description='This step will be skipped if the assets are already created on-chain. Asset creation is a one-time process. Users must go through steps 1-3 every time they wish to be authorized.'
+                    description='This step will be skipped if the assets are already created on-chain. Asset creation is a one-time process. Users must go through steps 1-4 every time they wish to be authorized.'
                     content={<>
+                        <p>You may expand the sections below to learn more about each method. However, to actually generate and receive the asset, you must be connected via Algorand.</p>
                         <Expandable
                             title="Generate New Asset (User Creates)"
                             content={<><p>Click below to create a new asset. You may specify a metadata color in the input box below. You will have to sign the creation transaction in your wallet.</p>
@@ -193,10 +194,15 @@ const Verification: NextPage = () => {
                 />
 
                 <Step
-                    title='Step 1: Choose Assets'
-                    description='Here, users will specify the assets that they want to sign-in with. To be verified by Blockin, the user must own the requested asset in their wallet at the time of verification. Blockin verifies users through proof of ownership of an asset on-chain.'
+                    title='Step 1: Challenge Details are Agreed Upon'
+                    description='In Step 1, the authorizing resource and the user will agree upon the details of the sign-in challenge. This challenge will then be sent to the user to be signed.'
                     content={<>
-                        <Expandable
+                        <p>More commonly, the authorizing resource will generate most, if not all, of the challenge details, but they can also allow the user to have some freedom of choice in some areas.</p>
+                        <p>{"The sign-in challenge will use the EIP-4361 interface and is created with the Blockin library. Blockin additionally supports specifying digital assets, such as NFTs, in the 'resources' field. A sample challenge is provided below:"}</p>
+                        <pre style={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
+                            {challenge}
+                        </pre>
+                        {/* <Expandable
                             title='Add Owned Assets'
                             content={<AssetList assetIds={ownedAssets} addToChallenge={addAssetIdToChallenge} />}
                         />
@@ -218,31 +224,51 @@ const Verification: NextPage = () => {
                             <h3><b>Asset IDs Added to the Challenge</b></h3>
                             <AssetIdList assetIds={assetIds} signInColor={signInColor} />
                             <button type='submit' onClick={clearChallenge}>Reset</button>
-                        </div>
+                        </div> */}
                     </>}
                 />
 
                 <Step
-                    title='Step 2: Challenge is Generated'
-                    description='The challenge below is created with the Blockin library. All information is customizable as long as it follows the Sign In with Ethereum Standard (EIP-4361).'
+                    title='Step 2: User Signs Challenge with Their Wallet'
+                    description='In Step 2, the challenge is sent to the user to be signed. The user can now review the challenge all in plaintext. If they wish to approve the challenge, they will sign it with their private key and send the signature back to the authorizing resource.'
                     content={
-                        <pre style={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
-                            {challenge}
-                        </pre>
+                        <>
+                        </>
+                    }
+                />
+                <Step
+                    title='Step 3: Challenge Verification'
+                    description='In Step 3, the authorizing resource will perform all verification checks to make sure the challenge is valid and well-formed.'
+                    content={
+                        <>
+                            <p>{'The authorizing resource can use the Blockin library to help verify the challenge. Blockin checks that a) the challenge is well-formed, b) signed correctly, and c) that all requested assets are owned by the user by querying the public blockchain.'}</p>
+                            <p>Note that there may be additional checks unique to the requested resource that Blockin does not handle. These checks will also be performed in Step 3.</p>
+                        </>
+                    }
+                />
+                <Step
+                    title='Step 4: Granting Access'
+                    description='If you reach Step 4 successfully, the challenge is now fully verified! The user can now be granted access through any method of choice (JWTs, session tokens, cookies, etc).'
+                    content={
+                        <></>
                     }
                 />
             </div>
-            <Step
-                title='Step 3: Sign Challenge with Your Wallet'
-                description=''
-                content={
 
+            <br />
+            <Step
+                title='Steps 1-4 Implemented: Example Sign-In Process'
+                description='Here, we show an implementation of steps 1-4 for our demo site. As explained above, we will be using different banner designs to showcase different role-based access privileges.'
+                content={<>
+                    <p>{'If you are connected via Pera Wallet and Algorand, you may select one of these chains, and the site will send you a valid sign-in request to your wallet. Or else, we have provided a "Simulated" experience for you that will successfully sign the challenge on your behalf.'}</p>
+                    <p>*Note that the assets generated in Step 0 are for Testnet only.</p>
                     <div style={{ marginBottom: 50, marginTop: 10 }}>
-                        <SignChallengeButton assets={assetIds} cookieValue={assetIds[0] ? assetIds[0] : 'none'} challengeParams={challenge} />
+                        <SignChallengeButton assets={ownedAssets} cookieValue={assetIds[0] ? assetIds[0] : 'none'} challengeParams={challenge} />
                     </div>
+                </>
                 }
             />
-        </Layout>
+        </Layout >
     )
 }
 
