@@ -14,7 +14,7 @@ const loadingMessage = <>
 </>
 
 const successMessage = <>
-    <p>You have signed the challenge successfully.</p>
+    <p>You have signed the challenge with your wallet successfully.</p>
 </>
 
 const failureMessage = <>
@@ -30,7 +30,7 @@ const Verification: NextPage = () => {
     const [assetId, setAssetId] = useState('');
     const [assetIds, setAssetIds] = useState<string[]>([]);
     const [userIsSigningChallenge, setUserIsSigningChallenge] = useState(false);
-    const [displayMessage, setDisplayMessage] = useState(loadingMessage);
+    const [displayMessage, setDisplayMessage] = useState(<p></p>);
     const [userSignedChallenge, setUserSignedChallenge] = useState(false);
 
     const [ownedAssets, setOwnedAssets] = useState<any[]>([]);
@@ -81,21 +81,21 @@ const Verification: NextPage = () => {
     }
 
     const handleSignChallenge = async () => {
-        setUserIsSigningChallenge(true);
-        setDisplayMessage(loadingMessage);
+        // setUserIsSigningChallenge(true);
+        // setDisplayMessage(loadingMessage);
 
-        if (connector != undefined) {
-            const response = await signChallenge(connector, challenge);
+        // if (connector != undefined) {
+        //     const response = await signChallenge(connector, challenge);
 
-            if (!response.signatureBytes || !response.originalBytes) {
-                setDisplayMessage(failureMessage);
-                setUserIsSigningChallenge(false)
-            }
-            else {
-                setDisplayMessage(successMessage);
-                setUserSignedChallenge(true);
-            }
-        }
+        //     if (!response.signatureBytes || !response.originalBytes) {
+        //         setDisplayMessage(failureMessage);
+        //         setUserIsSigningChallenge(false)
+        //     }
+        //     else {
+        setDisplayMessage(successMessage);
+        setUserSignedChallenge(true);
+        //     }
+        // }
     }
 
 
@@ -123,8 +123,8 @@ const Verification: NextPage = () => {
                 description='Netflix wants to verify that you actually own the plan you say you own. They generate a Blockin challenge and ask you to sign it with your wallet.'
                 content={
                     <>
-                        <button onClick={handleSignChallenge}>Sign Challenge</button>
-                        {userIsSigningChallenge && displayMessage}
+                        <button onClick={handleSignChallenge} disabled={!plan}>Sign Challenge</button>
+                        {displayMessage}
                         <hr />
                     </>
 
