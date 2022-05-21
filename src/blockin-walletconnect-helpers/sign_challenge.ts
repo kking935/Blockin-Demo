@@ -138,7 +138,7 @@ export const getChallenge = async (connector: WalletConnect, assetIds: string[])
  *  the signatures, we eventually call verifyChallenge() which takes the signature ad an input. Blockin will
  *  never use your private keys.
  */
-export const signChallenge = async (connector: WalletConnect, message: string) => {
+export const signChallenge = async (connector: WalletConnect, message: string, testnet?: boolean) => {
     const uTxn = algosdk.makePaymentTxn(
         connector?.accounts[0],
         connector?.accounts[0],
@@ -148,8 +148,8 @@ export const signChallenge = async (connector: WalletConnect, message: string) =
         0,
         1000000,
         new Uint8Array(Buffer.from(message)),
-        'SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=',
-        'testnet-v1.0'
+        testnet ? 'SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=' : 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8=',
+        testnet ? 'testnet-v1.0' : 'mainnet-v1.0'
     );
 
     const unsignedTxn = {
@@ -206,7 +206,7 @@ export const verifyChallengeOnBackend = async (signChallengeResponse: any) => {
         body: bodyStr,
         headers: { 'Content-Type': 'application/json' }
     }).then(res => res.json());
-    
+
 
     return verificationRes;
 }

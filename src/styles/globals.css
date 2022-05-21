@@ -308,3 +308,13 @@ footer a p {
 p {
   font-size: large;
 }
+
+.link-description {
+    margin-top: 10px;
+}
+
+.home li .link-description {
+    margin: 20px 0px 0px;
+    text-decoration: none;
+    color: black
+}

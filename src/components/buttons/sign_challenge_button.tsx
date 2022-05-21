@@ -3,7 +3,7 @@ import { useCookies } from "react-cookie"
 import { useWalletContext } from "../../contexts/WalletContext"
 import { signChallenge, verifyChallengeOnBackend } from "../../blockin-walletconnect-helpers/sign_challenge"
 import { ChainSelect, SignInWithBlockinButton } from 'blockin/dist/ui';
-import { VerifyChallengeOnBackendRequest, constructChallengeObjectFromString } from 'blockin';
+import { VerifyChallengeOnBackendRequest, constructChallengeObjectFromString, ChainProps } from 'blockin';
 
 const loadingMessage = <>
     <p>Go to your wallet and accept the challenge request...</p>
@@ -26,13 +26,18 @@ export const SignChallengeButton = ({ challenge, cookieValue, assets }: { challe
     const [displayMessage, setDisplayMessage] = useState(loadingMessage);
     const { connector } = useWalletContext();
     const [cookies, setCookie] = useCookies(['blockedin', 'stripes', 'gradient']);
+    const [chainProps, setChainProps] = useState<ChainProps>({
+        name: 'Default',
+        displayedAssets: [],
+        displayedUris: [],
+    });
 
     const handleSignChallenge = async () => {
         setUserIsSigningChallenge(true);
         setDisplayMessage(loadingMessage);
 
         if (connector != undefined) {
-            const response = await signChallenge(connector, challenge);
+            const response = await signChallenge(connector, challenge, chainProps.name === 'Algorand Testnet');
             return response;
         } else {
             return { message: 'Error: Error with signature response.', signatureBytes: new Uint8Array(0), originalBytes: new Uint8Array(0) };
@@ -46,7 +51,6 @@ export const SignChallengeButton = ({ challenge, cookieValue, assets }: { challe
 
         const verificationResponse = await verifyChallengeOnBackend(signChallengeResponse);
 
-        console.log(verificationResponse);
         if (!verificationResponse.verified) {
             setDisplayMessage(failureMessage);
             setUserIsSigningChallenge(false);
@@ -55,8 +59,17 @@ export const SignChallengeButton = ({ challenge, cookieValue, assets }: { challe
         else {
             setDisplayMessage(successMessage);
             setCookie('blockedin', cookieValue, { 'path': '/' });
-            setCookie('stripes', true, { 'path': '/' })
-            setCookie('gradient', true, { 'path': '/' })
+            if (constructChallengeObjectFromString(challenge).resources) {
+                for (const resource of constructChallengeObjectFromString(challenge).resources) {
+                    console.log(resource);
+                    if (resource === 'https://blockin.com/striped') {
+                        setCookie('stripes', true, { 'path': '/' })
+                    }
+                    if (resource === 'https://blockin.com/gradient') {
+                        setCookie('gradient', true, { 'path': '/' })
+                    }
+                }
+            }
         }
 
         alert(verificationResponse.message);
@@ -76,22 +89,23 @@ export const SignChallengeButton = ({ challenge, cookieValue, assets }: { challe
                         displayedUris: [],
                         currentChainInfo: undefined,
                         signChallenge: handleSignChallenge
+                    },
+                    {
+                        name: 'Algorand Mainnet',
+                        displayedAssets: [],
+                        displayedUris: [],
+                        currentChainInfo: undefined,
+                        signChallenge: handleSignChallenge
                     }
                 ]}
-                updateChain={async () => { }}
+                updateChain={(newChainProps: ChainProps) => { setChainProps(newChainProps) }}
             />
             {challenge &&
                 <SignInWithBlockinButton
                     challengeParams={constructChallengeObjectFromString(challenge ? challenge : '')}
-                    currentChain={'Algorand Testnet'}
-                    displayedAssets={[]}
-                    displayedUris={[{
-                        uri: 'https://blockin.com/striped', name: 'Striped Banner', frozen: false, defaultSelected: false, description: 'If selected, you will be able to view a striped banner at the top of the page while browsing this website.',
-                    },
-                    {
-                        uri: 'https://blockin.com/gradient', name: 'Gradient Banner', frozen: false, defaultSelected: false, description: 'If selected, you will be able to view a gradient banner at the top of the page while browsing this website.'
-                    }]}
-
+                    currentChain={chainProps.name}
+                    displayedAssets={chainProps.displayedAssets ? chainProps.displayedAssets : []}
+                    displayedUris={chainProps.displayedUris ? chainProps.displayedUris : []}
                     signChallenge={challenge ? handleSignChallenge : async () => {
                         return {
                             message: 'Failed to sign challenge. Challenge not generated yet'
