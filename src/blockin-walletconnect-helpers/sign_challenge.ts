@@ -186,19 +186,19 @@ export const signChallenge = async (connector: WalletConnect, message: string, t
         const signatureBytes = new Uint8Array(Buffer.from(signedTxnInfo[0][0].signature, 'base64'));
         const originalBytes = new Uint8Array(unsignedTxn.nativeTxn.bytesToSign());
 
-        return { originalBytes, signatureBytes, message: 'Successfully signed message.' }
+        return { originalBytes, signatureBytes, message: 'Successfully signed message.', challengeString: message }
     }
     else {
         return { message: 'Error: Error with signature response.', signatureBytes: new Uint8Array(0), originalBytes: new Uint8Array(0) };
     }
 };
 
-export const verifyChallengeOnBackend = async (signChallengeResponse: any) => {
+export const verifyChallengeOnBackend = async (originalBytes: Uint8Array, signatureBytes: Uint8Array) => {
     //Blockin verify
     //Note: It will always return a string and should never throw an error
     //Returns "Successfully granted access via Blockin" upon success
 
-    const bodyStr = stringify(signChallengeResponse); //hack to preserve uint8 arrays
+    const bodyStr = stringify({ originalBytes, signatureBytes }); //hack to preserve uint8 arrays
     console.log(bodyStr);
 
     const verificationRes = await fetch('../api/verifyChallenge', {

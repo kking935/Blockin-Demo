@@ -238,7 +238,7 @@ const Verification: NextPage = () => {
                 content={
 
                     <div style={{ marginBottom: 50, marginTop: 10 }}>
-                        <SignChallengeButton assets={assetIds} cookieValue={assetIds[0] ? assetIds[0] : 'none'} challenge={challenge} />
+                        <SignChallengeButton assets={assetIds} cookieValue={assetIds[0] ? assetIds[0] : 'none'} challengeParams={challenge} />
                     </div>
                 }
             />
