@@ -28,7 +28,10 @@ export const SignChallengeButton = ({ challenge, cookieValue, assets }: { challe
     const [cookies, setCookie] = useCookies(['blockedin', 'stripes', 'gradient']);
     const [chainProps, setChainProps] = useState<ChainProps>({
         name: 'Default',
-        displayedAssets: [],
+        displayedAssets: assets.map(id => {
+            console.log(id);
+            return { assetId: id, name: id, frozen: false, defaultSelected: true, description: 'User has added an Algorand asset with ID: ' + id }
+        }),
         displayedUris: [],
     });
 
@@ -85,14 +88,19 @@ export const SignChallengeButton = ({ challenge, cookieValue, assets }: { challe
                 chains={[
                     {
                         name: 'Algorand Testnet',
-                        displayedAssets: [],
+                        displayedAssets: assets.map(id => {
+                            console.log(id);
+                            return { assetId: id, name: id, frozen: false, defaultSelected: true, description: 'User has added an Algorand asset with ID: ' + id }
+                        }),
                         displayedUris: [],
                         currentChainInfo: undefined,
                         signChallenge: handleSignChallenge
                     },
                     {
                         name: 'Algorand Mainnet',
-                        displayedAssets: [],
+                        displayedAssets: assets.map(id => {
+                            return { assetId: id, name: id, frozen: false, defaultSelected: true, description: 'User has added an Algorand asset with ID: ' + id }
+                        }),
                         displayedUris: [],
                         currentChainInfo: undefined,
                         signChallenge: handleSignChallenge

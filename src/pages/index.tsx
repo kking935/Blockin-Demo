@@ -19,8 +19,6 @@ const Home: NextPage = () => {
                         <Link href={'/scenarios/simpleverification'}>
                             <a>Demo Walkthrough (Simple Example Use Case)</a>
                         </Link>
-
-
                     </li>
                     <div className='link-description'>
                         No wallet connection or signatures needed.
