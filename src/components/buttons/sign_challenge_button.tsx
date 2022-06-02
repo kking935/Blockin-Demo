@@ -167,6 +167,13 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                         const signer = provider.getSigner();
                         setConnected(true);
                         setAddress(await signer.getAddress());
+                        const returnedAssets = await getAssets('Ethereum', await signer.getAddress(), {}, false);
+                        console.log("ASFHJKASDFH", assets);
+                        const assetIds = [];
+                        for (const asset of returnedAssets?.assets) {
+                            assetIds.push(asset['token_address']);
+                        }
+                        setOwnedAssetIds(assetIds);
                     }
                     await handleConnect();
                 }
@@ -184,14 +191,15 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
             });
             setDisplayedAssets([]);
             setDisplayedUris([]);
-            setOwnedAssetIds(['TODO: 123456', '31278351256']);
         } else if (newChainProps.name.startsWith('Algorand')) {
-
             setChain(newChainProps.name);
             //TODO: I know this isn't the right way to do this but it works
-            setConnect(() => async () => {
-                algorandConnect(setConnector, setAddress, setConnected);
-            });
+            const connectFunction = () => {
+                return async () => {
+                    algorandConnect(setConnector, setAddress, setConnected, setOwnedAssetIds);
+                }
+            }
+            setConnect(connectFunction);
             setDisconnect(() => async () => {
                 await logout();
                 await connector?.killSession({ message: 'bye' })
@@ -206,7 +214,6 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
             });
             setDisplayedAssets([]);
             setDisplayedUris([]);
-            setOwnedAssetIds(['TODO: 56789', '123472387']);
         } else if (newChainProps.name === 'Simulated') {
             setChain(newChainProps.name);
             //TODO: I know this isn't the right way to do this but it works
@@ -352,7 +359,9 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                     signChallenge={handleSignChallenge}
                     verifyChallengeOnBackend={handleVerifyChallenge}
                     canAddCustomAssets={true}
-                    customAddResourcesMessage={`For convenience, we have provided you with a list of asset IDs that you own in the connected wallet: ${ownedAssetIds ? ownedAssetIds.toString() : 'None'}`}
+                    customAddResourcesMessage={<>For convenience, we have provided you with a list of asset IDs that you own in the connected wallet:<pre>{` ${ownedAssetIds ? ownedAssetIds.map((val, idx) => {
+                        return `${idx + 1}) ${val}\n`
+                    }).join(' ') : 'None'}`}</pre></>}
                 />
 
             }

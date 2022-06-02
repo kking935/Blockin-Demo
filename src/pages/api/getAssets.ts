@@ -26,22 +26,22 @@ const getAssetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
     for (const asset of assets) {
 
-        const id: string = asset['asset-id'];
-        if (!newAssetMap[id]) {
-            const assetInfo = await chainDriver.getAssetDetails(id);
-            newAssetMap[id] = assetInfo;
-        }
+        let id: string = asset['asset-id'];
+        // if (!newAssetMap[id]) {
+        //     const assetInfo = await chainDriver.getAssetDetails(id);
+        //     newAssetMap[id] = assetInfo;
+        // }
 
-        if (includeColors) {
-            asset['color'] = await getColorFromMetadata(newAssetMap[id]['metadata-hash']);
+        // if (includeColors) {
+        //     asset['color'] = await getColorFromMetadata(newAssetMap[id]['metadata-hash']);
 
 
-            if (!asset['color']) {
-                asset['color'] = 'Custom';
-            } else {
-                asset['color'] = asset['color'].charAt(0).toUpperCase() + asset['color'].slice(1);
-            }
-        }
+        //     if (!asset['color']) {
+        //         asset['color'] = 'Custom';
+        //     } else {
+        //         asset['color'] = asset['color'].charAt(0).toUpperCase() + asset['color'].slice(1);
+        //     }
+        // }
     }
 
     return res.status(200).json({ assets, assetMap: newAssetMap });
