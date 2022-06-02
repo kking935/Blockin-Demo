@@ -1,9 +1,9 @@
 import { SyntheticEvent, useState } from "react"
-import { useWalletContext } from "../../contexts/WalletContext"
-import { signAssetCreateTxn } from "../../blockin-walletconnect-helpers/sign_asset_create_txn"
+import { useAlgorandContext } from "../../chain_handlers_frontend/algorand/AlgorandContext"
+import { signAssetCreateTxn } from "../../chain_handlers_frontend/algorand/smartcontract-helpers/sign_asset_create_txn"
 
 export const UserCreatesForm = ({ updateOwnedAssets }: { updateOwnedAssets: () => Promise<void> }) => {
-    const { connector } = useWalletContext();
+    const { connector } = useAlgorandContext();
     const [creatingAsset, setCreatingAsset] = useState(false);
     const [createdAsset, setCreatedAsset] = useState(false);
     const [metadata, setMetadata] = useState('');

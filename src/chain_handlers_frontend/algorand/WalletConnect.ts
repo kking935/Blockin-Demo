@@ -4,7 +4,7 @@ import QRCodeModal from "@walletconnect/qrcode-modal";
 import { UniversalTxn } from 'blockin';
 import { Dispatch, SetStateAction } from "react";
 
-export const connect = (setConnector: Dispatch<SetStateAction<WalletConnect | undefined>>, setAddress: Dispatch<SetStateAction<string>>) => {
+export const connect = (setConnector: Dispatch<SetStateAction<WalletConnect | undefined>>, setAddress: Dispatch<SetStateAction<string>>, setConnected: Dispatch<SetStateAction<boolean>>) => {
     // Create a connector
     const connector = new WalletConnect({
         bridge: "https://bridge.walletconnect.org", // Required
@@ -44,9 +44,12 @@ export const connect = (setConnector: Dispatch<SetStateAction<WalletConnect | un
         // Delete connector
     });
 
-    setConnector(connector)
-    const newAddress = connector && connector.accounts[0] ? connector.accounts[0].substring(0, 4) + '....' + connector.accounts[0].substring(connector.accounts[0].length - 4) : ''
-    setAddress(newAddress)
+    setConnector(connector);
+    if (connector.accounts[0]) {
+        setAddress(connector.accounts[0]);
+        setConnected(true);
+    }
+
 }
 
 export const createWCRequest = async (uTxns: UniversalTxn[]) => {

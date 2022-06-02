@@ -1,9 +1,8 @@
 import WalletConnect from "@walletconnect/client";
 import { createWCRequest } from '../WalletConnect';
-import { parse, stringify } from '../utils/preserveJson';
+import { parse, stringify } from '../../../utils/preserveJson';
 
 export const signOptIn = async (connector: WalletConnect, assetId: string) => {
-
     const data = await fetch('../api/createOptInTxn', {
         method: 'post',
         body: JSON.stringify({

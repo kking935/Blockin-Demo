@@ -1,10 +1,13 @@
-import { connect } from "../WalletConnect"
-import { useWalletContext } from "../contexts/WalletContext"
+import { connect } from "../chain_handlers_frontend/algorand/WalletConnect"
+import { useChainContext } from "../chain_handlers_frontend/ChainContext"
+
 import { useEffect, useState } from "react"
 import { CloseIcon, LoginIcon } from "./icons";
+import { useAlgorandContext } from "../chain_handlers_frontend/algorand/AlgorandContext";
 
 const ConnectScreen = () => {
-    const { connector, address, setConnector, setAddress } = useWalletContext();
+    const { address, setAddress } = useChainContext();
+    const { setConnector } = useAlgorandContext();
     const [popup, setPopup] = useState(false)
 
     const delay = 1
@@ -23,7 +26,7 @@ const ConnectScreen = () => {
         // when component unmount like in willComponentUnmount
         // and show will not change to true
         return () => {
-          clearTimeout(timer1);
+            clearTimeout(timer1);
         };
     }, [address])
 

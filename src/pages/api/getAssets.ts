@@ -2,19 +2,20 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { setChainDriver } from 'blockin';
 import { getColorFromMetadata } from "../../permissions/permissions";
 import AlgoDriver from "blockin-algo-driver";
-
-const chainDriver = new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : '');
-setChainDriver(chainDriver)
+import { getChainDriver } from "./apiConstants";
 
 const getAssetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
+    const chainDriver = getChainDriver(req.body.chain);
+    setChainDriver(chainDriver);
+
     const address = req.body.address;
     const assetMap = req.body.assetMap;
     const includeColors = req.body.includeColors;
 
     const assets: any[] = [];
-
+    console.log("BEFORE", assets, address);
     const allAssets = await chainDriver.getAllAssetsForAddress(address);
-
+    console.log("AFTER", allAssets, assets);
     const newAssetMap = assetMap;
 
     for (const asset of allAssets) {
@@ -44,7 +45,6 @@ const getAssetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     return res.status(200).json({ assets, assetMap: newAssetMap });
-
 };
 
 export default getAssetRequest;

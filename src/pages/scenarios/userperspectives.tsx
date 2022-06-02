@@ -2,9 +2,8 @@
 import Layout from '../../components/layout'
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
-import { getChallenge, getAssets } from '../../blockin-walletconnect-helpers/sign_challenge';
+import { getChallenge, getAssets } from '../../chain_handlers_frontend/backend_connectors';
 import { NextPage } from 'next/types';
-import { useWalletContext } from '../../contexts/WalletContext';
 import { getColorFromMetadata } from '../../permissions/permissions';
 import { SignChallengeButton } from '../../components/buttons/sign_challenge_button';
 import { SignOptInButton } from '../../components/buttons/sign_opt_in_button';

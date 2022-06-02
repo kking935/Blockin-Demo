@@ -1,8 +1,8 @@
 import { SyntheticEvent, useState } from "react"
-import { useWalletContext } from "../../contexts/WalletContext"
+import { useAlgorandContext } from "../../chain_handlers_frontend/algorand/AlgorandContext"
 
 export const LocalContractCreatesForm = ({contractId, setAssetId}: {contractId: string, setAssetId: React.Dispatch<React.SetStateAction<string>>}) => {
-    const { connector } = useWalletContext();
+    const { connector } = useAlgorandContext();
     const [creatingAsset, setCreatingAsset] = useState(false);
     const [createdAsset, setCreatedAsset] = useState(false);
     const [metadata, setMetadata] = useState('');

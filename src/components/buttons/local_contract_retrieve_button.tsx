@@ -1,9 +1,9 @@
 import { SyntheticEvent, useState } from "react"
-import { useWalletContext } from "../../contexts/WalletContext"
-import { signContractNoOp } from "../../blockin-walletconnect-helpers/sign_contract_no_op"
+import { useAlgorandContext } from "../../chain_handlers_frontend/algorand/AlgorandContext"
+import { signContractNoOp } from "../../chain_handlers_frontend/algorand/smartcontract-helpers/sign_contract_no_op"
 
 export const LocalContractRetrieveAssetButton = ({ contractId, assetId, updateAssets }: { contractId: string, assetId: string, updateAssets: () => Promise<void> }) => {
-    const { connector } = useWalletContext();
+    const { connector } = useAlgorandContext();
     const [retrievingAsset, setRetrievingAsset] = useState(false);
     const [retrievedAsset, setRetrievedAsset] = useState(false);
 

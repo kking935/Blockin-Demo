@@ -3,13 +3,12 @@ import { myAccount } from "./apiConstants";
 import { createAssetTxn, sendTxn, setChainDriver } from 'blockin';
 import { sha256 } from "../../permissions/sha256";
 import AlgoDriver from "blockin-algo-driver";
+import { getChainDriver } from "./apiConstants";
 
 const enc = new TextEncoder();
-const chainDriver = new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : '');
-setChainDriver(chainDriver)
 
 const getTokenRequest = async (req: NextApiRequest, res: NextApiResponse) => {
-    const token = await createAccessToken();
+    const token = await createAccessToken(req.body.chain);
     return res.status(200).send(token);
 };
 
@@ -21,7 +20,10 @@ function getRandomIntInclusive(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-export async function createAccessToken() {
+export async function createAccessToken(chain: string) {
+    const chainDriver = getChainDriver(chain);
+    setChainDriver(chainDriver);
+
     try {
         const colors = ['red', 'blue', 'green', 'pink', 'purple'];
         // const randomIdx = getRandomIntInclusive(0, 4);

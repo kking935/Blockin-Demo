@@ -1,5 +1,5 @@
 import WalletConnect from '@walletconnect/client';
-import { parse, stringify } from '../utils/preserveJson';
+import { parse, stringify } from '../../../utils/preserveJson';
 import { createWCRequest } from '../WalletConnect';
 
 export const signAssetCreateTxn = async (connector: WalletConnect, assetAuthorization: string) => {

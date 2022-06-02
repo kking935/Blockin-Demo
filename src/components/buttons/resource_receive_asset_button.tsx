@@ -1,8 +1,8 @@
 import { SyntheticEvent, useState } from "react"
-import { useWalletContext } from "../../contexts/WalletContext"
+import { useAlgorandContext } from "../../chain_handlers_frontend/algorand/AlgorandContext"
 
 export const ReceiveAssetFromResourceButton = ({ asset, updateAssets }: { asset: string, updateAssets: () => Promise<void> }) => {
-    const { connector } = useWalletContext();
+    const { connector } = useAlgorandContext();
     const [waiting, setWaiting] = useState(false);
     const [resourceTransferred, setResourceTransferred] = useState(false);
 
