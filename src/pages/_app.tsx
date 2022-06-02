@@ -7,11 +7,16 @@ import { ChainContext } from '../chain_handlers_frontend/ChainContext';
 import { connect as algorandConnect } from '../chain_handlers_frontend/algorand/WalletConnect';
 import { AlgorandContext } from '../chain_handlers_frontend/algorand/AlgorandContext';
 import { PresetAsset, PresetUri, SignChallengeResponse } from 'blockin';
+import Web3Modal from "web3modal";
+import { ethers } from "ethers";
+import { EthereumContext } from '../chain_handlers_frontend/ethereum/EthereumContext';
+
 
 const App = ({ Component, pageProps }: AppProps) => {
+    const [web3Modal, setWeb3Modal] = useState<Web3Modal>();
     const [connector, setConnector] = useState<WalletConnect>()
     const [address, setAddress] = useState<string>('')
-    const [chain, setChain] = useState<string>('Default');
+    const [chain, setChain] = useState<string>('Ethereum');
     const [signChallenge, setSignChallenge] = useState<(challenge: string) => Promise<SignChallengeResponse>>(async () => { return {} });
     const [displayedAssets, setDisplayedAssets] = useState<PresetAsset[]>([]);
     const [displayedUris, setDisplayedUris] = useState<PresetUri[]>([]);
@@ -21,6 +26,8 @@ const App = ({ Component, pageProps }: AppProps) => {
     const [connect, setConnect] = useState<() => Promise<void>>(async () => { });
     const [connected, setConnected] = useState<boolean>(false);
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
+
+
 
     return (
         <ChainContext.Provider value={{
@@ -47,12 +54,16 @@ const App = ({ Component, pageProps }: AppProps) => {
             ownedAssetIds,
             setOwnedAssetIds
         }}>
-            <AlgorandContext.Provider value={{
-                connector,
-                setConnector,
+            <EthereumContext.Provider value={{
+                web3Modal, setWeb3Modal
             }}>
-                <Component {...pageProps} />
-            </AlgorandContext.Provider>
+                <AlgorandContext.Provider value={{
+                    connector,
+                    setConnector,
+                }}>
+                    <Component {...pageProps} />
+                </AlgorandContext.Provider>
+            </EthereumContext.Provider>
         </ChainContext.Provider >
     )
 }

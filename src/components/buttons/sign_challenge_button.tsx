@@ -3,12 +3,17 @@ import { useEffect, useState } from "react"
 import { useCookies } from "react-cookie"
 import { useChainContext } from "../../chain_handlers_frontend/ChainContext"
 import { getAssets, getChallenge, verifyChallengeOnBackend } from "../../chain_handlers_frontend/backend_connectors"
-import { ChainSelect, SignInWithBlockinButton } from 'blockin/dist/ui';
+import { SignInWithBlockinButton } from 'blockin/dist/ui';
 import { constructChallengeObjectFromString, ChainProps, ChallengeParams, SupportedChain } from 'blockin';
 import { signChallengeEth } from "../../chain_handlers_frontend/ethereum/sign_challenge";
 import { connect as algorandConnect } from "../../chain_handlers_frontend/algorand/WalletConnect";
 import { useAlgorandContext } from "../../chain_handlers_frontend/algorand/AlgorandContext";
 import { signChallengeAlgo } from "../../chain_handlers_frontend/algorand/sign_challenge";
+import Blockies from 'react-blockies';
+import { ethers } from "ethers";
+import { useEthereumContext } from "../../chain_handlers_frontend/ethereum/EthereumContext";
+import Web3Modal from "web3modal";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
 const loadingMessage = <>
     <p>Go to your wallet and accept the challenge request...</p>
@@ -57,6 +62,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
         loggedIn,
         setLoggedIn
     } = useChainContext();
+    const { web3Modal, setWeb3Modal } = useEthereumContext();
     const [challengeString, setChallengeString] = useState('');
     const [cookies, setCookie, removeCookie] = useCookies(['blockedin', 'stripes', 'gradient']);
     const [assetsDisplayed, setAssetsDisplayed] = useState(assets ? assets.map((elem: any) => {
@@ -71,6 +77,10 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
             return { assetId: elem['asset-id'], name: `Algorand Testnet Asset ID: ${elem['asset-id']}`, frozen: false, defaultSelected: false, description: `${elem['color']} Banner` }
         }));
     }, [assets]);
+
+    useEffect(() => {
+        handleUpdateChain({ name: chain });
+    }, [])
 
 
     const handleSignChallenge = async (challenge: string) => {
@@ -131,14 +141,34 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
             setChain('Ethereum');
             //TODO: I know this isn't the right way to do this but it works
             const connectFunction = () => {
-                return async () => {
-                    console.log("asfjhaksdfhjk");
-                    let accounts = await window.ethereum.request({ method: 'eth_accounts' });
-                    console.log(accounts);
-                    if (accounts[0]) {
-                        setAddress(accounts[0]);
-                        setConnected(true);
+                const providerOptions = {
+                    // Example with WalletConnect provider
+                    walletconnect: {
+                        package: WalletConnectProvider,
+                        options: {
+                            infuraId: "27e484dcd9e3efcfd25a83a78777cdf1"
+                        }
                     }
+                };
+
+                const web3ModalInstance = web3Modal ? web3Modal : new Web3Modal({
+                    network: "mainnet", // optional
+                    cacheProvider: false, // optional
+                    providerOptions // required
+                });
+                setWeb3Modal(web3ModalInstance);
+
+                return async () => {
+                    const handleConnect = async () => {
+                        web3ModalInstance.clearCachedProvider();
+
+                        const instance = await web3ModalInstance.connect();
+                        const provider = new ethers.providers.Web3Provider(instance);
+                        const signer = provider.getSigner();
+                        setConnected(true);
+                        setAddress(await signer.getAddress());
+                    }
+                    await handleConnect();
                 }
             }
             setConnect(connectFunction);
@@ -260,6 +290,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
             {
                 <SignInWithBlockinButton
                     connected={connected}
+                    address={address}
                     connect={async () => {
                         connect()
                     }}
@@ -291,6 +322,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                         notBefore: undefined
                     }}
                     loggedIn={loggedIn}
+                    loggedInMessage={'Valid'}
                     logout={async () => {
                         await logout();
                         setLoggedIn(false);
@@ -325,10 +357,5 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
 
             }
         </div>
-        <div style={{ textAlign: 'center' }}>
-            Address: {address ? address : 'None'}
-        </div>
-
-        {/* {userIsSigningChallenge && displayMessage} */}
     </>;
 }
