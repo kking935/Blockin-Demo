@@ -1,30 +1,30 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Layout from '../components/layout'
+import Layout from './layout'
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
 import { getChallenge, getAssets } from '../chain_handlers_frontend/backend_connectors';
 import { NextPage } from 'next/types';
 import { useChainContext } from '../chain_handlers_frontend/ChainContext';
 import { getColorFromMetadata } from '../permissions/permissions';
-import { SignChallengeButton } from '../components/buttons/sign_challenge_button';
-import { SignOptInButton } from '../components/buttons/sign_opt_in_button';
-import { ResourceCreateAssetButton } from '../components/buttons/resource_create_asset_button';
-import { AssetLink } from '../components/assetLink';
-import { ReceiveAssetFromResourceButton } from '../components/buttons/resource_receive_asset_button';
-import { UserCreatesForm } from '../components/forms/user_create_asset_form';
-import { LocalContractCreatesForm } from '../components/forms/local_contract_create_asset_form';
-import { Expandable } from '../components/expandable';
-import { Step } from '../components/step';
-import { AssetIdList, AssetList } from '../components/assetList';
-import ConnectScreen from '../components/connectScreen';
-import { ContractOptInButton } from '../components/buttons/contract_opt_in_button';
-import { LocalContractRetrieveAssetButton } from '../components/buttons/local_contract_retrieve_button';
+import { SignChallengeButton } from './buttons/sign_challenge_button';
+import { SignOptInButton } from './buttons/sign_opt_in_button';
+import { ResourceCreateAssetButton } from './buttons/resource_create_asset_button';
+import { AssetLink } from './assetLink';
+import { ReceiveAssetFromResourceButton } from './buttons/resource_receive_asset_button';
+import { UserCreatesForm } from './forms/user_create_asset_form';
+import { LocalContractCreatesForm } from './forms/local_contract_create_asset_form';
+import { Expandable } from './expandable';
+import { Step } from './step';
+import { AssetIdList, AssetList } from './assetList';
+import ConnectScreen from './connectScreen';
+import { ContractOptInButton } from './buttons/contract_opt_in_button';
+import { LocalContractRetrieveAssetButton } from './buttons/local_contract_retrieve_button';
 
 const SAMPLE_ASSET_ID = '86695725';
 
 const contractId = process.env.NEXT_PUBLIC_LOCAL_CONTRACT_ID ?? "0";
 
-const TechnicalDemo = () => {
+const OtherDemos = () => {
     const { chain, address } = useChainContext();
     const [challenge, setChallenge] = useState('');
     const [challengeParams, setChallengeParams] = useState({});
@@ -101,7 +101,7 @@ const TechnicalDemo = () => {
         <>
             {/* <ConnectScreen /> */}
             <h2>Challenge Generation Demo</h2>
-            <p>Challenges are generated using the EIP-4361 Sign-In with Ethereum interface. Blockin additionally supports specifying assets in the resources field by prefixing them with 'Asset ID :'. All parts of the challenge are customizable using the Blockin library as long as it still follows the EIP-4361 interface.</p>
+            <p>Challenges are generated using the EIP-4361 Sign-In with Ethereum interface. Blockin additionally supports specifying assets in the resources field by prefixing them with `Asset ID :`. All parts of the challenge are customizable using the Blockin library as long as it still follows the EIP-4361 interface.</p>
             <p>A sample challenge is provided below: </p>
             <pre>{challenge}</pre>
             <hr />
@@ -131,7 +131,7 @@ const TechnicalDemo = () => {
                         <p>Click below to create a new asset. You may specify a metadata color in the input box below. You will have to sign the creation transaction in your wallet.</p>
 
                         <UserCreatesForm updateOwnedAssets={updateOwnedAssets} />
-                    </> : <><hr /><b><p>Switch your chain to Algorand Testnet in the site header to participate in the demo.</p></b></>}
+                    </> : <><hr /><b><p>Switch your chain to Algorand Testnet in the site header and connect a wallet to participate in the demo.</p></b></>}
                 </>}
             />
 
@@ -154,7 +154,7 @@ const TechnicalDemo = () => {
                             {resourceCreatesAssetId && resourceCreatesOptedIn && <div>
                                 <ReceiveAssetFromResourceButton asset={resourceCreatesAssetId} updateAssets={updateOwnedAssets} />
                             </div>}
-                        </> : <><hr /><b><p>Switch your chain to Algorand Testnet in the site header to participate in the demo.</p></b></>}
+                        </> : <><hr /><b><p>Switch your chain to Algorand Testnet in the site header and connect a wallet to participate in the demo.</p></b></>}
                     </>
                 }
             />
@@ -181,7 +181,7 @@ const TechnicalDemo = () => {
                             {smartContractCreatesLocalAssetOptedIn && <div>
                                 <LocalContractRetrieveAssetButton contractId={contractId} assetId={smartContractCreatesLocalAssetId} updateAssets={updateOwnedAssets} />
                             </div>}
-                        </> : <><hr /><b><p>Switch your chain to Algorand Testnet in the site header to participate in the demo.</p></b></>}
+                        </> : <><hr /><b><p>Switch your chain to Algorand Testnet in the site header and connect a wallet to participate in the demo.</p></b></>}
 
                     </>
                 }
@@ -203,4 +203,4 @@ const TechnicalDemo = () => {
     )
 }
 
-export default TechnicalDemo
+export default OtherDemos

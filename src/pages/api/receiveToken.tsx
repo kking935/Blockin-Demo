@@ -24,7 +24,7 @@ const receiveTokenRequest = async (req: NextApiRequest, res: NextApiResponse) =>
 export default receiveTokenRequest;
 
 export async function receiveToken(address: string, assetId: string) {
-    const chainDriver = getChainDriver(req.body.chain);
+    const chainDriver = getChainDriver('Algorand Testnet');
     setChainDriver(chainDriver);
 
     try {

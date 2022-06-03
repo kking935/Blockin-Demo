@@ -1,17 +1,13 @@
 import { NextPage } from 'next/types'
-import Link from 'next/link'
 import Layout from '../components/layout'
-import { Expandable } from '../components/expandable'
-import { SimpleDemo } from '../components/simpledemo'
-import TechnicalDemo from '../components/technicaldemo'
+import OtherDemos from '../components/otherDemos'
 
 const Home: NextPage = () => {
     return (
         <Layout>
             <section className='home'>
                 <h2>Welcome to the Blockin Demo Site!</h2>
-                <p>This site is intended to demonstrate Blockin, not to explain or get too technical. To learn more, click here.</p>
-                <p>Also, note that this site shows how to use the Blockin library, but it is just a specific implementation. Any site can completely customize how they use the Blockin library.</p>
+                <p>This site is intended to demonstrate Blockin and the Blockin library, not to explain or go too technical. To learn more, visit the Blockin Docs (link at bottom of this page).</p>
                 <hr />
                 {/* <p>The problem Blockin solves is that current sign-in standards (such as EIP-4361 Sign-In with Ethereum) are limited in two ways: 1) only capable of supporting a single chain at a time and 2) lack of role-based access control options.</p>
                 <p> Not all users for a company like Netflix, for example, will all belong to the same blockchain. Blockin is capable of supporting sign-ins from any blockchain!</p>
@@ -19,7 +15,7 @@ const Home: NextPage = () => {
                 <p>Blockin also allows for the ability to include and verify ownership of on-chain assets (such as NFTs) with a sign-in request, something previously not possible.</p> */}
                 <h2>Sign-In Demo</h2>
                 <p>At the top of the page, you can experiment with a sample sign-in example using Blockin. Different banner colors are used to represent different sign-in privileges.</p>
-                <p>The "Simulated Chain" option is provided for convenience. This allows you to successfully interact with this demo without connecting a wallet.</p>
+                <p>The <u>Simulated Chain</u> option is provided for convenience. This allows you to successfully interact with this demo without connecting a wallet.</p>
                 {/* <Expandable
                     special={true}
                     title="What is Blockin Used For?"
@@ -48,7 +44,7 @@ const Home: NextPage = () => {
  */}
                 <hr />
 
-                <TechnicalDemo />
+                <OtherDemos />
 
                 {/* <hr />
                 <h2>What does the "Simulated Chain" option mean?</h2> */}

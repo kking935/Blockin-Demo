@@ -17,7 +17,7 @@ const Header = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['blockedin', 'stripes', 'gradient']);
     const [challenge, setChallenge] = useState('');
     const { connector, setConnector } = useAlgorandContext();
-    const { address, setAddress, chain, setConnected } = useChainContext()
+    const { address, setAddress, chain, setConnected, setOwnedAssetIds } = useChainContext()
 
     const logout = async () => {
         removeCookie('blockedin', { 'path': '/' });
@@ -78,57 +78,6 @@ const Header = () => {
             setChallenge(blockinChallenge);
         }
     }
-
-    const loggedInElem = <>
-        <div className='bannerStatus'>
-            <div>
-                <KeyIcon />
-                <p>Blocked In ({bannerColor})</p>
-            </div>
-            <button className='logout' onClick={logout}>
-                <LogoutIcon /> Logout
-            </button>
-        </div>
-    </>
-
-    const connectedElem = <>
-        <div className='connectStatus'>
-            <div>
-                <WalletIcon />
-                <p>{address}</p>
-            </div>
-            <button className='logout' onClick={disconnect}>
-                <LogoutIcon /> Disconnect
-            </button>
-        </div>
-    </>;
-
-    const disconnectedElem = <>
-        <div className='connectStatus'>
-            <div>
-                <WalletIcon />
-                <p>Not Connected</p>
-            </div>
-            <button className='login' onClick={() => connect(setConnector, setAddress, setConnected)}>
-                <LoginIcon /> Connect
-            </button>
-        </div>
-    </>;
-
-    const loggedOutElem = <>
-        <div className='bannerStatus'>
-            <div>
-                <WalletIcon />
-                <p>Not Blocked In</p>
-            </div>
-            {/* <SignChallengeButton cookieValue={''} challengeParams={challenge} assets={[]} /> */}
-            <Link href='/scenarios/verification'>
-                <a className='login'>
-                    <LoginIcon /> Login
-                </a>
-            </Link>
-        </div>
-    </>
 
     return (
         <>

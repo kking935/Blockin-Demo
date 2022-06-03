@@ -6,7 +6,7 @@ import { CloseIcon, LoginIcon } from "./icons";
 import { useAlgorandContext } from "../chain_handlers_frontend/algorand/AlgorandContext";
 
 const ConnectScreen = () => {
-    const { address, setAddress } = useChainContext();
+    const { address, setAddress, setOwnedAssetIds, setConnected } = useChainContext();
     const { setConnector } = useAlgorandContext();
     const [popup, setPopup] = useState(false)
 
@@ -35,7 +35,7 @@ const ConnectScreen = () => {
             <div>
                 <button onClick={() => setPopup(false)} className="closeButton"><CloseIcon /></button>
                 <h1>You must connect your wallet to get started</h1>
-                <button className="connectButton" onClick={() => connect(setConnector, setAddress)}><LoginIcon /> Connect Wallet</button>
+                <button className="connectButton" onClick={() => connect(setConnector, setAddress, setConnected, setOwnedAssetIds)}><LoginIcon /> Connect Wallet</button>
             </div>
         </section>
     )
