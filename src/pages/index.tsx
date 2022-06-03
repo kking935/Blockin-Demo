@@ -7,14 +7,15 @@ const Home: NextPage = () => {
         <Layout>
             <section className='home'>
                 <h2>Welcome to the Blockin Demo Site!</h2>
-                <p>This site is intended to demonstrate Blockin and the Blockin library, not to explain or go too technical. To learn more, visit the Blockin Docs (link at bottom of this page).</p>
+                <p>This site is intended to demonstrate Blockin and the Blockin library, not to explain or go too technical. To learn more, visit the <a href="https://blockin.gitbook.io/blockin/" target="_blank" rel="noreferrer" style={{ color: 'blue' }}>Blockin Docs</a>.</p>
                 <hr />
                 {/* <p>The problem Blockin solves is that current sign-in standards (such as EIP-4361 Sign-In with Ethereum) are limited in two ways: 1) only capable of supporting a single chain at a time and 2) lack of role-based access control options.</p>
                 <p> Not all users for a company like Netflix, for example, will all belong to the same blockchain. Blockin is capable of supporting sign-ins from any blockchain!</p>
 
                 <p>Blockin also allows for the ability to include and verify ownership of on-chain assets (such as NFTs) with a sign-in request, something previously not possible.</p> */}
                 <h2>Sign-In Demo</h2>
-                <p>At the top of the page, you can experiment with a sample sign-in example using Blockin. Different banner colors are used to represent different sign-in privileges.</p>
+                <p>At the top of the page, you can experiment with a sample sign-in example using Blockin. Think of the different banner colors as different sign-in privileges (ex: standard vs premium plan).</p>
+                <p>This is what the end-user will see. Everything else, including the other demos, happen behind the scenes.</p>
                 <p>The <u>Simulated Chain</u> option is provided for convenience. This allows you to successfully interact with this demo without connecting a wallet.</p>
                 {/* <Expandable
                     special={true}

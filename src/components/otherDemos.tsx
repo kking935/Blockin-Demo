@@ -25,7 +25,7 @@ const SAMPLE_ASSET_ID = '86695725';
 const contractId = process.env.NEXT_PUBLIC_LOCAL_CONTRACT_ID ?? "0";
 
 const OtherDemos = () => {
-    const { chain, address } = useChainContext();
+    const { chain, address, connected } = useChainContext();
     const [challenge, setChallenge] = useState('');
     const [challengeParams, setChallengeParams] = useState({});
 
@@ -101,37 +101,37 @@ const OtherDemos = () => {
         <>
             {/* <ConnectScreen /> */}
             <h2>Challenge Generation Demo</h2>
-            <p>Challenges are generated using the EIP-4361 Sign-In with Ethereum interface. Blockin additionally supports specifying assets in the resources field by prefixing them with `Asset ID :`. All parts of the challenge are customizable using the Blockin library as long as it still follows the EIP-4361 interface.</p>
+            <p>Challenges are generated using the EIP-4361 Sign-In with Ethereum interface. Blockin additionally supports specifying assets, such as NFTs, in the resources field by prefixing them with `Asset ID :`.</p>
+            <p>The end-user will eventually sign this challenge message with their private key.</p>
             <p>A sample challenge is provided below: </p>
             <pre>{challenge}</pre>
             <hr />
-            <h2>Asset Creation Demos (Algorand Testnet)</h2>
-            <p>{"As explained in the Blockin paper, there are three different methods of creating assets, each with their own pros and cons. Authorization assets don't have to be created using Blockin; they can be created in anyway you would like. However, we recommend following the best practices described below, depending on who is creating the asset."}</p>
+            <h2>Asset Creation Demos</h2>
+            <p>{"As explained in the Blockin paper, there are three different methods of creating authorization assets based on who creates them, each with their own respective pros and cons. Note that these assets don't have to be created using the Blockin library. However, all created assets will fall under one of the three categories."}</p>
 
             <Expandable
                 title="User Creates"
                 content={<>
                     <p>{"For 'User Creates', the user will create the asset, including the metadata, and send the asset creation transaction to the blockchain."}</p>
-                    <p>{"Note that although the user has complete freedom over the metadata, it most likely will not be like this in reality. The authorizing resource can and should add additional validity checks enforcing that the metadata hash is well-formed for any specific user."}</p>
+                    <p>{"This method has the advantage that the resource provider is not paying the gas fees for every transactin. Each user is paying their own gas fees."}</p>
+                    <p>{"Note that although the user has complete freedom over the metadata, it should not be like this in reality. The authorizing resource can and should add additional validity checks enforcing that the metadata hash is well-formed for any specific user. We recommend following the guidelines defined in the Blockin paper."}</p>
+
                     <Expandable
-                        special={true}
-                        title="Example of how Asset Metadata can be Used"
+                        // special={true}
+                        title="Example: Dynamic Asset Metadata with User Creates"
                         content={<><p>{"Algorand allows 32 bytes for a metadata hash to be stored on-chain for each asset. These 32 bytes can be used in anyway that the authorizing resource would like to (encryption, hashes, plaintext, etc.)."}</p>
-                            <p>{"The Blockin library does not enforce the metadata bytes to be used in any specific way. For this example, we use the metadata scheme below."}</p>
                             <p>{"We start with a valid HTML color name in plaintext such as 'red'. We then apply the following function to the plaintext to get the 32 bytes metadata hash: Base64(SHA256(plaintext))."}</p>
-                            <p>{"For example, this asset ("}<AssetLink assetId={SAMPLE_ASSET_ID} />{") used 'red' as its color and the output of Base64(SHA256('red'))) is 'sfUaUR8doM00i4+FmNsy5hy5Y+X8aeK0FIW/mVkO11o='"}</p>
-                            <p>{"If you "}<AssetLink assetId={SAMPLE_ASSET_ID} text='click here' />{" and go to the 'Technical Information' tab, you can see the metadata hash is indeed 'sfUaUR8doM00i4+FmNsy5hy5Y+X8aeK0FIW/mVkO11o='."}</p>
-                            <p>{"Whenever a user requests to sign in with an asset using Blockin, the authorizing resource can use this metadata hash to grant role-based privileges. For example, the metadata hash from the asset above for our site will correspond to the red banner color privilege."}</p>
+                            <p>{"If we perform this function on 'red', the output is 'sfUaUR8doM00i4+FmNsy5hy5Y+X8aeK0FIW/mVkO11o='"}</p>
+                            <p>{"If you "}<AssetLink assetId={SAMPLE_ASSET_ID} text='click here' />{" and go to the 'Technical Information' tab, you can see the metadata hash stored on-chain for this example asset is 'sfUaUR8doM00i4+FmNsy5hy5Y+X8aeK0FIW/mVkO11o='."}</p>
+                            <p>{"Whenever a user requests to sign in with an asset using Blockin, the authorizing resource can use this metadata hash to grant role-based privileges. For example, users that sign in with the above asset can be placed on the red team."}</p>
                         </>}
                     />
-                    <p>{"This method also has the advantage that the resource provider is not paying the gas fees for every user. Each user is paying their own gas fees."}</p>
-
-
-                    {chain === 'Algorand Testnet' ? <>
+                    <h4>User Demo</h4>
+                    {chain === 'Algorand Testnet' && connected ? <>
                         <p>Click below to create a new asset. You may specify a metadata color in the input box below. You will have to sign the creation transaction in your wallet.</p>
 
                         <UserCreatesForm updateOwnedAssets={updateOwnedAssets} />
-                    </> : <><hr /><b><p>Switch your chain to Algorand Testnet in the site header and connect a wallet to participate in the demo.</p></b></>}
+                    </> : <><p>Switch your chain to Algorand Testnet in the site header and connect a wallet to participate in the demo.</p></>}
                 </>}
             />
 
@@ -141,8 +141,8 @@ const OtherDemos = () => {
                     <>
                         <p>{"For this method, the resource will define the metadata and send the asset creation transaction to the blockchain. The asset will then be sent to the user's wallet."}</p>
 
-
-                        {chain === 'Algorand Testnet' ? <>
+                        <h4>Resource Demo (Algorand Testnet)</h4>
+                        {chain === 'Algorand Testnet' && connected ? <>
                             <p>Click below to request to receive a new asset from the authorizing resource. You will have to sign a transaction in your wallet.</p>
 
                             <div>
@@ -154,7 +154,7 @@ const OtherDemos = () => {
                             {resourceCreatesAssetId && resourceCreatesOptedIn && <div>
                                 <ReceiveAssetFromResourceButton asset={resourceCreatesAssetId} updateAssets={updateOwnedAssets} />
                             </div>}
-                        </> : <><hr /><b><p>Switch your chain to Algorand Testnet in the site header and connect a wallet to participate in the demo.</p></b></>}
+                        </> : <><p>Switch your chain to Algorand Testnet in the site header and connect a wallet to participate in the demo.</p></>}
                     </>
                 }
             />
@@ -163,8 +163,8 @@ const OtherDemos = () => {
                 content={
                     <>
                         <p>{"For this method, a smart contract will define the metadata and send the asset creation transaction to the blockchain. The asset will then be sent to the user's wallet via the smart contract."}</p>
-
-                        {chain === 'Algorand Testnet' ? <>
+                        <h4>Smart Contract Demo (Algorand Testnet)</h4>
+                        {chain === 'Algorand Testnet' && connected ? <>
                             <p>Click below to request to receive a new asset from the authorizing resource. You will have to sign a transaction in your wallet.</p>
 
                             <p>{"For this method, the user must opt-in to the contract. Once they have opted-in the resource will call the smart contract with their asset details and user address. The smart contract creates the asset and stores the new asset's id in the user's local storage. Next the user opts-in to the asset and requests their asset from the smart contract. The smart contract uses the mapping in the user's local storage to find the asset created by it earlier and sends it to the user."}</p>
@@ -181,7 +181,7 @@ const OtherDemos = () => {
                             {smartContractCreatesLocalAssetOptedIn && <div>
                                 <LocalContractRetrieveAssetButton contractId={contractId} assetId={smartContractCreatesLocalAssetId} updateAssets={updateOwnedAssets} />
                             </div>}
-                        </> : <><hr /><b><p>Switch your chain to Algorand Testnet in the site header and connect a wallet to participate in the demo.</p></b></>}
+                        </> : <><p>Switch your chain to Algorand Testnet in the site header and connect a wallet to participate in the demo.</p></>}
 
                     </>
                 }
