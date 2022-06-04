@@ -49,6 +49,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
         setDisconnect,
         setDisplayedAssets,
         setDisplayedUris,
+        currentChainInfo,
         setCurrentChainInfo,
         setSignChallenge,
         setOwnedAssetIds,
@@ -66,19 +67,20 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
     const [challengeString, setChallengeString] = useState('');
     const [cookies, setCookie, removeCookie] = useCookies(['blockedin', 'stripes', 'gradient']);
     const [assetsDisplayed, setAssetsDisplayed] = useState(assets ? assets.map((elem: any) => {
-        console.log(elem);
+        // console.log(elem);
         return { assetId: elem['asset-id'], name: `Algorand Testnet Asset ID: ${elem['asset-id']}`, frozen: false, defaultSelected: false, description: `${elem['color']} Banner` }
     }) : []);
     const [nonce, setNonce] = useState('0x123456789');
 
     useEffect(() => {
         setAssetsDisplayed(assets.map((elem: any) => {
-            console.log(elem);
+            // console.log(elem);
             return { assetId: elem['asset-id'], name: `Algorand Testnet Asset ID: ${elem['asset-id']}`, frozen: false, defaultSelected: false, description: `${elem['color']} Banner` }
         }));
     }, [assets]);
 
     useEffect(() => {
+        // console.log('INITIAL USE EFFECT', chain)
         handleUpdateChain({ name: chain });
     }, [])
 
@@ -137,8 +139,21 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
         setConnected(false);
         console.log(newChainProps.name);
         setAddress('');
+
         if (newChainProps.name === 'Ethereum') {
-            setChain('Ethereum');
+            // console.log('SETTING TO ETHEREUM', chain);
+            setCurrentChainInfo({
+                getNameForAddress: async (address: string) => {
+                    // console.log("ENSSSSS");
+                    if (address) {
+                        console.log("ATTEMPTING TO RESOLVE ENS NAME...")
+                        const ensAddress = await ethers.getDefaultProvider('homestead', { quorum: 1 }).lookupAddress(address);
+                        if (ensAddress) return ensAddress;
+                    }
+                    return undefined;
+                }
+            });
+
             //TODO: I know this isn't the right way to do this but it works
             const connectFunction = () => {
                 const providerOptions = {
@@ -168,16 +183,18 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                         setConnected(true);
                         setAddress(await signer.getAddress());
                         const returnedAssets = await getAssets('Ethereum', await signer.getAddress(), {}, false);
-                        console.log("ASFHJKASDFH", assets);
+                        // console.log("ASFHJKASDFH", assets);
                         const assetIds = [];
                         for (const asset of returnedAssets?.assets) {
                             assetIds.push(asset['token_address']);
                         }
                         setOwnedAssetIds(assetIds);
+
                     }
                     await handleConnect();
                 }
             }
+            setChain('Ethereum');
             setConnect(connectFunction);
             setDisconnect(() => {
                 return async () => {
@@ -191,9 +208,10 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
             });
             setDisplayedAssets([]);
             setDisplayedUris([]);
-        } else if (newChainProps.name.startsWith('Algorand')) {
+
+        } else if (newChainProps.name && newChainProps.name.startsWith('Algorand')) {
+            setCurrentChainInfo({});
             setChain(newChainProps.name);
-            //TODO: I know this isn't the right way to do this but it works
             const connectFunction = () => {
                 return async () => {
                     algorandConnect(setConnector, setAddress, setConnected, setOwnedAssetIds);
@@ -215,6 +233,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
             setDisplayedAssets([]);
             setDisplayedUris([]);
         } else if (newChainProps.name === 'Simulated') {
+            setCurrentChainInfo({});
             setChain(newChainProps.name);
             //TODO: I know this isn't the right way to do this but it works
             setConnect(() => async () => {
@@ -274,7 +293,6 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
             setNonce(challengeObj.nonce);
         }
     }
-
     return <>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
             {/* <ChainSelect
@@ -335,6 +353,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                         setLoggedIn(false);
                     }}
                     currentChain={chain}
+                    currentChainInfo={currentChainInfo}
                     displayedAssets={[{
                         assetId: '0xabc123xyz456',
                         name: 'Sample Asset',

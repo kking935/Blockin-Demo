@@ -7,7 +7,7 @@ const getChallengeParamsRequest = async (req: NextApiRequest, res: NextApiRespon
     const chainDriver = getChainDriver(req.body.chain);
     setChainDriver(chainDriver);
 
-    console.log(chainDriver);
+    // console.log(chainDriver);
 
     return res.status(200).json({
         domain: 'https://blockin.com',

@@ -1,4 +1,4 @@
-import { PresetAsset, PresetUri, SignChallengeResponse } from 'blockin';
+import { PresetAsset, PresetUri, SignChallengeResponse, SupportedChain } from 'blockin';
 import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react';
 
 export type ChainContextType = {
@@ -33,8 +33,8 @@ export type ChainContextType = {
     displayedUris: PresetUri[],
     setDisplayedUris: Dispatch<SetStateAction<PresetUri[]>>,
 
-    currentChainInfo?: any | undefined,
-    setCurrentChainInfo?: Dispatch<SetStateAction<(challenge: string) => Promise<any | undefined>>>,
+    currentChainInfo: SupportedChain | undefined,
+    setCurrentChainInfo: Dispatch<SetStateAction<SupportedChain | undefined>>,
 }
 
 export const ChainContext = createContext<ChainContextType>({
@@ -58,6 +58,8 @@ export const ChainContext = createContext<ChainContextType>({
     displayedUris: [],
     setDisplayedAssets: () => { },
     setDisplayedUris: () => { },
+    setCurrentChainInfo: () => { },
+    currentChainInfo: {}
 });
 
 export const useChainContext = () => useContext(ChainContext);

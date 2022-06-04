@@ -13,9 +13,9 @@ const getAssetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     const includeColors = req.body.includeColors;
 
     const assets: any[] = [];
-    console.log("BEFORE", assets, address);
+    // console.log("BEFORE", assets, address);
     const allAssets = await chainDriver.getAllAssetsForAddress(address);
-    console.log("AFTER", allAssets, assets);
+    // console.log("AFTER", allAssets, assets);
     const newAssetMap = assetMap;
 
     for (const asset of allAssets) {

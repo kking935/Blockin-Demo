@@ -16,7 +16,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     const [web3Modal, setWeb3Modal] = useState<Web3Modal>();
     const [connector, setConnector] = useState<WalletConnect>()
     const [address, setAddress] = useState<string>('')
-    const [chain, setChain] = useState<string>('Ethereum');
+    const [chain, setChain] = useState<string>('Simulated');
     const [signChallenge, setSignChallenge] = useState<(challenge: string) => Promise<SignChallengeResponse>>(async () => { return {} });
     const [displayedAssets, setDisplayedAssets] = useState<PresetAsset[]>([]);
     const [displayedUris, setDisplayedUris] = useState<PresetUri[]>([]);
