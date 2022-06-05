@@ -1,9 +1,9 @@
 import { SyntheticEvent, useState } from "react"
-import { useWalletContext } from "../../contexts/WalletContext"
-import { signOptIn } from "../../blockin-walletconnect-helpers/sign_opt_in"
+import { useAlgorandContext } from "../../chain_handlers_frontend/algorand/AlgorandContext"
+import { signOptIn } from "../../chain_handlers_frontend/algorand/smartcontract-helpers/sign_opt_in"
 
 export const SignOptInButton = ({ asset, onConfirm }: { asset: string, onConfirm: () => Promise<void> }) => {
-    const { connector } = useWalletContext();
+    const { connector } = useAlgorandContext();
     const [resourceOptedIn, setResourceOptedIn] = useState(false);
     const [waiting, setWaiting] = useState(false);
 

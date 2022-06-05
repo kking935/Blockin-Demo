@@ -1,17 +1,23 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Image from 'next/image'
 import { useState } from 'react';
 import Link from 'next/link';
 import { BlockinIcon, KeyIcon, WalletIcon, LogoutIcon, LoginIcon } from './icons';
-import { connect } from '../WalletConnect';
+import { connect } from '../chain_handlers_frontend/algorand/WalletConnect';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie'
 import { getColorFromMetadata } from '../permissions/permissions';
-import { useWalletContext } from '../contexts/WalletContext';
+import { SignChallengeButton } from './buttons/sign_challenge_button';
+import { getChallenge } from '../chain_handlers_frontend/backend_connectors';
+import { useChainContext } from '../chain_handlers_frontend/ChainContext';
+import { useAlgorandContext } from '../chain_handlers_frontend/algorand/AlgorandContext';
 
 const Header = () => {
     const [bannerColor, setBannerColor] = useState('');
     const [cookies, setCookie, removeCookie] = useCookies(['blockedin', 'stripes', 'gradient']);
-    const { connector, setConnector, address, setAddress } = useWalletContext();
+    const [challenge, setChallenge] = useState('');
+    const { connector, setConnector } = useAlgorandContext();
+    const { address, setAddress, chain, setConnected, setOwnedAssetIds } = useChainContext()
 
     const logout = async () => {
         removeCookie('blockedin', { 'path': '/' });
@@ -61,56 +67,17 @@ const Header = () => {
         console.log(address)
     }, [address, setAddress])
 
-    const loggedInElem = <>
-        <div className='bannerStatus'>
-            <div>
-                <KeyIcon />
-                <p>Blocked In ({bannerColor})</p>
-            </div>
-            <button className='logout' onClick={logout}>
-                <LogoutIcon /> Logout
-            </button>
-        </div>
-    </>
+    useEffect(() => {
+        updateChallenge();
+    }, [connector, chain]);
 
-    const connectedElem = <>
-        <div className='connectStatus'>
-            <div>
-                <WalletIcon />
-                <p>{address}</p>
-            </div>
-            <button className='logout' onClick={disconnect}>
-                <LogoutIcon /> Disconnect
-            </button>
-        </div>
-    </>;
-
-    const disconnectedElem = <>
-        <div className='connectStatus'>
-            <div>
-                <WalletIcon />
-                <p>Not Connected</p>
-            </div>
-            <button className='login' onClick={() => connect(setConnector, setAddress)}>
-                <LoginIcon /> Connect
-            </button>
-        </div>
-
-    </>;
-
-    const loggedOutElem = <>
-        <div className='bannerStatus'>
-            <div>
-                <WalletIcon />
-                <p>Not Blocked In</p>
-            </div>
-            <Link href='/scenarios/verification'>
-                <a className='login'>
-                    <LoginIcon /> Login
-                </a>
-            </Link>
-        </div>
-    </>
+    const updateChallenge = async () => {
+        if (address) {
+            const blockinChallenge = await getChallenge(chain, address, []);
+            console.log(blockinChallenge);
+            setChallenge(blockinChallenge);
+        }
+    }
 
     return (
         <>
@@ -123,27 +90,32 @@ const Header = () => {
                 </Link>
 
 
-                <div className='bottomBanner'>
+                {/* <div className='bottomBanner'>
                     {cookies['blockedin'] ?
                         loggedInElem : loggedOutElem
                     }
-                    {address != '' ?
+                    {address ?
                         connectedElem : disconnectedElem
                     }
-                </div>
-
-
+                </div> */}
+                <SignChallengeButton assets={[]} cookieValue={'none'} challengeParams={''} />
 
             </header >
+
+
             {cookies['stripes'] && <div style={{
-                width: '100%', height: 50, background: 'repeating-linear-gradient(45deg, red, red 10px, white 10px, white 20px)'
+                width: '100%', height: 25,
+                backgroundColor: 'blue'
+                // background: 'repeating-linear-gradient(45deg, red, red 10px, white 10px, white 20px)'
             }}></div>}
 
             {cookies['gradient'] && <div style={{
-                width: '100%', height: 50, background: 'linear-gradient(black, blue)'
+                width: '100%', height: 25,
+                backgroundColor: 'red'
+                // background: 'linear-gradient(black, blue)'
             }}></div>}
         </>
     )
 }
 
-export default Header
+export default Header;

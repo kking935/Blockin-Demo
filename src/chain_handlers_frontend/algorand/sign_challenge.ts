@@ -1,21 +1,6 @@
+import WalletConnect from "@walletconnect/client";
 import algosdk from "algosdk";
-import WalletConnect from '@walletconnect/client';
-import { createWCRequest } from "../WalletConnect";
-import { stringify } from "../utils/preserveJson";
-
-export async function getAssets(address: string, assetMap: any, includeColors: boolean) {
-    const data = await fetch('../api/getAssets', {
-        method: 'post',
-        body: JSON.stringify({
-            address,
-            includeColors,
-            assetMap
-        }),
-        headers: { 'Content-Type': 'application/json' }
-    }).then(res => res.json());
-
-    return data;
-}
+import { createWCRequest } from "./WalletConnect";
 
 interface IScenarioTxn {
     txn: algosdk.Transaction;
@@ -26,22 +11,8 @@ interface IScenarioTxn {
 
 type ScenarioReturnType = IScenarioTxn[][];
 // ...End of api.ts from WalletConnect example
-
-const getChallengeFromBlockin = async (connector: WalletConnect, assetIds: string[]): Promise<string> => {
-    const data = await fetch('../api/getChallenge', {
-        method: 'post',
-        body: JSON.stringify({
-            address: connector?.accounts[0],
-            assetIds
-        }),
-        headers: { 'Content-Type': 'application/json' }
-    }).then(res => res.json());
-
-    return data.message;
-}
-
 //confusing algoSDK stuff
-const parseSignedTransactions = async (txnsFormattedForAlgoSdk: ScenarioReturnType, result: Array<string | null>):
+export const parseSignedTransactions = async (txnsFormattedForAlgoSdk: ScenarioReturnType, result: Array<string | null>):
     Promise<Array<Array<{
         txID: string;
         signingAddress?: string;
@@ -96,7 +67,7 @@ const parseSignedTransactions = async (txnsFormattedForAlgoSdk: ScenarioReturnTy
 
             const txn = (signedTxn.txn as unknown) as algosdk.Transaction;
             const txID = txn.txID();
-            const unsignedTxID = txnsFormattedForAlgoSdk[group][i].txn.txID();
+            const unsignedTxID: any = txnsFormattedForAlgoSdk[group][i].txn.txID();
 
             if (txID !== unsignedTxID) {
                 throw new Error(
@@ -119,26 +90,7 @@ const parseSignedTransactions = async (txnsFormattedForAlgoSdk: ScenarioReturnTy
     return signedTxnInfo;
 }
 
-
-export const getChallenge = async (connector: WalletConnect, assetIds: string[]) => {
-    const assets = [];
-    for (const assetId of assetIds) {
-        assets.push('Asset ID: ' + assetId);
-    }
-
-    const message = await getChallengeFromBlockin(connector, assets);
-    return message;
-}
-
-
-/** 
- *  IMPORTANT: Note that nothing with the signatures is imported from Blockin. Blockin does not handle any
- *  signature functionality. All of this must be implemented in the client. This function uses WalletConnect
- *  and algoSDK to sign the challenge inputted as the 'message' parameter. Once everything is handled with
- *  the signatures, we eventually call verifyChallenge() which takes the signature ad an input. Blockin will
- *  never use your private keys.
- */
-export const signChallenge = async (connector: WalletConnect, message: string, testnet?: boolean) => {
+export const signChallengeAlgo = async (connector: WalletConnect, message: string, testnet?: boolean) => {
     const uTxn = algosdk.makePaymentTxn(
         connector?.accounts[0],
         connector?.accounts[0],
@@ -191,22 +143,4 @@ export const signChallenge = async (connector: WalletConnect, message: string, t
     else {
         return { message: 'Error: Error with signature response.', signatureBytes: new Uint8Array(0), originalBytes: new Uint8Array(0) };
     }
-};
-
-export const verifyChallengeOnBackend = async (originalBytes: Uint8Array, signatureBytes: Uint8Array) => {
-    //Blockin verify
-    //Note: It will always return a string and should never throw an error
-    //Returns "Successfully granted access via Blockin" upon success
-
-    const bodyStr = stringify({ originalBytes, signatureBytes }); //hack to preserve uint8 arrays
-    console.log(bodyStr);
-
-    const verificationRes = await fetch('../api/verifyChallenge', {
-        method: 'post',
-        body: bodyStr,
-        headers: { 'Content-Type': 'application/json' }
-    }).then(res => res.json());
-
-
-    return verificationRes;
 }

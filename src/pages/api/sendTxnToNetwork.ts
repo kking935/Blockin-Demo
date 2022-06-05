@@ -2,11 +2,14 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { sendTxn, setChainDriver } from 'blockin';
 import { parse } from "../../utils/preserveJson";
 import AlgoDriver from "blockin-algo-driver";
+import { getChainDriver } from "./apiConstants";
 
 const enc = new TextEncoder();
-setChainDriver(new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : ''))
 
 const sendTxnRequest = async (req: NextApiRequest, res: NextApiResponse) => {
+    const chainDriver = getChainDriver(req.body.chain);
+    setChainDriver(chainDriver);
+
     const body = parse(JSON.stringify(req.body)); //little hack to preserve Uint8Arrays
 
     const sendTx = await sendTxn(body.stxs, body.uTxn.txnId)

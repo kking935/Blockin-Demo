@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react"
 import { AssetLink } from "../assetLink"
-import { useWalletContext } from "../../contexts/WalletContext"
+import { useAlgorandContext } from "../../chain_handlers_frontend/algorand/AlgorandContext"
 
 export const ResourceCreateAssetButton = ({ asset, setAsset }: { asset: string, setAsset: Dispatch<SetStateAction<string>> }) => {
-    const { connector } = useWalletContext();
+    const { connector } = useAlgorandContext();
     const [resourceAddress, setResourceAddress] = useState('');
     const [resourceMetadata, setResourceMetadata] = useState('');
     const [creatingAsset, setCreatingAsset] = useState(false);

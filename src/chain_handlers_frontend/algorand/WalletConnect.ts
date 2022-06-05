@@ -3,8 +3,9 @@ import WalletConnect from "@walletconnect/client";
 import QRCodeModal from "@walletconnect/qrcode-modal";
 import { UniversalTxn } from 'blockin';
 import { Dispatch, SetStateAction } from "react";
+import { getAssets } from "../backend_connectors";
 
-export const connect = (setConnector: Dispatch<SetStateAction<WalletConnect | undefined>>, setAddress: Dispatch<SetStateAction<string>>) => {
+export const connect = async (setConnector: Dispatch<SetStateAction<WalletConnect | undefined>>, setAddress: Dispatch<SetStateAction<string>>, setConnected: Dispatch<SetStateAction<boolean>>, setOwnedAssetIds: Dispatch<SetStateAction<string[]>>) => {
     // Create a connector
     const connector = new WalletConnect({
         bridge: "https://bridge.walletconnect.org", // Required
@@ -44,9 +45,22 @@ export const connect = (setConnector: Dispatch<SetStateAction<WalletConnect | un
         // Delete connector
     });
 
-    setConnector(connector)
-    const newAddress = connector && connector.accounts[0] ? connector.accounts[0].substring(0, 4) + '....' + connector.accounts[0].substring(connector.accounts[0].length - 4) : ''
-    setAddress(newAddress)
+    setConnector(connector);
+    if (connector.accounts[0]) {
+        setAddress(connector.accounts[0]);
+        const mainnetAssets = await getAssets('Algorand', connector.accounts[0], {}, false);
+        const testnetAssets = await getAssets('Algorand Testnet', connector.accounts[0], {}, false);
+        const assets = [];
+        for (const asset of mainnetAssets?.assets) {
+            assets.push(`${asset['asset-id']}`);
+        }
+        for (const asset of testnetAssets?.assets) {
+            assets.push(`Testnet: ${asset['asset-id']}`);
+        }
+        setOwnedAssetIds(assets);
+        setConnected(true);
+    }
+
 }
 
 export const createWCRequest = async (uTxns: UniversalTxn[]) => {

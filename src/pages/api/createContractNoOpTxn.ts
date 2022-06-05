@@ -3,11 +3,11 @@ import { sendTxn, setChainDriver } from 'blockin';
 import { myAccount } from "./apiConstants";
 import { stringify } from "../../utils/preserveJson";
 import AlgoDriver from "blockin-algo-driver";
-
-const chainDriver = new AlgoDriver('Testnet', process.env.ALGO_API_KEY ? process.env.ALGO_API_KEY : '')
-setChainDriver(chainDriver);
+import { getChainDriver } from "./apiConstants";
 
 const createContractNoOpRequest = async (req: NextApiRequest, res: NextApiResponse) => {
+    const chainDriver = getChainDriver(req.body.chain);
+    setChainDriver(chainDriver);
 
     const from = req.body.from;
     const contractId = req.body.contractId;
@@ -15,16 +15,20 @@ const createContractNoOpRequest = async (req: NextApiRequest, res: NextApiRespon
 
     console.log("contractId")
     console.log(contractId)
-    const uTxn = await chainDriver.makeContractNoOpTxn({
-        from: from,
-        appIndex: Number(contractId),
-        accounts: [from],
-        foreignAssets: [Number(assetId)],
-        appArgs: undefined
-    });
+    if (chainDriver instanceof AlgoDriver) {
+        const uTxn = await chainDriver.makeContractNoOpTxn({
+            from: from,
+            appIndex: Number(contractId),
+            accounts: [from],
+            foreignAssets: [Number(assetId)],
+            appArgs: undefined
+        });
 
-    const uTxnString = stringify(uTxn);  //little hack to preserve Uint8Arrays
-    return res.status(200).json({ uTxn: uTxnString });
+        const uTxnString = stringify(uTxn);  //little hack to preserve Uint8Arrays
+        return res.status(200).json({ uTxn: uTxnString });
+    } else {
+        throw 'ChainDriver not an instance of AlgoDriver';
+    }
 };
 
 export default createContractNoOpRequest;
