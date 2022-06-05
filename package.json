@@ -15,7 +15,7 @@
     "@walletconnect/types": "^1.7.7",
     "@walletconnect/web3-provider": "^1.7.8",
     "algosdk": "^1.17.0",
-    "blockin": "^1.2.2",
+    "blockin": "^1.2.4",
     "blockin-algo-driver": "^1.0.2",
     "blockin-eth-driver": "^1.0.7",
     "crypto-browserify": "^3.12.0",
