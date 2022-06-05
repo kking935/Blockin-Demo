@@ -15,9 +15,9 @@
     "@walletconnect/types": "^1.7.7",
     "@walletconnect/web3-provider": "^1.7.8",
     "algosdk": "^1.17.0",
-    "blockin": "^1.1.34",
-    "blockin-algo-driver": "^1.0.1",
-    "blockin-eth-driver": "^1.0.6",
+    "blockin": "^1.1.35",
+    "blockin-algo-driver": "^1.0.2",
+    "blockin-eth-driver": "^1.0.7",
     "crypto-browserify": "^3.12.0",
     "dotenv": "^16.0.1",
     "eth-sig-util": "^3.0.1",
@@ -39,6 +39,6 @@
     "@types/react-dom": "18.0.0",
     "eslint": "8.13.0",
     "eslint-config-next": "12.1.4",
-    "typescript": "^4.7.2"
+    "typescript": "^4.7.3"
   }
 }

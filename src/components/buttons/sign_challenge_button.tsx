@@ -378,7 +378,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                     signChallenge={handleSignChallenge}
                     verifyChallengeOnBackend={handleVerifyChallenge}
                     canAddCustomAssets={true}
-                    customAddResourcesMessage={<>For convenience, we have provided you with a list of asset IDs that you own in the connected wallet:<pre>{` ${ownedAssetIds ? ownedAssetIds.map((val, idx) => {
+                    customAddHelpDisplay={<>For convenience, we have provided you with a list of asset IDs that you own in the connected wallet:<pre>{` ${ownedAssetIds ? ownedAssetIds.map((val, idx) => {
                         return `${idx + 1}) ${val}\n`
                     }).join(' ') : 'None'}`}</pre></>}
                 />
