@@ -3,8 +3,8 @@ import { useEffect, useState } from "react"
 import { useCookies } from "react-cookie"
 import { useChainContext } from "../../chain_handlers_frontend/ChainContext"
 import { getAssets, getChallenge, verifyChallengeOnBackend } from "../../chain_handlers_frontend/backend_connectors"
-import { SignInWithBlockinButton } from 'blockin/dist/ui';
-import { constructChallengeObjectFromString, ChainProps, ChallengeParams, SupportedChain } from 'blockin';
+import { BlockinUIDisplay } from 'blockin/dist/ui';
+import { constructChallengeObjectFromString, ChallengeParams, SupportedChainMetadata } from 'blockin';
 import { signChallengeEth } from "../../chain_handlers_frontend/ethereum/sign_challenge";
 import { connect as algorandConnect } from "../../chain_handlers_frontend/algorand/WalletConnect";
 import { useAlgorandContext } from "../../chain_handlers_frontend/algorand/AlgorandContext";
@@ -47,14 +47,12 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
         setConnect,
         signChallenge,
         setDisconnect,
-        setDisplayedAssets,
-        setDisplayedUris,
-        currentChainInfo,
-        setCurrentChainInfo,
+        setDisplayedResources,
+        selectedChainInfo,
+        setSelectedChainInfo,
         setSignChallenge,
         setOwnedAssetIds,
-        displayedAssets,
-        displayedUris,
+        displayedResources,
         chain,
         setChain,
         setAddress,
@@ -135,14 +133,14 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
     }
 
 
-    const handleUpdateChain = async (newChainProps: SupportedChain) => {
+    const handleUpdateChain = async (newChainProps: SupportedChainMetadata) => {
         setConnected(false);
         console.log(newChainProps.name);
         setAddress('');
 
         if (newChainProps.name === 'Ethereum') {
             // console.log('SETTING TO ETHEREUM', chain);
-            setCurrentChainInfo({
+            setSelectedChainInfo({
                 getNameForAddress: async (address: string) => {
                     // console.log("ENSSSSS");
                     if (address) {
@@ -206,11 +204,10 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
             setSignChallenge(() => async (challenge: string) => {
                 return signChallengeEth(challenge);
             });
-            setDisplayedAssets([]);
-            setDisplayedUris([]);
+            setDisplayedResources([]);
 
         } else if (newChainProps.name && newChainProps.name.startsWith('Algorand')) {
-            setCurrentChainInfo({});
+            setSelectedChainInfo({});
             setChain(newChainProps.name);
             const connectFunction = () => {
                 return async () => {
@@ -230,10 +227,9 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                 if (connector) return signChallengeAlgo(connector, challenge, newChainProps.name === 'Algorand Testnet');
                 else throw 'Error signing challenge'
             });
-            setDisplayedAssets([]);
-            setDisplayedUris([]);
+            setDisplayedResources([])
         } else if (newChainProps.name === 'Simulated') {
-            setCurrentChainInfo({});
+            setSelectedChainInfo({});
             setChain(newChainProps.name);
             //TODO: I know this isn't the right way to do this but it works
             setConnect(() => async () => {
@@ -246,8 +242,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                 setConnected(false);
             });
             setSignChallenge(() => handleSignChallengeSuccess);
-            setDisplayedAssets([]);
-            setDisplayedUris([]);
+            setDisplayedResources([])
             setOwnedAssetIds([]);
         }
     }
@@ -313,7 +308,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                 updateChain={handleUpdateChain}
             /> */}
             {
-                <SignInWithBlockinButton
+                <BlockinUIDisplay
                     connected={connected}
                     address={address}
                     connect={async () => {
@@ -347,36 +342,50 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                         notBefore: undefined
                     }}
                     loggedIn={loggedIn}
-                    loggedInMessage={'Valid'}
+                    loggedInDetails={'Valid'}
                     logout={async () => {
                         await logout();
                         setLoggedIn(false);
                     }}
-                    currentChain={chain}
-                    currentChainInfo={currentChainInfo}
-                    displayedAssets={[{
-                        assetId: '0xabc123xyz456',
+                    selectedChainName={chain}
+                    selectedChainInfo={selectedChainInfo}
+                    displayedResources={[{
+                        isAsset: true,
+                        assetIdOrUriString: '0xabc123xyz456',
                         name: 'Sample Asset',
                         defaultSelected: false,
                         frozen: false,
                         description: 'This asset is just displayed for demo purposes to show that assets can be used in sign-in requests. You will NOT be verified by Blockin if this is selected because you do not actually own this asset. You can experiment with adding custom assets that you do own below.'
-                    }]}
-                    displayedUris={[{
-                        uri: 'https://blockin.com/blue',
+                    },
+                    {
+                        isAsset: false,
+                        assetIdOrUriString: 'https://blockin.com/blue',
                         name: 'Blue Banner',
                         defaultSelected: false,
                         frozen: false,
                         description: 'If selected, you will see a blue banner at the top of the page upon signing-in. '
                     },
                     {
-                        uri: 'https://blockin.com/red',
+                        isAsset: false,
+                        assetIdOrUriString: 'https://blockin.com/red',
                         name: 'Red Banner',
                         defaultSelected: false,
                         frozen: false,
                         description: 'If selected, you will see a red banner at the top of the page upon signing-in. '
                     }]}
-                    signChallenge={handleSignChallenge}
-                    verifyChallengeOnBackend={handleVerifyChallenge}
+                    signAndVerifyChallenge={async (challenge: string) => {
+                        const signChallengeResponse = await handleSignChallenge(challenge);
+                        if (!signChallengeResponse.originalBytes || !signChallengeResponse.signatureBytes) {
+                            return { success: false, message: `${signChallengeResponse.message}` };
+                        }
+
+                        const verifyChallengeResponse = await handleVerifyChallenge(
+                            signChallengeResponse.originalBytes,
+                            signChallengeResponse.signatureBytes,
+                            constructChallengeObjectFromString(challenge)
+                        );
+                        return verifyChallengeResponse;
+                    }}
                     canAddCustomAssets={true}
                     customAddHelpDisplay={<>For convenience, we have provided you with a list of asset IDs that you own in the connected wallet:<pre>{` ${ownedAssetIds ? ownedAssetIds.map((val, idx) => {
                         return `${idx + 1}) ${val}\n`

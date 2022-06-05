@@ -1,5 +1,11 @@
-import { PresetAsset, PresetUri, SignChallengeResponse, SupportedChain } from 'blockin';
+import { PresetResource, SupportedChainMetadata } from 'blockin';
 import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react';
+
+export type SignChallengeResponse = {
+    originalBytes?: Uint8Array;
+    signatureBytes?: Uint8Array;
+    message?: string;
+}
 
 export type ChainContextType = {
     connected: boolean,
@@ -27,14 +33,12 @@ export type ChainContextType = {
     chain: string,
     setChain: Dispatch<SetStateAction<string>>,
 
-    displayedAssets: PresetAsset[],
-    setDisplayedAssets: Dispatch<SetStateAction<PresetAsset[]>>,
+    displayedResources: PresetResource[],
+    setDisplayedResources: Dispatch<SetStateAction<PresetResource[]>>,
 
-    displayedUris: PresetUri[],
-    setDisplayedUris: Dispatch<SetStateAction<PresetUri[]>>,
 
-    currentChainInfo: SupportedChain | undefined,
-    setCurrentChainInfo: Dispatch<SetStateAction<SupportedChain | undefined>>,
+    selectedChainInfo: SupportedChainMetadata | undefined,
+    setSelectedChainInfo: Dispatch<SetStateAction<SupportedChainMetadata | undefined>>,
 }
 
 export const ChainContext = createContext<ChainContextType>({
@@ -54,12 +58,10 @@ export const ChainContext = createContext<ChainContextType>({
     setChain: () => { },
     ownedAssetIds: [],
     setOwnedAssetIds: () => { },
-    displayedAssets: [],
-    displayedUris: [],
-    setDisplayedAssets: () => { },
-    setDisplayedUris: () => { },
-    setCurrentChainInfo: () => { },
-    currentChainInfo: {}
+    displayedResources: [],
+    setDisplayedResources: () => { },
+    setSelectedChainInfo: () => { },
+    selectedChainInfo: {}
 });
 
 export const useChainContext = () => useContext(ChainContext);
