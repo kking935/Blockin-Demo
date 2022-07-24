@@ -23,7 +23,7 @@ const receiveTokenRequest = async (req: NextApiRequest, res: NextApiResponse) =>
 
 export default receiveTokenRequest;
 
-export async function receiveToken(address: string, assetId: string) {
+export async function receiveToken(address?: string, assetId?: string) {
     const chainDriver = getChainDriver('Algorand Testnet');
     setChainDriver(chainDriver);
 
@@ -32,7 +32,7 @@ export async function receiveToken(address: string, assetId: string) {
         // params.flatFee = true;
         let uTxn = await createAssetTransferTxn({
             from: myAccount.addr,
-            to: address,
+            to: address ?? '',
             amount: 1,
             assetIndex: Number(assetId),
         })

@@ -243,6 +243,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                     setConnected(false);
                 }
             });
+            
             setSignChallenge(() => async (challenge: string) => {
                 return signChallengeEth(challenge);
             });
