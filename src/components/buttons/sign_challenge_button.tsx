@@ -138,7 +138,45 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
         console.log(newChainProps.name);
         setAddress('');
 
-        if (newChainProps.name === 'Ethereum') {
+        if (newChainProps.name && newChainProps.name.startsWith('Algorand')) {
+            setSelectedChainInfo({});
+            setChain(newChainProps.name);
+            const connectFunction = () => {
+                return async () => {
+                    algorandConnect(setConnector, setAddress, setConnected, setOwnedAssetIds);
+                }
+            }
+            setConnect(connectFunction);
+            setDisconnect(() => async () => {
+                await logout();
+                await connector?.killSession({ message: 'bye' })
+                connector?.rejectSession({ message: 'bye' })
+                setConnector(undefined)
+                setAddress('')
+                setConnected(false);
+            });
+            setSignChallenge(() => async (challenge: string) => {
+                if (connector) return signChallengeAlgo(connector, challenge, newChainProps.name === 'Algorand Testnet');
+                else throw 'Error signing challenge'
+            });
+            setDisplayedResources([])
+        } else if (newChainProps.name === 'Simulated') {
+            setSelectedChainInfo({});
+            setChain(newChainProps.name);
+            //TODO: I know this isn't the right way to do this but it works
+            setConnect(() => async () => {
+                setAddress('0x123456789')
+                setConnected(true);
+            });
+            setDisconnect(() => async () => {
+                await logout();
+                setAddress('');
+                setConnected(false);
+            });
+            setSignChallenge(() => handleSignChallengeSuccess);
+            setDisplayedResources([])
+            setOwnedAssetIds([]);
+        } else {
             // console.log('SETTING TO ETHEREUM', chain);
             setSelectedChainInfo({
                 getNameForAddress: async (address: string) => {
@@ -180,11 +218,15 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                         const signer = provider.getSigner();
                         setConnected(true);
                         setAddress(await signer.getAddress());
-                        const returnedAssets = await getAssets('Ethereum', await signer.getAddress(), {}, false);
-                        // console.log("ASFHJKASDFH", assets);
                         const assetIds = [];
-                        for (const asset of returnedAssets?.assets) {
-                            assetIds.push(asset['token_address']);
+                        //TODO: add asset lookups for other chains
+                        if (newChainProps.name === 'Ethereum') {
+                            const returnedAssets = await getAssets('Ethereum', await signer.getAddress(), {}, false);
+                            // console.log("ASFHJKASDFH", assets);
+
+                            for (const asset of returnedAssets?.assets) {
+                                assetIds.push(asset['token_address']);
+                            }
                         }
                         setOwnedAssetIds(assetIds);
 
@@ -192,7 +234,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                     await handleConnect();
                 }
             }
-            setChain('Ethereum');
+            setChain(newChainProps.name ?? 'Ethereum');
             setConnect(connectFunction);
             setDisconnect(() => {
                 return async () => {
@@ -206,44 +248,6 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
             });
             setDisplayedResources([]);
 
-        } else if (newChainProps.name && newChainProps.name.startsWith('Algorand')) {
-            setSelectedChainInfo({});
-            setChain(newChainProps.name);
-            const connectFunction = () => {
-                return async () => {
-                    algorandConnect(setConnector, setAddress, setConnected, setOwnedAssetIds);
-                }
-            }
-            setConnect(connectFunction);
-            setDisconnect(() => async () => {
-                await logout();
-                await connector?.killSession({ message: 'bye' })
-                connector?.rejectSession({ message: 'bye' })
-                setConnector(undefined)
-                setAddress('')
-                setConnected(false);
-            });
-            setSignChallenge(() => async (challenge: string) => {
-                if (connector) return signChallengeAlgo(connector, challenge, newChainProps.name === 'Algorand Testnet');
-                else throw 'Error signing challenge'
-            });
-            setDisplayedResources([])
-        } else if (newChainProps.name === 'Simulated') {
-            setSelectedChainInfo({});
-            setChain(newChainProps.name);
-            //TODO: I know this isn't the right way to do this but it works
-            setConnect(() => async () => {
-                setAddress('0x123456789')
-                setConnected(true);
-            });
-            setDisconnect(() => async () => {
-                await logout();
-                setAddress('');
-                setConnected(false);
-            });
-            setSignChallenge(() => handleSignChallengeSuccess);
-            setDisplayedResources([])
-            setOwnedAssetIds([]);
         }
     }
 
@@ -330,6 +334,11 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                         {
                             name: 'Algorand Mainnet',
                         },
+                        {
+                            name: 'Polygon',
+                        },
+                        { name: 'BSC' },
+                        { name: 'Avalanche' }
                     ]}
                     onChainUpdate={handleUpdateChain}
                     challengeParams={{
@@ -387,9 +396,15 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                         return verifyChallengeResponse;
                     }}
                     canAddCustomAssets={true}
-                    customAddHelpDisplay={<>For convenience, we have provided you with a list of asset IDs that you own in the connected wallet:<pre>{` ${ownedAssetIds ? ownedAssetIds.map((val, idx) => {
-                        return `${idx + 1}) ${val}\n`
-                    }).join(' ') : 'None'}`}</pre></>}
+                    customAddHelpDisplay={
+                        <>
+                            <>For EVM chains, the asset ID # is the contract address. For Algorand, it is the Asset ID.</>
+                            {ownedAssetIds.length > 0 && <>For convenience, we have provided you with a list of asset IDs that you own in the connected wallet:<pre>{` ${ownedAssetIds ? ownedAssetIds.map((val, idx) => {
+                                return `${idx + 1}) ${val}\n`
+                            }).join(' ') : 'None'}`}</pre></>}
+                        </>
+                    }
+
                 />
 
             }
