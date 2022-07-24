@@ -134,6 +134,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
 
 
     const handleUpdateChain = async (newChainProps: SupportedChainMetadata) => {
+        console.log(newChainProps)
         setConnected(false);
         console.log(newChainProps.name);
         setAddress('');
@@ -143,7 +144,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
             setChain(newChainProps.name);
             const connectFunction = () => {
                 return async () => {
-                    algorandConnect(setConnector, setAddress, setConnected, setOwnedAssetIds);
+                    await algorandConnect(setConnector, setAddress, setConnected, setOwnedAssetIds);
                 }
             }
             setConnect(connectFunction);
@@ -234,7 +235,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                     await handleConnect();
                 }
             }
-            setChain(newChainProps.name ?? 'Ethereum');
+            setChain(newChainProps.name ?? '');
             setConnect(connectFunction);
             setDisconnect(() => {
                 return async () => {
@@ -243,7 +244,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                     setConnected(false);
                 }
             });
-            
+
             setSignChallenge(() => async (challenge: string) => {
                 return signChallengeEth(challenge);
             });

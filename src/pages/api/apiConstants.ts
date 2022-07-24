@@ -38,7 +38,7 @@ export const getChainDriver = (chain: string) => {
             return algoTestnetDriver;
         case 'Algorand Mainnet':
             return algoMainnetDriver;
-            case 'Polygon':
+        case 'Polygon':
             return polygonDriver;
         case 'Avalanche':
             return avalancheDriver;
