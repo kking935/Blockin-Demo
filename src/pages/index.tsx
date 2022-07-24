@@ -16,6 +16,7 @@ const Home: NextPage = () => {
                 <h2>Sign-In Demo</h2>
                 <p>At the top of the page, you can experiment with a sample sign-in example using Blockin. Think of the different banner colors as different sign-in privileges (ex: standard vs premium plan).</p>
                 <p>This is what the end-user will see. Everything else, including the other demos, happen behind the scenes.</p>
+                <p>If desired, one can additionally add Web 2.0 sign-in options and let users choose how they would like to sign-in.</p>
                 <p>The <u>Simulated Chain</u> option is provided for convenience. This allows you to successfully interact with this demo without connecting a wallet.</p>
                 {/* <Expandable
                     special={true}
