@@ -217,6 +217,71 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                         const instance = await web3ModalInstance.connect();
                         const provider = new ethers.providers.Web3Provider(instance);
                         const signer = provider.getSigner();
+                        let chainId = '0x1';
+                        let addParams = {};
+                        if (newChainProps.name === 'Polygon') {
+
+
+                            chainId = '0x89';
+                            addParams = {
+                                chainId: '0x89',
+                                chainName: "Polygon",
+                                rpcUrls: ["https://polygon-rpc.com/"],
+                                blockExplorerUrls: ["https://polygonscan.com/"],
+                            }
+                        } else if (newChainProps.name === 'BSC' || newChainProps.name === 'Binance Smart Chain') {
+                            chainId = '0x38';
+                            addParams = {
+                                "chainId": "0x38", // 56 in decimal
+                                "chainName": "Smart Chain",
+                                "rpcUrls": [
+                                    "https://bsc-dataseed.binance.org"
+                                ],
+                                "nativeCurrency": {
+                                    "name": "Binance Coin",
+                                    "symbol": "BNB",
+                                    "decimals": 18
+                                },
+                                "blockExplorerUrls": [
+                                    "https://bscscan.com"
+                                ]
+                            }
+                        } else if (newChainProps.name === 'Avalanche') {
+
+                            chainId = '0xA86A'
+                            addParams = {
+                                chainId: "0xA86A",
+                                chainName: "Avalanche Mainnet C-Chain",
+                                nativeCurrency: {
+                                    name: "Avalanche",
+                                    symbol: "AVAX",
+                                    decimals: 18,
+                                },
+                                rpcUrls: ["https://api.avax.network/ext/bc/C/rpc"],
+                                blockExplorerUrls: ["https://snowtrace.io/"],
+                            }
+                        }
+                        console.log(chainId, addParams);
+                        try {
+                            await window.ethereum.request({
+                                method: "wallet_switchEthereumChain",
+                                params: [{ chainId: chainId }],
+                            });
+                        } catch (switchError: any) {
+                            // This error code indicates that the chain has not been added to MetaMask.
+                            if (switchError.code === 4902) {
+                                try {
+                                    await window.ethereum.request({
+                                        method: "wallet_addEthereumChain",
+                                        params: [
+                                            addParams
+                                        ],
+                                    });
+                                } catch (addError) {
+                                    throw addError;
+                                }
+                            }
+                        }
                         setConnected(true);
                         setAddress(await signer.getAddress());
                         const assetIds = [];
@@ -249,6 +314,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                 return signChallengeEth(challenge);
             });
             setDisplayedResources([]);
+
 
         }
     }
