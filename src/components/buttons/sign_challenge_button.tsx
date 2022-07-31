@@ -115,10 +115,10 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                 console.log(challengeObj);
                 for (const resource of challengeObj.resources) {
                     console.log(resource);
-                    if (resource === 'https://blockin.com/blue') {
+                    if (resource === 'https://blockin.com/admin') {
                         setCookie('stripes', true, { 'path': '/' })
                     }
-                    if (resource === 'https://blockin.com/red') {
+                    if (resource === 'https://blockin.com/manager') {
                         setCookie('gradient', true, { 'path': '/' })
                     }
                 }
@@ -360,6 +360,13 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
             setNonce(challengeObj.nonce);
         }
     }
+    let loggedInDetails = 'Normal User';
+    if (cookies['stripes']) {
+        loggedInDetails = 'Admin';
+    } else if (cookies['gradient']) {
+        loggedInDetails = 'Manager';
+    }
+
     return <>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
             {/* <ChainSelect
@@ -419,7 +426,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                         notBefore: undefined
                     }}
                     loggedIn={loggedIn}
-                    loggedInDetails={'Valid'}
+                    loggedInDetails={loggedInDetails}
                     logout={async () => {
                         await logout();
                         setLoggedIn(false);
@@ -428,28 +435,28 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                     selectedChainInfo={selectedChainInfo}
                     displayedResources={[{
                         isAsset: true,
-                        assetIdOrUriString: '0x1234abcd',
-                        name: 'Premium Subscription',
+                        assetIdOrUriString: '0x1234567890',
+                        name: 'Premium Features',
                         defaultSelected: false,
                         frozen: false,
-                        description: 'This asset (NFT) represents access to this site\'s premium plan. This is just here for demo purposes. You will NOT be verified by Blockin if this is selected because you do not actually own this asset.'
+                        description: 'This asset (NFT) represents access to this site\'s premium features. This is just here for demo purposes. You will NOT be verified by Blockin if this is selected because you do not actually own this asset.'
                     },
                     {
                         isAsset: false,
                         assetIdOrUriString: 'https://blockin.com/admin',
-                        name: 'Administrator (Blue)',
+                        name: 'Administrator',
                         defaultSelected: false,
                         frozen: false,
-                        description: 'Anything can be added as a resource to sign-in requests, not just assets. If selected, this site will verify that you are an "administrator", and if so, you will get "adminsitrator" privileges and see a blue banner on-screen.'
+                        description: 'Anything can be added as a resource to sign-in requests, not just assets. If selected, this site will verify that you are an "administrator", and if so, you will get "adminsitrator" privileges.'
                     },
-                    {
-                        isAsset: false,
-                        assetIdOrUriString: 'https://blockin.com/manager',
-                        name: 'Manager (Red)',
-                        defaultSelected: false,
-                        frozen: false,
-                        description: 'If selected, this site will verify that you are a "manager", and if so, you will get "manager" privileges and see a red banner on-screen.'
-                    },
+                    // {
+                    //     isAsset: false,
+                    //     assetIdOrUriString: 'https://blockin.com/manager',
+                    //     name: 'Manager (Red)',
+                    //     defaultSelected: false,
+                    //     frozen: false,
+                    //     description: 'If selected, this site will verify that you are a "manager", and if so, you will get "manager" privileges and see a red banner on-screen.'
+                    // },
                     {
                         isAsset: false,
                         assetIdOrUriString: 'https://blockin.com/standard',

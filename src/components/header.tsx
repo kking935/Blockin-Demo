@@ -99,21 +99,21 @@ const Header = () => {
                     }
                 </div> */}
                 <SignChallengeButton assets={[]} cookieValue={'none'} challengeParams={''} />
-                
+
             </header >
 
 
-            {cookies['stripes'] && <div style={{
+            {/* {cookies['stripes'] && <div style={{
                 width: '100%', height: 25,
                 backgroundColor: 'blue'
                 // background: 'repeating-linear-gradient(45deg, red, red 10px, white 10px, white 20px)'
-            }}></div>}
+            }}>Signed In As Admin</div>}
 
             {cookies['gradient'] && <div style={{
                 width: '100%', height: 25,
                 backgroundColor: 'red'
                 // background: 'linear-gradient(black, blue)'
-            }}></div>}
+            }}></div>} */}
         </>
     )
 }
