@@ -447,7 +447,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                         name: 'Administrator',
                         defaultSelected: false,
                         frozen: false,
-                        description: 'Anything can be added as a resource to sign-in requests, not just assets. If selected, this site will verify that you are an "administrator", and if so, you will get "adminsitrator" privileges.'
+                        description: 'Anything can be added as a resource to sign-in requests, not just assets. If selected, this site will verify that you are an "administrator", and if so, you will get "administrator" privileges.'
                     },
                     // {
                     //     isAsset: false,

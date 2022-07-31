@@ -98,6 +98,23 @@ const Header = () => {
                         connectedElem : disconnectedElem
                     }
                 </div> */}
+                {/* <div style={{ textAlign: 'center' }}>
+                    <b>Sign In With Web 2.0</b>
+                    <br />
+                    <br />
+                    <input style={{ color: 'black', margin: 4 }} type="text" placeholder="Username" />
+                    <input style={{ color: 'black', margin: 4 }} type="text" placeholder="Password" />
+                    <button style={{ color: 'black', margin: 0 }}>Sign In</button>
+                    <br />
+
+
+                    <br />
+                    <b>Sign In With Blockin</b>
+                    <br />
+                    <br />
+                </div> */}
+
+
                 <SignChallengeButton assets={[]} cookieValue={'none'} challengeParams={''} />
 
             </header >
