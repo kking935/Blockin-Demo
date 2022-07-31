@@ -9,7 +9,7 @@ const Home: NextPage = () => {
                 {/* <p>The Simulated Chain option is provided to allow you to successfully interact with this demo without connecting a wallet.</p>
                 <hr /> */}
                 <h2>Welcome to the Blockin Demo!</h2>
-                <p>You may select the "Simulated" option to interact with this demo without connecting a wallet.</p>
+                <p>You may select the Simulated option to interact with this demo without connecting a wallet.</p>
                 <hr />
                 <p>Learn more about Blockin by checking out the <a href="https://blockin.gitbook.io/blockin/" target="_blank" rel="noreferrer" style={{ color: 'blue' }}>documentation</a> or the <a href="https://github.com/Blockin-Labs" target="_blank" rel="noreferrer" style={{ color: 'blue' }}>source code</a>!</p>
                 {/* <hr /> */}
