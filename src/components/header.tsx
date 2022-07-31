@@ -99,7 +99,7 @@ const Header = () => {
                     }
                 </div> */}
                 <SignChallengeButton assets={[]} cookieValue={'none'} challengeParams={''} />
-
+                
             </header >
 
 

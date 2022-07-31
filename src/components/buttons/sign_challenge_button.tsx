@@ -166,7 +166,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
             setChain(newChainProps.name);
             //TODO: I know this isn't the right way to do this but it works
             setConnect(() => async () => {
-                setAddress('0x123456789')
+                setAddress('0x123456789123456789123456789123456789')
                 setConnected(true);
             });
             setDisconnect(() => async () => {
@@ -391,7 +391,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                     }}
                     chainOptions={[
                         {
-                            name: 'Simulated'
+                            name: 'Simulated',
                         },
                         {
                             name: 'Ethereum'
@@ -428,27 +428,35 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                     selectedChainInfo={selectedChainInfo}
                     displayedResources={[{
                         isAsset: true,
-                        assetIdOrUriString: '0xabc123xyz456',
-                        name: 'Sample Asset',
+                        assetIdOrUriString: '0x1234abcd',
+                        name: 'Premium Subscription',
                         defaultSelected: false,
                         frozen: false,
-                        description: 'This asset is just displayed for demo purposes to show that assets can be used in sign-in requests. You will NOT be verified by Blockin if this is selected because you do not actually own this asset. You can experiment with adding custom assets that you do own below.'
+                        description: 'This asset (NFT) represents access to this site\'s premium plan. This is just here for demo purposes. You will NOT be verified by Blockin if this is selected because you do not actually own this asset.'
                     },
                     {
                         isAsset: false,
-                        assetIdOrUriString: 'https://blockin.com/blue',
-                        name: 'Blue Banner',
+                        assetIdOrUriString: 'https://blockin.com/admin',
+                        name: 'Administrator (Blue)',
                         defaultSelected: false,
                         frozen: false,
-                        description: 'If selected, you will see a blue banner at the top of the page upon signing-in. '
+                        description: 'Anything can be added as a resource to sign-in requests, not just assets. If selected, this site will verify that you are an "administrator", and if so, you will get "adminsitrator" privileges and see a blue banner on-screen.'
                     },
                     {
                         isAsset: false,
-                        assetIdOrUriString: 'https://blockin.com/red',
-                        name: 'Red Banner',
+                        assetIdOrUriString: 'https://blockin.com/manager',
+                        name: 'Manager (Red)',
                         defaultSelected: false,
                         frozen: false,
-                        description: 'If selected, you will see a red banner at the top of the page upon signing-in. '
+                        description: 'If selected, this site will verify that you are a "manager", and if so, you will get "manager" privileges and see a red banner on-screen.'
+                    },
+                    {
+                        isAsset: false,
+                        assetIdOrUriString: 'https://blockin.com/standard',
+                        name: 'Normal User',
+                        defaultSelected: true,
+                        frozen: true,
+                        description: 'This site always requires you to sign-in with at least the minimum standard user access, so this resource is selected and locked.'
                     }]}
                     signAndVerifyChallenge={async (challenge: string) => {
                         const signChallengeResponse = await handleSignChallenge(challenge);
@@ -466,8 +474,10 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                     canAddCustomAssets={true}
                     customAddHelpDisplay={
                         <>
+                            <>Try experimenting with adding custom assets that you do and do not own below.</>
+                            <br /><br />
                             <>For EVM chains, the asset ID # is the contract address. For Algorand, it is the Asset ID.</>
-                            {ownedAssetIds.length > 0 && <>For convenience, we have provided you with a list of asset IDs that you own in the connected wallet:<pre>{` ${ownedAssetIds ? ownedAssetIds.map((val, idx) => {
+                            {ownedAssetIds.length > 0 && <> For convenience, we have provided you with a list of asset IDs that you own in the connected wallet:<pre>{` ${ownedAssetIds ? ownedAssetIds.map((val, idx) => {
                                 return `${idx + 1}) ${val}\n`
                             }).join(' ') : 'None'}`}</pre></>}
                         </>
