@@ -7,7 +7,6 @@ const getChallengeRequest = async (req: NextApiRequest, res: NextApiResponse) =>
     const chainDriver = getChainDriver(req.body.chain);
     setChainDriver(chainDriver);
 
-    // console.log(chainDriver);
     const message = await createChallenge(
         {
             domain: 'https://blockin.com',

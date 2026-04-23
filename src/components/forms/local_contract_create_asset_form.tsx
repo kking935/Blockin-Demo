@@ -11,12 +11,11 @@ export const LocalContractCreatesForm = ({contractId, setAssetId}: {contractId: 
         e.preventDefault();
 
         if (connector == undefined) {
-            console.log("Failed to call signAssetCreateTxn because connector is undefined")
             return;
         }
 
         setCreatingAsset(true);
-        const data = await fetch('../api/localContractCreateAsset', {
+        await fetch('../api/localContractCreateAsset', {
             method: 'post',
             body: JSON.stringify({
                 address: connector.accounts[0],
@@ -26,12 +25,10 @@ export const LocalContractCreatesForm = ({contractId, setAssetId}: {contractId: 
             headers: { 'Content-Type': 'application/json' }
         }).then(res => res.json())
             .then(data => {
-                console.log("response data")
-                console.log(data)
                 setAssetId(data.assetId);
             })
             .catch(err => {
-                console.log("ERROR:", err)
+                console.error(err);
             })
         setCreatingAsset(false);
         setCreatedAsset(true);

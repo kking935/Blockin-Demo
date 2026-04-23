@@ -21,8 +21,8 @@ export const signAssetCreateTxn = async (connector: WalletConnect, assetAuthoriz
     });
 
     if (!decodedResult) {
-        console.log("ERROR: decodeResult is undefined")
-        return
+        console.error("decodedResult is undefined");
+        return;
     }
 
     const stxs: Uint8Array[] = []

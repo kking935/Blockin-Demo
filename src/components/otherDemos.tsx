@@ -77,22 +77,11 @@ const OtherDemos = () => {
 
     const updateChallenge = async () => {
         const blockinChallenge = await getChallenge(chain, address ? address : '0xabcdefghijklmnop', ['123456']);
-        console.log("BLOCKIN CHALLENGE", blockinChallenge);
         setChallenge(blockinChallenge);
     }
 
     const updateOwnedAssets = async () => {
-        // const address = CURRENT_CHAIN.startsWith('Algorand') ? connector?.accounts[0] : '0x9af0aa8d04F02329B11B2847527Ce1309acAE2EC';
-        // // console.log(CURRENT_CHAIN.startsWith('Algorand'), CURRENT_CHAIN, address);
-        // if (address) {
-        //     const { assets, assetMap } = await getAssets(
-        //         address,
-        //         assetInfoMap,
-        //         true
-        //     );
-        //     setAssetInfoMap(assetMap);
-        //     setOwnedAssets(assets);
-        // }
+        // Placeholder: owned-asset lookups are handled by SignChallengeButton's chain-specific code path.
     }
 
 

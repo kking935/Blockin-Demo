@@ -65,20 +65,17 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
     const [challengeString, setChallengeString] = useState('');
     const [cookies, setCookie, removeCookie] = useCookies(['blockedin', 'stripes', 'gradient']);
     const [assetsDisplayed, setAssetsDisplayed] = useState(assets ? assets.map((elem: any) => {
-        // console.log(elem);
         return { assetId: elem['asset-id'], name: `Algorand Testnet Asset ID: ${elem['asset-id']}`, frozen: false, defaultSelected: false, description: `${elem['color']} Banner` }
     }) : []);
     const [nonce, setNonce] = useState('0x123456789');
 
     useEffect(() => {
         setAssetsDisplayed(assets.map((elem: any) => {
-            // console.log(elem);
             return { assetId: elem['asset-id'], name: `Algorand Testnet Asset ID: ${elem['asset-id']}`, frozen: false, defaultSelected: false, description: `${elem['color']} Banner` }
         }));
     }, [assets]);
 
     useEffect(() => {
-        // console.log('INITIAL USE EFFECT', chain)
         handleUpdateChain({ name: chain });
     }, [])
 
@@ -87,7 +84,6 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
         setUserIsSigningChallenge(true);
         setDisplayMessage(loadingMessage);
         setChallengeString(challenge);
-        console.log("CHALLENGE STRING", challenge);
 
         if (chain === 'Simulated') {
             return { signatureBytes: new Uint8Array(32), originalBytes: new Uint8Array(32) }
@@ -99,9 +95,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
     }
 
     const handleVerifyChallenge = async (originalBytes: Uint8Array, signatureBytes: Uint8Array, challengeObj: ChallengeParams) => {
-        console.log("TEST", originalBytes, signatureBytes, challengeObj);
         const verificationResponse = chain !== 'Simulated' ? await verifyChallengeOnBackend(chain, originalBytes, signatureBytes) : { verified: true, message: 'Successfully verified!' };
-        console.log(verificationResponse, "REASDJAHK");
         if (!verificationResponse.verified) {
             setDisplayMessage(failureMessage);
             setUserIsSigningChallenge(false);
@@ -112,9 +106,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
             setCookie('blockedin', cookieValue, { 'path': '/' });
 
             if (challengeObj.resources) {
-                console.log(challengeObj);
                 for (const resource of challengeObj.resources) {
-                    console.log(resource);
                     if (resource === 'https://blockin.com/admin') {
                         setCookie('stripes', true, { 'path': '/' })
                     }
@@ -134,9 +126,7 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
 
 
     const handleUpdateChain = async (newChainProps: SupportedChainMetadata) => {
-        console.log(newChainProps)
         setConnected(false);
-        console.log(newChainProps.name);
         setAddress('');
 
         if (newChainProps.name && newChainProps.name.startsWith('Algorand')) {
@@ -164,7 +154,6 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
         } else if (newChainProps.name === 'Simulated') {
             setSelectedChainInfo({});
             setChain(newChainProps.name);
-            //TODO: I know this isn't the right way to do this but it works
             setConnect(() => async () => {
                 setAddress('0x123456789123456789123456789123456789')
                 setConnected(true);
@@ -178,12 +167,9 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
             setDisplayedResources([])
             setOwnedAssetIds([]);
         } else {
-            // console.log('SETTING TO ETHEREUM', chain);
             setSelectedChainInfo({
                 getNameForAddress: async (address: string) => {
-                    // console.log("ENSSSSS");
                     if (address) {
-                        console.log("ATTEMPTING TO RESOLVE ENS NAME...")
                         const ensAddress = await ethers.getDefaultProvider('homestead', { quorum: 1 }).lookupAddress(address);
                         if (ensAddress) return ensAddress;
                     }
@@ -191,14 +177,12 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                 }
             });
 
-            //TODO: I know this isn't the right way to do this but it works
             const connectFunction = () => {
                 const providerOptions = {
-                    // Example with WalletConnect provider
                     walletconnect: {
                         package: WalletConnectProvider,
                         options: {
-                            infuraId: "27e484dcd9e3efcfd25a83a78777cdf1"
+                            infuraId: process.env.NEXT_PUBLIC_INFURA_ID ?? ""
                         }
                     }
                 };
@@ -261,7 +245,6 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                                 blockExplorerUrls: ["https://snowtrace.io/"],
                             }
                         }
-                        console.log(chainId, addParams);
                         try {
                             await window.ethereum.request({
                                 method: "wallet_switchEthereumChain",
@@ -285,11 +268,9 @@ export const SignChallengeButton = ({ challengeParams, cookieValue, assets }: { 
                         setConnected(true);
                         setAddress(await signer.getAddress());
                         const assetIds = [];
-                        //TODO: add asset lookups for other chains
+                        // Asset lookups are currently only implemented for Ethereum.
                         if (newChainProps.name === 'Ethereum') {
                             const returnedAssets = await getAssets('Ethereum', await signer.getAddress(), {}, false);
-                            // console.log("ASFHJKASDFH", assets);
-
                             for (const asset of returnedAssets?.assets) {
                                 assetIds.push(asset['token_address']);
                             }

@@ -12,12 +12,11 @@ export const ResourceCreateAssetButton = ({ asset, setAsset }: { asset: string, 
         e.preventDefault();
 
         if (connector == undefined) {
-            console.log("Failed to call signAssetCreateTxn because connector is undefined")
             return;
         }
 
         setCreatingAsset(true);
-        const res = await fetch('../api/getToken')
+        await fetch('../api/getToken')
             .then(res => res.json())
             .then(data => {
                 setResourceAddress(data.address);
@@ -25,7 +24,7 @@ export const ResourceCreateAssetButton = ({ asset, setAsset }: { asset: string, 
                 setResourceMetadata(data.metadata);
             })
             .catch(err => {
-                console.log("ERROR:", err)
+                console.error(err);
             })
 
         setCreatingAsset(false);

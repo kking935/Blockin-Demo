@@ -13,8 +13,6 @@ const createContractNoOpRequest = async (req: NextApiRequest, res: NextApiRespon
     const contractId = req.body.contractId;
     const assetId = req.body.assetId;
 
-    console.log("contractId")
-    console.log(contractId)
     if (chainDriver instanceof AlgoDriver) {
         const uTxn = await chainDriver.makeContractNoOpTxn({
             from: from,

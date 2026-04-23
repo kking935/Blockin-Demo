@@ -14,7 +14,6 @@ const sendTxnRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const sendTx = await sendTxn(body.stxs, body.uTxn.txnId)
 
-    console.log("Transaction : " + sendTx.txId);
     return res.status(200).send(sendTx);
 };
 

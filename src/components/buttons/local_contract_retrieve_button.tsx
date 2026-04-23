@@ -11,11 +11,10 @@ export const LocalContractRetrieveAssetButton = ({ contractId, assetId, updateAs
         e.preventDefault();
 
         if (connector == undefined) {
-            console.log("Failed to call signAssetCreateTxn because connector is undefined")
             return;
         }
         setRetrievingAsset(true);
-        const res = await signContractNoOp(connector, contractId, assetId)
+        await signContractNoOp(connector, contractId, assetId)
         
         setRetrievingAsset(false);
         setRetrievedAsset(true);

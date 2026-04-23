@@ -23,8 +23,8 @@ export const signContractNoOp = async (connector: WalletConnect, contractId: str
     });
 
     if (!decodedResult) {
-        console.log("ERROR: decodeResult is undefined")
-        return
+        console.error("decodedResult is undefined");
+        return;
     }
     const stxs: Uint8Array[] = []
     decodedResult.forEach((elem) => {

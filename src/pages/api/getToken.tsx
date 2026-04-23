@@ -43,7 +43,6 @@ export async function createAccessToken(chain: string) {
         })
 
         let signedTxn = uTxn.nativeTxn.signTxn(myAccount.sk);
-        console.log("Signed transaction with txID: %s", uTxn.txnId);
 
         await sendTxn(signedTxn, uTxn.txnId)
         const assetDetails = await chainDriver.lookupTransactionById(uTxn.txnId);
@@ -51,6 +50,6 @@ export async function createAccessToken(chain: string) {
         return { address: myAccount.addr, assetId: assetDetails.transaction['created-asset-index'], metadata: colors[randomIdx] }
     }
     catch (err) {
-        console.log("err", err);
+        console.error(err);
     }
 };

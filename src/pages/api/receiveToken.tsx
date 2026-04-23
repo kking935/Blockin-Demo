@@ -39,14 +39,12 @@ export async function receiveToken(address?: string, assetId?: string) {
 
         const txn = uTxn.nativeTxn
         let signedTxn = txn.signTxn(myAccount.sk);
-        console.log("Signed transaction with txID: %s", uTxn.txnId);
 
         await sendTxn(signedTxn, uTxn.txnId)
-        console.log("Successfully sent 1 of asset", uTxn.txnId)
 
         return { address: myAccount.addr, assetId }
     }
     catch (err) {
-        console.log("err", err);
+        console.error(err);
     }
 };

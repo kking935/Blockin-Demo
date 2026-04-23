@@ -41,7 +41,6 @@ const getChallengeFromBlockin = async (chain: string, address: string, assetIds:
 
 export const verifyChallengeOnBackend = async (chain: string, originalBytes: Uint8Array, signatureBytes: Uint8Array) => {
     const bodyStr = stringify({ originalBytes, signatureBytes, chain }); //hack to preserve uint8 arrays
-    console.log(bodyStr);
 
     const verificationRes = await fetch('../api/verifyChallenge', {
         method: 'post',

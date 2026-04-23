@@ -21,8 +21,8 @@ export const signOptIn = async (connector: WalletConnect, assetId: string) => {
     });
 
     if (!decodedResult) {
-        console.log("ERROR: decodeResult is undefined")
-        return
+        console.error("decodedResult is undefined");
+        return;
     }
     const stxs: Uint8Array[] = []
     decodedResult.forEach((elem) => {

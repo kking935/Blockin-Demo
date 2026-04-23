@@ -12,7 +12,6 @@ export const UserCreatesForm = ({ updateOwnedAssets }: { updateOwnedAssets: () =
         e.preventDefault();
 
         if (connector == undefined) {
-            console.log("Failed to call signAssetCreateTxn because connector is undefined")
             return;
         }
 

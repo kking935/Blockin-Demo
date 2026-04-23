@@ -28,16 +28,12 @@ const localContractCreateAssetRequest = async (req: NextApiRequest, res: NextApi
 
 
         let signedTxn = uTxn.nativeTxn.signTxn(myAccount.sk);
-        console.log("Signed transaction with txID: %s", uTxn.txnId);
-        const sentTxn = await sendTxn(signedTxn, uTxn.txnId)
-        console.log(sentTxn)
-        console.log("TODO: return data: assetId")
+        await sendTxn(signedTxn, uTxn.txnId)
         const all_local_states = await chainDriver.lookupApplicationLocalState(address)
         let asset_id = 0
         all_local_states['apps-local-states'].forEach((elem: any) => {
             if (elem.id == process.env.NEXT_PUBLIC_LOCAL_CONTRACT_ID) {
                 asset_id = elem['key-value'][0].value.uint
-                console.log(asset_id)
             }
         });
 

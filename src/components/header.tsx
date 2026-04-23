@@ -63,18 +63,12 @@ const Header = () => {
     }, [cookies]);
 
     useEffect(() => {
-        console.log("updating banner cuz address changed")
-        console.log(address)
-    }, [address, setAddress])
-
-    useEffect(() => {
         updateChallenge();
     }, [connector, chain]);
 
     const updateChallenge = async () => {
         if (address) {
             const blockinChallenge = await getChallenge(chain, address, []);
-            console.log(blockinChallenge);
             setChallenge(blockinChallenge);
         }
     }

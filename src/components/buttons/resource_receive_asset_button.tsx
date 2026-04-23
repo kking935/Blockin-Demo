@@ -10,11 +10,10 @@ export const ReceiveAssetFromResourceButton = ({ asset, updateAssets }: { asset:
         e.preventDefault();
 
         if (connector == undefined) {
-            console.log("Failed to call signAssetCreateTxn because connector is undefined")
             return;
         }
         setWaiting(true);
-        const res = await fetch(`../api/receiveToken?assetId=${asset}&address=${connector.accounts[0]}`);
+        await fetch(`../api/receiveToken?assetId=${asset}&address=${connector.accounts[0]}`);
         setWaiting(false);
         setResourceTransferred(true);
         updateAssets();

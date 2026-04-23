@@ -11,7 +11,6 @@ export const SignOptInButton = ({ asset, onConfirm }: { asset: string, onConfirm
         e.preventDefault();
 
         if (connector == undefined) {
-            console.log("Failed to call signAssetCreateTxn because connector is undefined")
             return;
         }
         setWaiting(true);

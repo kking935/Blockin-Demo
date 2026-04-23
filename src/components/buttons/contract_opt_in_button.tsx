@@ -11,7 +11,6 @@ export const ContractOptInButton = ({ contractId, onConfirm }: { contractId: str
         e.preventDefault();
 
         if (connector == undefined) {
-            console.log("Failed to call signAssetCreateTxn because connector is undefined")
             return;
         }
         setWaiting(true);
